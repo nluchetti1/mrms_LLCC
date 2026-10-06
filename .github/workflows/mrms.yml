@@ -1,0 +1,103 @@
+name: MRMS LLCC nowcast
+
+on:
+  # The real trigger: cron-job.org calls the dispatch API every 5 minutes, because GitHub's
+  # own scheduler is deprioritised and routinely runs 5-15 minutes late - fatal for a
+  # product whose whole value is being current.
+  #
+  #   POST https://api.github.com/repos/<owner>/<repo>/actions/workflows/mrms.yml/dispatches
+  #   Authorization: Bearer <fine-grained token, this repo only, Actions: read & write>
+  #   Accept: application/vnd.github+json
+  #   Body: {"ref":"main"}
+  workflow_dispatch:
+  # A slow fallback so the page does not die outright if cron-job.org stops calling.
+  schedule:
+    - cron: "*/30 * * * *"
+
+# The OPPOSITE of CloudScope's setting. A five-minute radar frame is worthless the moment a
+# newer one is queued, so a run that is still going when the next trigger arrives is cancelled
+# rather than allowed to finish and publish something already out of date.
+concurrency:
+  group: mrms-nowcast
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      # The published site lives on its own branch. Checking it out first carries the last
+      # hour of frames and the cached freezing level forward into this run. On the very
+      # first run the branch does not exist yet, which is fine - continue-on-error, and the
+      # next step makes an empty folder.
+      - name: Restore previous frames
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: site
+
+      - name: Ensure site folder
+        run: mkdir -p site
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install eccodes (pygrib needs the C library)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libeccodes0 libeccodes-dev
+
+      - run: pip install -r requirements.txt
+
+      # Natural Earth coastlines are downloaded on first use. Caching them saves a few
+      # seconds every five minutes, which adds up to most of a day's runtime.
+      - name: Cache cartopy data
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/cartopy
+          key: cartopy-ne-10m-v1
+
+      # Fails fast on a name that no longer exists or a function whose returns disagree on
+      # arity - the two ways CloudScope broke in production. Skipped if _checks.py is absent.
+      - name: Static checks
+        run: |
+          if [ -f _checks.py ]; then python _checks.py mrms_classify.py; \
+          else echo "_checks.py not present - skipping"; fi
+
+      - name: Classify latest MRMS
+        env:
+          OUT_DIR: site
+        run: python mrms_classify.py
+
+      # The viewer lives in main and is copied in every run, so there is exactly one
+      # index.html anywhere. Editing it means editing web/index.html on main; the next run
+      # publishes it.
+      - name: Assemble site
+        run: |
+          cp web/index.html site/index.html
+          touch site/.nojekyll
+
+      # Force-push a branch with a SINGLE commit. Every run replaces the last, so the repo
+      # never accumulates history however long this runs: committing to main at this cadence
+      # would add ~85 MB a day.
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd site
+          rm -rf .git
+          git init -q
+          git checkout -q -b gh-pages
+          git add -A
+          git -c user.name="cloudscope-bot" -c user.email="actions@users.noreply.github.com" \
+            commit -qm "MRMS nowcast $(date -u '+%Y-%m-%d %H:%MZ')"
+          git push -fq "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+          echo "published $(ls frames | wc -l) frames"
