@@ -104,8 +104,10 @@
            vertical-align:-1px}
   .refl{display:flex; height:9px; margin-top:8px; border-radius:2px; overflow:hidden}
   .refl span{flex:1}
-  .reflticks{display:flex; justify-content:space-between; font-size:11.5px; color:var(--dim);
-             margin-top:3px}
+  .reflticks{position:relative; height:16px; font-size:11.5px; color:var(--dim); margin-top:3px}
+  .reflticks span{position:absolute; top:0; transform:translateX(-50%)}
+  .reflticks span:first-child{transform:none}
+  .reflticks .unit{right:0; left:auto; transform:none}
 
   /* ---- timeline ------------------------------------------------------------------ */
   .timeline{display:flex; align-items:center; gap:14px; margin:14px 0 6px; flex-wrap:wrap}
@@ -171,6 +173,8 @@
   .def p{grid-column:2; margin:0; color:var(--steel); font-size:14px; line-height:1.45}
   .ro-how{color:var(--steel); font-size:13.5px; line-height:1.45; margin:-4px 0 12px}
   .xs{margin-top:14px}
+  .xsh{display:flex; gap:16px; align-items:baseline}
+  .xsh .chk{font-size:13px}
   .xswrap{position:relative; background:var(--well); border-radius:4px; line-height:0}
   #xs-canvas{display:block; width:100%; height:320px}
   .xsmsg{position:absolute; inset:0; display:grid; place-items:center; color:var(--steel);
@@ -248,7 +252,9 @@
 </div>
 
 <section class="panel xs" id="xs-panel" hidden>
-  <h3><span>Vertical cross-section</span><small id="xs-sub">tap a start point on either map</small></h3>
+  <h3><span>Vertical cross-section</span>
+    <span class="xsh"><label class="chk"><input type="checkbox" id="xs-smooth" checked> Smooth</label>
+    <small id="xs-sub">tap a start point on either map</small></span></h3>
   <div class="xswrap"><canvas id="xs-canvas" height="320"></canvas>
     <div class="xsmsg" id="xs-msg"></div></div>
   <div class="scale" id="xs-legend"></div>
@@ -272,7 +278,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v8";
+const VIEWER_VERSION = "mrms-v10";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -533,6 +539,17 @@ function getVol(f){
   return VOLS[f.volume];
 }
 
+let LUT = null, LUT_FOR = null;
+function reflLut(){
+  if (LUT && LUT_FOR === M) return LUT;
+  const out = [];
+  for (let k = 0; k <= 200; k++){
+    const c = reflColor(k / 2);
+    out.push(c ? [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)] : null);
+  }
+  LUT_FOR = M; return (LUT = out);
+}
+
 function reflColor(dbz){
   const R = M.refl;
   for (let k = R.levels.length - 2; k >= 0; k--) if (dbz >= R.levels[k]) return R.colors[k];
@@ -580,32 +597,91 @@ async function drawSection(){
   const ZMAX = 16;
   const yOf = z => pt + PH * (1 - Math.min(z, ZMAX) / ZMAX);
 
-  const N = Math.max(2, Math.min(400, Math.ceil(km / 0.5)));
-  const cols = [];
+  // ---- rendered per device pixel, like GR2 ----------------------------------------------
+  // Smooth: bilinear between grid cells along the line AND linear between levels in height.
+  // No-echo is interpolated as a low value and then thresholded at 0 dBZ, so echo edges come
+  // out smooth without being smeared outward past where 0 dBZ actually is. Blind cells (the
+  // beam cannot see that low) are never interpolated into - they stay shaded.
+  // Raw: nearest cell, each level owning the band halfway to its neighbours.
+  const smooth = $("xs-smooth").checked;
+  const NOE = -15;                              // no echo, as a value to interpolate toward
+  const lo = k => k === 0 ? Math.max(0, H[0] - (H[1] - H[0]) / 2) : (H[k - 1] + H[k]) / 2;
+  const hi = k => k === L - 1 ? H[k] + (H[k] - H[k - 1]) / 2 : (H[k] + H[k + 1]) / 2;
+  const X0 = Math.round(pl * dpr), Y0 = Math.round(pt * dpr);
+  const PWd = Math.max(1, Math.round(PW * dpr)), PHd = Math.max(1, Math.round(PH * dpr));
+  const img = x.createImageData(PWd, PHd), px = img.data;
+  const lut = reflLut();
+
+  // Row -> level mapping is the same for every column, so it is worked out once.
+  const rowK = new Int16Array(PHd), rowW = new Float32Array(PHd), rowN = new Int16Array(PHd);
+  for (let ry = 0; ry < PHd; ry++){
+    const z = ZMAX * (1 - (ry + 0.5) / PHd);
+    let n_ = -1;
+    for (let k = 0; k < L; k++) if (z >= lo(k) && z < hi(k)){ n_ = k; break; }
+    rowN[ry] = n_;
+    if (z < lo(0) || z >= hi(L - 1)){ rowK[ry] = -1; continue; }
+    if (z <= H[0]){ rowK[ry] = 0; rowW[ry] = 0; continue; }
+    if (z >= H[L - 1]){ rowK[ry] = L - 2; rowW[ry] = 1; continue; }
+    let k = 0; while (k < L - 2 && H[k + 1] <= z) k++;
+    rowK[ry] = k; rowW[ry] = (z - H[k]) / (H[k + 1] - H[k]);
+  }
+
+  const cell = (k, j, i) => {                   // dBZ, NOE for no echo, NaN for blind
+    if (j < 0 || i < 0 || j >= g.ny || i >= g.nx) return NaN;
+    const v = vol[k * n + j * g.nx + i];
+    return v === 254 ? NaN : v === 255 ? NOE : v / 2;
+  };
+  const prof = new Float32Array(L);
+  for (let cx = 0; cx < PWd; cx++){
+    const t = (cx + 0.5) / PWd;
+    const lat = xsA.lat + (xsB.lat - xsA.lat) * t, lon = xsA.lon + (xsB.lon - xsA.lon) * t;
+    const fj = (g.lat_n - lat) / g.dlat, fi = (lon - g.lon_w) / g.dlon;
+    if (smooth){
+      const j0 = Math.floor(fj), i0 = Math.floor(fi), wj = fj - j0, wi = fi - i0;
+      const W = [(1 - wj) * (1 - wi), (1 - wj) * wi, wj * (1 - wi), wj * wi];
+      for (let k = 0; k < L; k++){
+        const c = [cell(k, j0, i0), cell(k, j0, i0 + 1), cell(k, j0 + 1, i0), cell(k, j0 + 1, i0 + 1)];
+        let s = 0, w = 0;
+        for (let q = 0; q < 4; q++) if (!Number.isNaN(c[q])){ s += c[q] * W[q]; w += W[q]; }
+        prof[k] = w >= 0.5 ? s / w : NaN;       // mostly blind -> blind
+      }
+    } else {
+      const j = Math.round(fj), i = Math.round(fi);
+      for (let k = 0; k < L; k++) prof[k] = cell(k, j, i);
+    }
+    for (let ry = 0; ry < PHd; ry++){
+      let v;
+      if (smooth){
+        const k = rowK[ry]; if (k < 0) continue;
+        const a = prof[k], b = prof[Math.min(k + 1, L - 1)], w = rowW[ry];
+        if (Number.isNaN(a) && Number.isNaN(b)) v = NaN;
+        else if (Number.isNaN(a)) v = w > 0.5 ? b : NaN;
+        else if (Number.isNaN(b)) v = w < 0.5 ? a : NaN;
+        else v = a + (b - a) * w;
+      } else {
+        const k = rowN[ry]; if (k < 0) continue;
+        v = prof[k];
+      }
+      const o = (ry * PWd + cx) * 4;
+      if (Number.isNaN(v)){ px[o] = 0x26; px[o + 1] = 0x31; px[o + 2] = 0x3F; px[o + 3] = 255; continue; }
+      if (v < 0) continue;                      // below 0 dBZ: no echo, left transparent
+      const rgb = lut[Math.min(lut.length - 1, Math.round(v * 2))];
+      if (!rgb) continue;
+      px[o] = rgb[0]; px[o + 1] = rgb[1]; px[o + 2] = rgb[2]; px[o + 3] = 255;
+    }
+  }
+  x.putImageData(img, X0, Y0);
+
+  // traffic light and class along the line, as strips above the section (nearest cell)
+  const N = Math.max(2, Math.min(600, Math.round(PW)));
   for (let s = 0; s < N; s++){
     const t = (s + 0.5) / N;
     const lat = xsA.lat + (xsB.lat - xsA.lat) * t, lon = xsA.lon + (xsB.lon - xsA.lon) * t;
     const j = Math.round((g.lat_n - lat) / g.dlat), i = Math.round((lon - g.lon_w) / g.dlon);
-    cols.push(j >= 0 && i >= 0 && j < g.ny && i < g.nx ? j * g.nx + i : -1);
-  }
-  const sw = PW / N;
-  // level bands: each level owns the space halfway to its neighbours
-  const lo = k => k === 0 ? Math.max(0, H[0] - (H[1] - H[0]) / 2) : (H[k - 1] + H[k]) / 2;
-  const hi = k => k === L - 1 ? H[k] + (H[k] - H[k - 1]) / 2 : (H[k] + H[k + 1]) / 2;
-  for (let s = 0; s < N; s++){
-    const c = cols[s]; if (c < 0) continue;
-    const x0 = pl + s * sw;
-    for (let k = 0; k < L; k++){
-      const v = vol[k * n + c];
-      if (v === 255) continue;
-      x.fillStyle = v === 254 ? "#26313F" : (reflColor(v / 2) || "#26313F");
-      const y1 = yOf(hi(k)), y0 = yOf(lo(k));
-      x.fillRect(x0, y1, Math.ceil(sw) + 0.5, y0 - y1 + 0.5);
-    }
-    // traffic light and class along the line, as strips above the section
-    x.fillStyle = M.status[String(dat[c] - 1)].color; x.fillRect(x0, 4, Math.ceil(sw) + 0.5, 7);
-    const cl = M.classes[dat[n + c]];
-    if (dat[n + c] > 0){ x.fillStyle = cl.color; x.fillRect(x0, 13, Math.ceil(sw) + 0.5, 7); }
+    if (j < 0 || i < 0 || j >= g.ny || i >= g.nx) continue;
+    const c = j * g.nx + i, x0 = pl + s * PW / N, w = Math.ceil(PW / N) + 0.5;
+    x.fillStyle = M.status[String(dat[c] - 1)].color; x.fillRect(x0, 4, w, 7);
+    if (dat[n + c] > 0){ x.fillStyle = M.classes[dat[n + c]].color; x.fillRect(x0, 13, w, 7); }
   }
 
   // axes
@@ -661,13 +737,14 @@ async function drawSection(){
     `<span>Isotherms: 0 °C from the model freezing level, −20 °C estimated at 6.5 °C/km</span>`;
 }
 addEventListener("resize", () => { if (xsOn) drawSection(); });
+$("xs-smooth").onchange = () => drawSection();
 
 // ---- pads -----------------------------------------------------------------------------
 // Most significant first, each with its share of the 10 nmi disc, specks under 1% dropped.
 // Falls back to the single label for frames built before the breakdown existed.
 const SHORTCLASS = {core: "core", att: "attached anvil", det: "detached anvil",
   cu20: "cumulus below −20 °C", cu10: "cumulus −10 to −20 °C", cu0: "cumulus 0 to −10 °C",
-  warm: "shallow shower"};
+  warm: "shallow shower", elev: "elevated layer"};
 function padClasses(p){
   if (p.classes_10nm){
     if (!p.classes_10nm.length) return "No echo within 10 nmi";
@@ -726,10 +803,12 @@ function legendLeft(){
   }
 }
 function drawRefl(){
-  const R = M.refl;
+  // Ticks sit under the bin edge they label - evenly spaced labels drifted off their colours.
+  const R = M.refl, nb = R.colors.length;
   $("refl").innerHTML = R.colors.map(c => `<span style="background:${c}"></span>`).join("");
-  $("reflticks").innerHTML = [0, 20, 40, 60, 75].map(v => `<span>${v}</span>`).join("") +
-                             "<span>dBZ</span>";
+  $("reflticks").innerHTML = R.levels.slice(0, nb).map((v, k) => v % 10 === 0 ?
+    `<span style="left:${(100 * k / nb).toFixed(2)}%">${v}</span>` : "").join("") +
+    `<span class="unit">dBZ</span>`;
 }
 function drawTicks(){
   const n = M.frames.length, step = Math.max(1, Math.ceil(n / 6));
