@@ -74,10 +74,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 # Configuration
 # --------------------------------------------------------------------------------------
 ROOT = "https://mrms.ncep.noaa.gov/2D"
+ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v5"
+VIEWER_VERSION_EXPECTED = "mrms-v8"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -105,8 +106,20 @@ FREEZING_MAX_AGE_MIN = 70
 # cancels an in-progress run when the next trigger arrives - a backfill that tries to do all
 # eleven frames at once gets cancelled and publishes nothing.
 BACKFILL_PER_RUN = 4
-BACKFILL_BUDGET_S = 120     # setup (apt, pip) takes ~1 min, the latest frame ~30 s, and the
-                            # whole run has to finish inside the 5-minute trigger interval
+BACKFILL_BUDGET_S = 90      # setup (apt, pip) ~1 min, latest 2-D frame ~30 s, the 3-D volume
+                            # another ~30 s - and the whole run has to finish inside the
+                            # 5-minute trigger interval or the next trigger cancels it
+
+# 3-D merged reflectivity. Measured 6 Oct 2026: 33 levels from 0.5 to 19 km, all from one scan
+# time, 14.2 MB gzipped and ~30 s to fetch and decode, on the same 0.01 deg grid as the 2-D
+# products so every column lines up with the traffic light. Fetched for the NEWEST frame each
+# run only - archive frames stay 2-D, and the loop accumulates volumes one run at a time.
+#
+# Two sentinels, and they mean different things: -99 is no echo, -999 is NO COVERAGE - the beam
+# cannot see that low there (it appeared only at 0.5-2.0 km). A column with -999 under its
+# lowest echo has an unknown base, not a high one, which matters for "rained out".
+VOL_NO_ECHO, VOL_NO_COVER, VOL_NONE = 255, 254, 253
+VOL_MIN_LEVELS = 25        # fewer usable levels than this and the volume is dropped
 MATCH_TOL_MIN = 3.0          # how far a product's file may sit from the frame's valid time
 
 # (product, no-echo sentinel, units)
@@ -215,12 +228,14 @@ CLASSES = [
             "strongest echo sits below the measured 0 °C height. Can still trip flight-through "
             "cumulus if it reaches the +5 °C level, about 770 m below freezing."},
     {"id": 2, "key": "cu0", "name": "Cumulus topping 0 to −10 °C", "color": "#4FB3C9",
-     "how": "The coldest isotherm level still carrying 0 dBZ or more is 0 °C or −5 °C."},
+     "how": "Echo of 0 dBZ or more at the 0 °C level, but none at −10 °C, so the top lies "
+            "somewhere between 0 and −10 °C."},
     {"id": 3, "key": "cu10", "name": "Cumulus topping −10 to −20 °C", "color": "#3D7FD9",
-     "how": "The coldest isotherm level carrying echo is −10 °C or −15 °C. Drives the 5 nmi "
-            "cumulus standoff."},
+     "how": "Echo at the −10 °C level, but none at −20 °C, so the top lies between −10 and "
+            "−20 °C. Drives the 5 nmi cumulus standoff."},
     {"id": 4, "key": "cu20", "name": "Cumulus topping below −20 °C", "color": "#5B4FD0",
-     "how": "Echo of 0 dBZ or more at the −20 °C level. Drives the 10 nmi cumulus standoff."},
+     "how": "Echo of 0 dBZ or more at the −20 °C level, so the top is colder than −20 °C. "
+            "Drives the 10 nmi cumulus standoff."},
     {"id": 5, "key": "core", "name": "Convective core", "color": "#D946A8",
      "how": "Composite reflectivity of 40 dBZ or more, or any vertically integrated ice. VII only "
             "registers in strong cells, so it confirms a core rather than finding anvil. Takes "
@@ -245,8 +260,17 @@ CLASS_NOTE = ("Classes come from how high the echo reaches through the isotherm 
               "convective from layered cloud, so a broad rain shield reaching −20 °C is classed "
               "with cumulus topping below −20 °C.")
 # Echo-top level, the vertical reach the class is built from.
-TOP_LEVELS = ["none", "below freezing", "0 °C", "−5 °C", "−10 °C", "−15 °C", "−20 °C",
-              "above −20 °C (elevated)"]
+# What the five isotherm levels say about the echo top, as a bracket. Radar samples only at
+# 0, -5, -10, -15 and -20 C, so the honest statement is "echo here, none at the next level
+# up" - the top lies between them. Index = echo-top level in the data file.
+TOP_LEVELS = ["No echo",
+              "Below the 0 °C level: no echo at any isotherm",
+              "Between 0 and −5 °C: echo at 0 °C, none at −5 °C",
+              "Between −5 and −10 °C: echo at −5 °C, none at −10 °C",
+              "Between −10 and −15 °C: echo at −10 °C, none at −15 °C",
+              "Between −15 and −20 °C: echo at −15 °C, none at −20 °C",
+              "Colder than −20 °C: echo at the −20 °C level",
+              "Only above the −20 °C level: elevated echo"]
 
 STATUS = {-1: ("No coverage", "#6B7785"), 0: ("Clear", "#3FB97A"),
           1: ("Watch", "#F2C14E"), 2: ("Violating", "#E5484D")}
@@ -357,11 +381,15 @@ def decode_crop(raw, fill):
     cols = np.where((lon_axis >= DOMAIN["lon_min"]) & (lon_axis <= DOMAIN["lon_max"]))[0]
     if rows.size == 0 or cols.size == 0:
         raise ValueError("domain not on this grid")
-    sub = vals[rows.min():rows.max() + 1, cols.min():cols.max() + 1]
-    la = lat_axis[rows.min():rows.max() + 1]
-    lo = lon_axis[cols.min():cols.max() + 1]
+    # .copy(), not a slice. A slice is a VIEW, and a view keeps its whole parent alive: every
+    # 200x200 crop was pinning the full 3500x7000 CONUS grid, 98 MB apiece. Twelve 2-D products
+    # held ~1.2 GB, and the 33-level volume would have added ~3.2 GB more - enough to get the
+    # run OOM-killed on a 7 GB runner. Found when the test harness itself was killed.
+    sub = vals[rows.min():rows.max() + 1, cols.min():cols.max() + 1].copy()
+    la = lat_axis[rows.min():rows.max() + 1].copy()
+    lo = lon_axis[cols.min():cols.max() + 1].copy()
     if la[0] < la[-1]:
-        sub, la = sub[::-1], la[::-1]
+        sub, la = sub[::-1].copy(), la[::-1].copy()
     return sub, la, lo, valid
 
 
@@ -379,6 +407,68 @@ def freezing_level(sess, prev, state_dir):
     np.save(path, z0.astype(np.float32))
     return z0, {"fetched": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 "valid": valid}, True
+
+
+def list_levels_3d(sess):
+    """[(directory name, height km)] from the /3DRefl/ index. Listed rather than hard-coded:
+    the exact directory spelling (zero-padding of the height) is not worth guessing."""
+    r = sess.get(ROOT3 + "/", timeout=60)
+    r.raise_for_status()
+    found = set(re.findall(r'href="(MergedReflectivityQC_(\d+\.\d+))/"', r.text))
+    return sorted(((n, float(h)) for n, h in found), key=lambda t: t[1])
+
+
+def fetch_volume(sess, levels, shape):
+    """The newest 3-D volume cropped to DOMAIN: (vol[L,ny,nx] float32, heights, valid, note).
+    Returns (None, ...) if too few levels could be read to trust it."""
+    vol, heights, valids, failed = [], [], set(), []
+    for name, h in levels:
+        url = f"{ROOT3}/{name}/MRMS_{name}.latest.grib2.gz"
+        try:
+            sub, _, _, v = decode_crop(fetch_url(sess, url), -999.0)
+        except Exception as e:
+            failed.append(f"{h:g}")
+            logging.warning(f"3-D {h:g} km: {type(e).__name__}: {e}")
+            continue
+        if sub.shape != shape:
+            failed.append(f"{h:g}")
+            continue
+        vol.append(sub)
+        heights.append(h)
+        if v:
+            valids.add(v)
+    if len(vol) < VOL_MIN_LEVELS:
+        return None, None, None, f"only {len(vol)} of {len(levels)} levels readable"
+    note = (f"{len(vol)} levels" + (f", failed {failed}" if failed else "")
+            + (f", {len(valids)} distinct valid times" if len(valids) > 1 else ""))
+    return np.stack(vol), np.array(heights), (max(valids) if valids else None), note
+
+
+def encode_volume(vol):
+    """uint8 per cell: dBZ*2 (0-252), 255 no echo, 254 no coverage."""
+    enc = np.where(vol >= 0, np.clip(np.round(vol * 2), 0, 252), VOL_NO_ECHO).astype(np.uint8)
+    enc[vol <= -900] = VOL_NO_COVER
+    return enc
+
+
+def column_base_top(enc):
+    """Echo base and top as level indices per column.
+
+    base: index of the lowest level with echo, +64 if any level below it is NO COVERAGE - the
+          true base may be lower than the radar can see. 255 = no echo in the column.
+    top:  index of the highest level with echo. 255 = no echo.
+    """
+    echo = enc <= 252
+    has = echo.any(axis=0)
+    L = enc.shape[0]
+    b = np.argmax(echo, axis=0)
+    t = L - 1 - np.argmax(echo[::-1], axis=0)
+    blind = np.zeros(has.shape, bool)
+    for k in range(L):
+        blind |= (enc[k] == VOL_NO_COVER) & (k < b)
+    base = np.where(has, b + np.where(blind, 64, 0), 255).astype(np.uint8)
+    top = np.where(has, t, 255).astype(np.uint8)
+    return base, top
 
 
 # --------------------------------------------------------------------------------------
@@ -507,28 +597,47 @@ def evaluate(F, z0, la, lo):
     return status, red_rules, yel_rules, cls, top, diag
 
 
+# Significance order for summarising what surrounds a pad. Deliberately NOT the class id:
+# the first version took the highest id inside the window, and since detached anvil has the
+# highest id, a few detached specks outranked a sky full of attached anvil and cores.
+CLASS_RANK = {"core": 7, "att": 6, "det": 5, "cu20": 4, "cu10": 3, "cu0": 2, "warm": 1}
+SPECK_PCT = 1.0      # classes covering less of the 10 nmi disc than this are not listed
+
+
 def pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo):
     out = {}
     dlat_km, dlon_km = _spacing(la, lo)
     win = _disc(10.0, dlat_km, dlon_km)
     hw = win.shape[0] // 2, win.shape[1] // 2
     names = {c["id"]: c["name"] for c in CLASSES}
+    keys = {c["id"]: c["key"] for c in CLASSES}
     for name, (plat, plon) in SITES.items():
         j = int(np.argmin(np.abs(la - plat)))
         i = int(np.argmin(np.abs(lo - plon)))
         j0, j1 = max(0, j - hw[0]), min(la.size, j + hw[0] + 1)
         i0, i1 = max(0, i - hw[1]), min(lo.size, i + hw[1] + 1)
-        box = F["comp"][j0:j1, i0:i1]
-        cbox = cls[j0:j1, i0:i1]
+        # A true 10 nmi disc, trimmed where the pad sits near the domain edge. The first
+        # version used the bounding square, whose corners reach ~14 nmi.
+        disc = win[(j0 - j + hw[0]):(j1 - j + hw[0]), (i0 - i + hw[1]):(i1 - i + hw[1])]
+        box = F["comp"][j0:j1, i0:i1][disc]
+        cbox = cls[j0:j1, i0:i1][disc]
         dbz10 = float(box.max()) if box.size and box.max() > -90 else None
-        # The most significant echo inside 10 nmi, by class id (higher = more significant).
-        worst = int(cbox.max()) if cbox.size else 0
+        present = []
+        for cid in np.unique(cbox):
+            cid = int(cid)
+            if cid == 0:
+                continue
+            pct = 100.0 * float((cbox == cid).sum()) / cbox.size
+            if pct >= SPECK_PCT:
+                present.append({"key": keys[cid], "name": names[cid], "pct": round(pct)})
+        present.sort(key=lambda c: -CLASS_RANK[c["key"]])
         out[name] = {
             "status": int(status[j, i]),
             "red": [k for k in RULE_KEYS if red_rules[k][j, i]],
             "yellow": [k for k in RULE_KEYS if yel_rules[k][j, i] and not red_rules[k][j, i]],
             "class_here": names[int(cls[j, i])],
-            "class_10nm": names[worst] if worst else None,
+            "classes_10nm": present,
+            "class_10nm": present[0]["name"] if present else None,
             "max_dbz_10nm": None if dbz10 is None or dbz10 < 0 else round(dbz10, 1),
             "nearest_echo_nm": round(float(diag["dist_echo_nm"][j, i]), 1),
             "lightning_10nm": bool(red_rules["lightning"][j, i]),
@@ -632,8 +741,8 @@ def render_layers(status, cls, F, diag, la, lo, stem):
     return paths
 
 
-def write_data(stem, status, cls, top, F, red_rules, yel_rules):
-    """Per-cell readout for the viewer: six uint8 planes, north-up, row-major.
+def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop=None):
+    """Per-cell readout for the viewer: eight uint8 planes, north-up, row-major.
 
         0 status + 1        (0 no coverage, 1 clear, 2 watch, 3 violating)
         1 cloud class id
@@ -641,6 +750,10 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules):
         3 echo-top level    (index into TOP_LEVELS)
         4 red rule bits     (bit n = RULE_KEYS[n])
         5 yellow rule bits
+        6 3-D echo base     (level index, +64 if the radar is blind below; 255 none; 253 no volume)
+        7 3-D echo top      (level index; 255 none; 253 no volume)
+
+    Older frames have only the first six; the viewer checks the length.
     """
     dbz = np.where(F["comp"] >= 0, np.clip(np.round(F["comp"] * 2), 0, 254), 255)
     rbits = np.zeros(status.shape, np.uint8)
@@ -648,8 +761,10 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules):
     for b, k in enumerate(RULE_KEYS):
         rbits |= (red_rules[k].astype(np.uint8) << b)
         ybits |= ((yel_rules[k] & ~red_rules[k]).astype(np.uint8) << b)
+    none = np.full(status.shape, VOL_NONE, np.uint8)
     planes = [(status + 1).astype(np.uint8), cls.astype(np.uint8), dbz.astype(np.uint8),
-              top.astype(np.uint8), rbits, ybits]
+              top.astype(np.uint8), rbits, ybits,
+              vbase if vbase is not None else none, vtop if vtop is not None else none]
     rel = f"{stem}.bin"
     with open(os.path.join(OUT_DIR, rel), "wb") as fp:
         fp.write(b"".join(p.tobytes() for p in planes))
@@ -659,7 +774,7 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules):
 # --------------------------------------------------------------------------------------
 # Frames
 # --------------------------------------------------------------------------------------
-def build_frame(sess, sources, z0):
+def build_frame(sess, sources, z0, levels=None):
     """One complete frame from a {key: url} mapping.
 
     Always returns (frame, la, lo). On failure all three are None - one shape on every path,
@@ -707,7 +822,26 @@ def build_frame(sess, sources, z0):
     stamp = valid.replace(":", "").replace("-", "")[:13]
     stem = f"frames/{stamp}"
     images = render_layers(status, cls, F, diag, la, lo, stem)
-    data = write_data(stem, status, cls, top, F, red_rules, yel_rules)
+
+    # The 3-D volume, for the newest frame only. Its failure never costs the 2-D frame.
+    vbase = vtop = vol_rel = vol_valid = None
+    vol_note = "not fetched"
+    if levels:
+        try:
+            vol, heights, vol_valid, vol_note = fetch_volume(sess, levels, (la.size, lo.size))
+            if vol is not None:
+                enc = encode_volume(vol)
+                vbase, vtop = column_base_top(enc)
+                vol_rel = f"{stem}.vol"
+                # gzip, under a plain extension so Pages serves it as bytes rather than
+                # setting Content-Encoding and decompressing it behind the viewer's back
+                with open(os.path.join(OUT_DIR, vol_rel), "wb") as fp:
+                    fp.write(gzip.compress(enc.tobytes(), compresslevel=6))
+                _VOL_LEVELS[:] = [float(h) for h in heights]
+        except Exception as e:
+            vol_note = f"failed: {type(e).__name__}: {e}"
+        logging.info(f"3-D volume: {vol_note}")
+    data = write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase, vtop)
 
     vt = [datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ")
           for v in valid_times.values() if v]
@@ -716,12 +850,17 @@ def build_frame(sess, sources, z0):
     cls_counts = {c["key"]: int((cls == c["id"]).sum()) for c in CLASSES}
     frame = {"valid": valid, "stamp": stamp, "images": images, "data": data,
              "pads": pads, "counts": counts, "class_counts": cls_counts,
-             "missing": missing, "skew_min": skew}
+             "missing": missing, "skew_min": skew,
+             "volume": vol_rel, "volume_valid": vol_valid, "volume_note": vol_note,
+             "freezing_km": round(float(np.nanmean(z0)) / 1000.0, 2)}
     red_pads = [n for n, p in pads.items() if p["status"] == 2]
     yel_pads = [n for n, p in pads.items() if p["status"] == 1]
     logging.info(f"frame {valid}: pads violating {red_pads or '-'} watch {yel_pads or '-'}; "
                  f"skew {skew} min" + (f"; missing {missing}" if missing else ""))
     return frame, la, lo
+
+
+_VOL_LEVELS = []     # heights of the levels in this run's volume, for the manifest
 
 
 def _nearest(items, t, tol_min):
@@ -890,8 +1029,13 @@ def main():
         logging.warning(f"freezing level unavailable ({e}); using 4,800 m")
         z0, fmeta, refreshed = None, {"fetched": None, "valid": None, "fallback": True}, False
 
+    try:
+        levels = list_levels_3d(sess)
+    except Exception as e:
+        logging.warning(f"3-D level list unavailable ({e}); this frame stays 2-D")
+        levels = None
     newest, la, lo = build_frame(sess, {k: latest_url(p) for k, (p, _, _) in PRODUCTS.items()},
-                                 z0)
+                                 z0, levels)
     if newest is None:
         logging.error("latest frame withheld; previous frames left in place")
         return
@@ -925,6 +1069,8 @@ def main():
     for f in frames:
         keep.update(os.path.basename(p) for p in f["images"].values())
         keep.add(os.path.basename(f["data"]))
+        if f.get("volume"):
+            keep.add(os.path.basename(f["volume"]))
     for fn in os.listdir(frame_dir):
         if fn not in keep:
             os.remove(os.path.join(frame_dir, fn))
@@ -949,6 +1095,7 @@ def main():
         "rule_keys": RULE_KEYS, "rules": RULE_NAMES, "rule_how": RULE_HOW,
         "watch_how": WATCH_HOW, "not_evaluated": NOT_EVALUATED, "rules_off": RULES_OFF,
         "classes": CLASSES, "class_note": CLASS_NOTE, "top_levels": TOP_LEVELS,
+        "levels_km": _VOL_LEVELS or prev.get("levels_km") or [],
         "status": {str(k): {"name": v[0], "color": v[1]} for k, v in STATUS.items()},
         "refl": {"levels": REFL_LEVELS, "colors": REFL_COLORS},
         "thresholds": LLCC, "standard": "NASA-STD-4010 (2017-06-27)",
