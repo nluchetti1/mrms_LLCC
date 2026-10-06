@@ -77,7 +77,7 @@ ROOT = "https://mrms.ncep.noaa.gov/2D"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v2"
+VIEWER_VERSION_EXPECTED = "mrms-v5"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -166,7 +166,38 @@ RULE_NAMES = {
     "disturbed":       "Disturbed weather (4.1.7)",
     "thick_layer":     "Thick cloud layer spanning 0 to −10 °C (4.1.8)",
 }
+# How each rule is tested on the radar grid, in the viewer's own words.
+RULE_HOW = {
+    "lightning":       "Any cloud-to-ground flash in the NLDN 30-minute density within 10 nmi.",
+    "cumulus_through": "The point itself is in cumulus (not anvil) echo reaching an isotherm "
+                       "level, or whose strongest return sits above the +5 °C height.",
+    "cumulus_5nm":     "Cumulus or cumulonimbus echo of 0 dBZ or more at the −10 °C level "
+                       "within 5 nmi. Anvil echo never counts, however cold it reaches.",
+    "cumulus_10nm":    "Cumulus or cumulonimbus echo of 0 dBZ or more at the −20 °C level "
+                       "within 10 nmi. Anvil echo never counts.",
+    "attached_anvil":  "An attached anvil cell within 3 nmi, unless the exception holds: no echo "
+                       "at the 0 °C level beneath any anvil within 5 nmi, and the largest "
+                       "reflectivity within 1 nmi below 7.5 dBZ. Also violated by an attached "
+                       "anvil within 10 nmi while lightning is within 10 nmi.",
+    "detached_anvil":  "A detached anvil cell within 3 nmi, with the same exception.",
+    "disturbed":       "The point is in echo whose top is colder than 0 °C, and there is 30 dBZ or "
+                       "more within 5 nmi.",
+    "thick_layer":     "The point has echo at both the 0 °C and −10 °C levels, a layer at least "
+                       "that deep (typically 5,000 to 6,000 ft here), and is not anvil.",
+}
+WATCH_HOW = ("Watch means no rule is broken, but one would be if its standoff were 2 nmi longer, "
+             "or there is a cloud-to-ground flash within 20 nmi.")
+
+# Rules deliberately not scored. Disturbed weather is applied to synoptic disturbances such as
+# fronts, which radar alone cannot identify; on radar the test reduced to "30 dBZ within
+# 5 nmi" and mislabelled convective scenes with a rule meant for something else. Measured
+# over a convective loop it never once made a cell red on its own, so dropping it changes no
+# colours - only removes a misleading reason.
+RULES_OFF = ["disturbed"]
+
 NOT_EVALUATED = [
+    "Disturbed weather (4.1.7) - applied to synoptic disturbances such as fronts, which radar "
+    "alone cannot identify",
     "Surface electric fields (4.1.2) and their field-mill exceptions",
     "Debris clouds (4.1.6), which need an observed detachment time",
     "Smoke plumes (4.1.9)",
@@ -177,15 +208,42 @@ NOT_EVALUATED = [
 # Cloud class, read off how far up the isotherm stack an echo reaches. These are what the
 # radar can actually say about an echo, and each maps onto the rules it drives.
 CLASSES = [
-    {"id": 0, "key": "clear",    "name": "No echo",                        "color": "#00000000"},
-    {"id": 1, "key": "warm",     "name": "Shallow shower, below freezing", "color": "#5E7FA3"},
-    {"id": 2, "key": "cu0",      "name": "Cumulus topping 0 to −10 °C",    "color": "#4FB3C9"},
-    {"id": 3, "key": "cu10",     "name": "Cumulus topping −10 to −20 °C",  "color": "#3D7FD9"},
-    {"id": 4, "key": "cu20",     "name": "Cumulus topping below −20 °C",   "color": "#5B4FD0"},
-    {"id": 5, "key": "core",     "name": "Convective core",                "color": "#D946A8"},
-    {"id": 6, "key": "att",      "name": "Attached anvil",                 "color": "#B892F2"},
-    {"id": 7, "key": "det",      "name": "Detached anvil",                 "color": "#E4D3FA"},
+    {"id": 0, "key": "clear", "name": "No echo", "color": "#00000000",
+     "how": "Composite reflectivity below 0 dBZ. No rule applies here."},
+    {"id": 1, "key": "warm", "name": "Shallow shower, below freezing", "color": "#5E7FA3",
+     "how": "Echo of 0 dBZ or more that shows up at none of the isotherm levels: the column's "
+            "strongest echo sits below the measured 0 °C height. Can still trip flight-through "
+            "cumulus if it reaches the +5 °C level, about 770 m below freezing."},
+    {"id": 2, "key": "cu0", "name": "Cumulus topping 0 to −10 °C", "color": "#4FB3C9",
+     "how": "The coldest isotherm level still carrying 0 dBZ or more is 0 °C or −5 °C."},
+    {"id": 3, "key": "cu10", "name": "Cumulus topping −10 to −20 °C", "color": "#3D7FD9",
+     "how": "The coldest isotherm level carrying echo is −10 °C or −15 °C. Drives the 5 nmi "
+            "cumulus standoff."},
+    {"id": 4, "key": "cu20", "name": "Cumulus topping below −20 °C", "color": "#5B4FD0",
+     "how": "Echo of 0 dBZ or more at the −20 °C level. Drives the 10 nmi cumulus standoff."},
+    {"id": 5, "key": "core", "name": "Convective core", "color": "#D946A8",
+     "how": "Composite reflectivity of 40 dBZ or more, or any vertically integrated ice. VII only "
+            "registers in strong cells, so it confirms a core rather than finding anvil. Takes "
+            "precedence over every other class."},
+    {"id": 6, "key": "att", "name": "Attached anvil", "color": "#B892F2",
+     "how": "Echo weaker than 40 dBZ that reaches the −20 °C level, or sits only aloft (its "
+            "strongest echo above the −20 °C height, or in the upper layer composite), and is "
+            "joined to a convective core by unbroken echo."},
+    {"id": 7, "key": "det", "name": "Detached anvil", "color": "#E4D3FA",
+     "how": "The same upper-level echo as an attached anvil, but with no unbroken path of echo "
+            "back to any convective core."},
 ]
+# Radar cannot reliably tell convective from layered cloud, so a broad stratiform shield that
+# reaches -20 C is classed as "cumulus topping below -20 C". The classes are named for the
+# rule each one drives, which is what the vertical reach of the echo decides.
+CLASS_NOTE = ("Classes come from how high the echo reaches through the isotherm levels, checked "
+              "in this order: core, attached anvil, detached anvil, then cumulus by depth, then "
+              "shallow shower. Once an anvil, always an anvil: anvil echo is scored only by the "
+              "anvil rules and never trips a cumulus standoff. The convective core is the "
+              "cumulonimbus tower and does count as cumulus, so a point near a core can still "
+              "be within a cumulus standoff because of the core. Radar cannot reliably tell "
+              "convective from layered cloud, so a broad rain shield reaching −20 °C is classed "
+              "with cumulus topping below −20 °C.")
 # Echo-top level, the vertical reach the class is built from.
 TOP_LEVELS = ["none", "below freezing", "0 °C", "−5 °C", "−10 °C", "−15 °C", "−20 °C",
               "above −20 °C (elevated)"]
@@ -388,18 +446,29 @@ def evaluate(F, z0, la, lo):
 
     lightning = F["cg"] > 0.0
 
+    # Once an anvil, always an anvil. Anvil echo is scored ONLY by the anvil rules - it is not
+    # cumulus, so it must never trip a cumulus standoff, however cold it reaches. The first
+    # version keyed every cumulus test on any echo at the isotherm, so an anvil point got
+    # scored as cumulus by its own anvil echo. The parent cumulonimbus tower IS cumulus, so a
+    # point near a core can still trip the cumulus rules - from the core, not the anvil.
+    anvil_any = attached | detached
+    cu_echo = echo & ~anvil_any
+    cu10 = e["r10"] & ~anvil_any
+    cu20 = e["r20"] & ~anvil_any
+
     def rules(m):
         lit = near(lightning, L["lightning_nm"] + m)
         return {
             "lightning":       lit,
-            "cumulus_through": near(echo & top_to_plus5, m),
-            "cumulus_5nm":     near(e["r10"], L["cumulus_5nm"] + m),
-            "cumulus_10nm":    near(e["r20"], L["cumulus_10nm"] + m),
+            "cumulus_through": near(cu_echo & top_to_plus5, m),
+            "cumulus_5nm":     near(cu10, L["cumulus_5nm"] + m),
+            "cumulus_10nm":    near(cu20, L["cumulus_10nm"] + m),
             "attached_anvil":  (near(attached, L["attached_3nm"] + m) & ~exception)
                                | (near(attached, L["attached_lightning_nm"] + m) & lit),
             "detached_anvil":  near(detached, L["detached_3nm"] + m) & ~exception,
-            "disturbed":       near(echo & top_below_0c, m)
-                               & near(comp >= L["disturbed_dbz"], L["disturbed_nm"] + m),
+            # Off: see RULES_OFF. Kept as an all-false grid so the bit layout of the per-cell
+            # data file does not shift under the frames already in the loop.
+            "disturbed":       np.zeros(comp.shape, bool),
             "thick_layer":     near(e["r0"] & e["r10"] & ~(attached | detached), m),
         }
 
@@ -690,6 +759,115 @@ def backfill_sources(sess, have_valid, newest_valid, cache, budget):
 
 
 # --------------------------------------------------------------------------------------
+# Animated GIF export
+# --------------------------------------------------------------------------------------
+GIF_SCALE = 0.5            # each panel at half size keeps a 12-frame loop around 1-2 MB
+GIF_FRAME_MS = 650
+GIF_HOLD_MS = 1600         # linger on the newest frame so the loop reads as "now"
+GIF_RINGS_NM = (3, 5, 10, 20)
+RING_LABEL_DEG = {3: -20, 5: 22, 10: 40, 20: 48}   # matched in web/index.html
+GIF_VARIANTS = {"status": "Status and radar", "class": "Cloud class and radar",
+                "overlay": "Status on radar"}
+
+
+def _font(size, bold=False):
+    from PIL import ImageFont
+    for name in (("DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf"),
+                 "/usr/share/fonts/truetype/dejavu/" + ("DejaVuSans-Bold.ttf" if bold
+                                                        else "DejaVuSans.ttf")):
+        try:
+            return ImageFont.truetype(name, size)
+        except Exception:
+            pass
+    try:
+        return ImageFont.load_default(size=size)
+    except Exception:
+        return ImageFont.load_default()
+
+
+def _rings(img):
+    """Range rings, drawn with the same Mercator geometry the viewer uses for its SVG."""
+    from PIL import ImageDraw
+    W, H = img.size
+    d = DOMAIN
+    psi = lambda x: np.log(np.tan(np.pi / 4 + np.radians(x) / 2))
+    clat = float(np.mean([p[0] for p in SITES.values()]))
+    clon = float(np.mean([p[1] for p in SITES.values()]))
+    cx = (clon - d["lon_min"]) / (d["lon_max"] - d["lon_min"]) * W
+    cy = (psi(d["lat_max"]) - psi(clat)) / (psi(d["lat_max"]) - psi(d["lat_min"])) * H
+    span = d["lon_max"] - d["lon_min"]
+    draw = ImageDraw.Draw(img)
+    f = _font(10)
+    for nm in GIF_RINGS_NM:
+        r = nm * 1.852 / (111.32 * np.cos(np.radians(clat))) / span * W
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(159, 178, 196, 150), width=1)
+        # Staggered angles: on one diagonal the 3 and 5 nmi labels land on top of each other.
+        a = np.radians(RING_LABEL_DEG.get(nm, 45))
+        draw.text((cx + r * np.cos(a) + 3, cy - r * np.sin(a) - 6), f"{nm} nmi", font=f,
+                  fill=(159, 178, 196, 210))
+    return img
+
+
+def build_gifs(frames):
+    """One looping GIF per view, oldest to newest, so a loop can be shared or briefed from.
+
+    Built on the server rather than in the browser: it is the same picture for everyone, it
+    needs no encoder shipped to the page, and it can be tested here.
+    """
+    from PIL import Image, ImageDraw
+    ordered = sorted(frames, key=lambda f: f["valid"])
+    if not ordered:
+        return {}
+    well = (17, 26, 37, 255)
+    out = {}
+    for variant, title in GIF_VARIANTS.items():
+        pics = []
+        for f in ordered:
+            def layer(k):
+                return Image.open(os.path.join(OUT_DIR, f["images"][k])).convert("RGBA")
+            try:
+                if variant == "overlay":
+                    stack = [[layer("radar"), layer("statusline")]]
+                else:
+                    stack = [[layer(variant)], [layer("radar")]]
+            except Exception as e:
+                logging.warning(f"gif {variant}: frame {f['valid']} unreadable ({e}); skipped")
+                continue
+            panels = []
+            for layers in stack:
+                base = Image.new("RGBA", layers[0].size, well)
+                for L_ in layers:
+                    base = Image.alpha_composite(base, L_)
+                w, h = base.size
+                small = base.resize((int(w * GIF_SCALE), int(h * GIF_SCALE)), Image.LANCZOS)
+                # Rings go on AFTER the downscale: drawn first, their labels shrank to ~5 px.
+                panels.append(_rings(small))
+            pw, ph = panels[0].size
+            gap, head = 8, 46
+            canvas = Image.new("RGBA", (pw * len(panels) + gap * (len(panels) - 1), ph + head),
+                               (20, 29, 41, 255))
+            for k, p in enumerate(panels):
+                canvas.alpha_composite(p, (k * (pw + gap), head))
+            dr = ImageDraw.Draw(canvas)
+            dr.text((10, 8), "CloudScope Radar", font=_font(17, True), fill=(232, 238, 243))
+            dr.text((10, 28), title, font=_font(11), fill=(159, 178, 196))
+            stamp = f["valid"][11:16] + "Z  " + datetime.datetime.strptime(
+                f["valid"][:10], "%Y-%m-%d").strftime("%a %d %b")
+            tf = _font(17, True)
+            tw = dr.textlength(stamp, font=tf) if hasattr(dr, "textlength") else 140
+            dr.text((canvas.width - tw - 10, 8), stamp, font=tf, fill=(232, 238, 243))
+            pics.append(canvas.convert("RGB").convert("P", palette=Image.ADAPTIVE, colors=160))
+        if not pics:
+            continue
+        rel = f"loop_{variant}.gif"
+        dur = [GIF_FRAME_MS] * (len(pics) - 1) + [GIF_HOLD_MS]
+        pics[0].save(os.path.join(OUT_DIR, rel), save_all=True, append_images=pics[1:],
+                     duration=dur, loop=0, disposal=2)
+        out[variant] = rel
+    return out
+
+
+# --------------------------------------------------------------------------------------
 def load_manifest():
     try:
         with open(os.path.join(OUT_DIR, "manifest.json")) as fp:
@@ -751,8 +929,16 @@ def main():
         if fn not in keep:
             os.remove(os.path.join(frame_dir, fn))
 
+    try:
+        gifs = build_gifs(frames)
+    except Exception as e:
+        # A failed export must never cost the frame itself.
+        logging.warning(f"GIF export failed: {type(e).__name__}: {e}")
+        gifs = {}
+
     manifest = {
         "generated": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "gifs": gifs,
         "viewer_expected": VIEWER_VERSION_EXPECTED,
         "valid": newest["valid"], "freezing": fmeta, "domain": DOMAIN,
         "grid": {"ny": int(la.size), "nx": int(lo.size), "lat_n": float(la[0]),
@@ -760,8 +946,9 @@ def main():
                  "dlon": abs(float(lo[1] - lo[0]))},
         "sites": {k: list(v) for k, v in SITES.items()},
         "frames": frames,
-        "rule_keys": RULE_KEYS, "rules": RULE_NAMES, "not_evaluated": NOT_EVALUATED,
-        "classes": CLASSES, "top_levels": TOP_LEVELS,
+        "rule_keys": RULE_KEYS, "rules": RULE_NAMES, "rule_how": RULE_HOW,
+        "watch_how": WATCH_HOW, "not_evaluated": NOT_EVALUATED, "rules_off": RULES_OFF,
+        "classes": CLASSES, "class_note": CLASS_NOTE, "top_levels": TOP_LEVELS,
         "status": {str(k): {"name": v[0], "color": v[1]} for k, v in STATUS.items()},
         "refl": {"levels": REFL_LEVELS, "colors": REFL_COLORS},
         "thresholds": LLCC, "standard": "NASA-STD-4010 (2017-06-27)",
