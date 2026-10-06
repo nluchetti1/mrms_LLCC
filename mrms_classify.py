@@ -78,7 +78,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v8"
+VIEWER_VERSION_EXPECTED = "mrms-v10"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -97,6 +97,14 @@ SITES = {
 }
 
 FRAMES_KEPT = 12             # the loop length
+
+# Detached-anvil ORIGIN. A detached anvil is an anvil that came from a convective core and has
+# separated from it - not merely floating echo with no core under it right now. The loop is the
+# evidence: echo counts as detached anvil only if it lies where an ATTACHED anvil was in a
+# recent frame, allowing for drift. Drift is set generously, so the error falls on the side of
+# calling something anvil rather than missing one.
+HISTORY_MIN = 60             # look back over the last hour of frames
+DRIFT_KMH = 60.0             # ~32 kt: how far an anvil may have moved since an earlier frame
 FRAME_SPACING_MIN = 5        # spacing of backfilled frames
 FREEZING_MAX_AGE_MIN = 70
 
@@ -195,8 +203,9 @@ RULE_HOW = {
     "detached_anvil":  "A detached anvil cell within 3 nmi, with the same exception.",
     "disturbed":       "The point is in echo whose top is colder than 0 °C, and there is 30 dBZ or "
                        "more within 5 nmi.",
-    "thick_layer":     "The point has echo at both the 0 °C and −10 °C levels, a layer at least "
-                       "that deep (typically 5,000 to 6,000 ft here), and is not anvil.",
+    "thick_layer":     "The point has echo at both ends of a 10-degree span inside the 0 to "
+                       "−20 °C band (0 and −10, −5 and −15, or −10 and −20 °C): a layer at least "
+                       "~5,000 ft deep. Not applied to anvil.",
 }
 WATCH_HOW = ("Watch means no rule is broken, but one would be if its standoff were 2 nmi longer, "
              "or there is a cloud-to-ground flash within 20 nmi.")
@@ -223,30 +232,37 @@ NOT_EVALUATED = [
 CLASSES = [
     {"id": 0, "key": "clear", "name": "No echo", "color": "#00000000",
      "how": "Composite reflectivity below 0 dBZ. No rule applies here."},
-    {"id": 1, "key": "warm", "name": "Shallow shower, below freezing", "color": "#5E7FA3",
+    {"id": 1, "key": "warm", "name": "Shallow shower, below freezing", "color": "#94A3B8",
      "how": "Echo of 0 dBZ or more that shows up at none of the isotherm levels: the column's "
             "strongest echo sits below the measured 0 °C height. Can still trip flight-through "
             "cumulus if it reaches the +5 °C level, about 770 m below freezing."},
-    {"id": 2, "key": "cu0", "name": "Cumulus topping 0 to −10 °C", "color": "#4FB3C9",
+    {"id": 2, "key": "cu0", "name": "Cumulus topping 0 to −10 °C", "color": "#22D3EE",
      "how": "Echo of 0 dBZ or more at the 0 °C level, but none at −10 °C, so the top lies "
             "somewhere between 0 and −10 °C."},
-    {"id": 3, "key": "cu10", "name": "Cumulus topping −10 to −20 °C", "color": "#3D7FD9",
+    {"id": 3, "key": "cu10", "name": "Cumulus topping −10 to −20 °C", "color": "#3B82F6",
      "how": "Echo at the −10 °C level, but none at −20 °C, so the top lies between −10 and "
             "−20 °C. Drives the 5 nmi cumulus standoff."},
-    {"id": 4, "key": "cu20", "name": "Cumulus topping below −20 °C", "color": "#5B4FD0",
+    {"id": 4, "key": "cu20", "name": "Cumulus topping below −20 °C", "color": "#A78BFA",
      "how": "Echo of 0 dBZ or more at the −20 °C level, so the top is colder than −20 °C. "
             "Drives the 10 nmi cumulus standoff."},
-    {"id": 5, "key": "core", "name": "Convective core", "color": "#D946A8",
+    {"id": 5, "key": "core", "name": "Convective core", "color": "#FF4FD8",
      "how": "Composite reflectivity of 40 dBZ or more, or any vertically integrated ice. VII only "
             "registers in strong cells, so it confirms a core rather than finding anvil. Takes "
             "precedence over every other class."},
-    {"id": 6, "key": "att", "name": "Attached anvil", "color": "#B892F2",
+    {"id": 6, "key": "att", "name": "Attached anvil", "color": "#FB923C",
      "how": "Echo weaker than 40 dBZ that reaches the −20 °C level, or sits only aloft (its "
             "strongest echo above the −20 °C height, or in the upper layer composite), and is "
             "joined to a convective core by unbroken echo."},
-    {"id": 7, "key": "det", "name": "Detached anvil", "color": "#E4D3FA",
-     "how": "The same upper-level echo as an attached anvil, but with no unbroken path of echo "
-            "back to any convective core."},
+    {"id": 7, "key": "det", "name": "Detached anvil", "color": "#F5F5F4",
+     "how": "An anvil that came from a convective core and has separated from it. Floating "
+            "upper-level echo, no echo at 0 °C beneath it, no unbroken path back to a core now - "
+            "and lying where an attached anvil was in the last hour, allowing ~32 kt of drift. "
+            "Unconnected echo rooted down through 0 °C is a tower and stays cumulus."},
+    {"id": 8, "key": "elev", "name": "Elevated layer, not convective", "color": "#C9A66B",
+     "how": "Floating echo above freezing with no convective origin in the last hour of the "
+            "loop: a mid- or upper-level layer cloud, not anvil. Scored by the thick-cloud-layer "
+            "rule when it spans about 4,500 ft of the 0 to −20 °C band, never by the anvil or "
+            "cumulus standoffs."},
 ]
 # Radar cannot reliably tell convective from layered cloud, so a broad stratiform shield that
 # reaches -20 C is classed as "cumulus topping below -20 C". The classes are named for the
@@ -275,12 +291,14 @@ TOP_LEVELS = ["No echo",
 STATUS = {-1: ("No coverage", "#6B7785"), 0: ("Clear", "#3FB97A"),
           1: ("Watch", "#F2C14E"), 2: ("Violating", "#E5484D")}
 
-# Standard reflectivity colours, plus a 0-5 dBZ band. Most tables start at 5, but every rule
-# here is gated at 0 dBZ, so the weakest echo the rules act on has to be visible.
-REFL_LEVELS = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 95]
-REFL_COLORS = ["#5D7387", "#04E9E7", "#019FF4", "#0300F4", "#02FD02", "#01C501", "#008E00",
-               "#FDF802", "#E5BC00", "#FD9500", "#FD0000", "#D40000", "#BC0000", "#F800FD",
-               "#9854C6", "#FDFDFD"]
+# Reflectivity colours with the bottom bin at 0 dBZ, as 45 WS displays it: the standard table
+# shifted down 5 dB so cyan starts at 0. Every rule here is gated on 0 dBZ, so the weakest echo
+# that matters is the first colour on the scale. (The earlier grey 0-5 band read as missing
+# data.)
+REFL_LEVELS = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 95]
+REFL_COLORS = ["#04E9E7", "#019FF4", "#0300F4", "#02FD02", "#01C501", "#008E00", "#FDF802",
+               "#E5BC00", "#FD9500", "#FD0000", "#D40000", "#BC0000", "#F800FD", "#9854C6",
+               "#FDFDFD"]
 
 # Map chrome, tuned for the dark viewer. Layers are rendered on a transparent background so
 # they can be stacked: the panel behind them supplies the colour.
@@ -489,7 +507,41 @@ def _disc(nm, dlat_km, dlon_km):
     return np.hypot(jj * dlat_km, ii * dlon_km) <= km
 
 
-def evaluate(F, z0, la, lo):
+def attached_history(frames, valid_iso, la, lo):
+    """Where attached anvil has been in the last HISTORY_MIN minutes, grown by drift.
+
+    Read from the class plane of earlier frames' data files. Returns None when no earlier frame
+    is available at all - evaluate() then falls back to the conservative behaviour.
+    """
+    t = datetime.datetime.strptime(valid_iso, "%Y-%m-%dT%H:%M:%SZ")
+    dlat_km, dlon_km = _spacing(la, lo)
+    n = la.size * lo.size
+    seen, union = False, np.zeros((la.size, lo.size), bool)
+    for f in frames:
+        try:
+            dt = (t - datetime.datetime.strptime(f["valid"], "%Y-%m-%dT%H:%M:%SZ")
+                  ).total_seconds() / 60.0
+        except Exception:
+            continue
+        if not (0 < dt <= HISTORY_MIN):
+            continue
+        path = os.path.join(OUT_DIR, f.get("data", ""))
+        try:
+            raw = np.fromfile(path, np.uint8)
+        except Exception:
+            continue
+        if raw.size < 2 * n:
+            continue
+        seen = True
+        att = raw[n:2 * n].reshape(la.size, lo.size) == 6
+        if att.any():
+            r_nm = DRIFT_KMH * dt / 60.0 / 1.852
+            union |= maximum_filter(att.astype(np.uint8),
+                                    footprint=_disc(r_nm, dlat_km, dlon_km)) > 0
+    return union if seen else None
+
+
+def evaluate(F, z0, la, lo, history=None):
     """Traffic light, per-rule grids, cloud class and echo-top level for every cell."""
     L = LLCC
     dlat_km, dlon_km = _spacing(la, lo)
@@ -525,7 +577,24 @@ def evaluate(F, z0, la, lo):
         has_core[np.unique(lab[core])] = True
         has_core[0] = False
     attached = anvil & has_core[lab]
-    detached = anvil & ~has_core[lab]
+    # Detached anvil is a FLOATING ice cloud. Unconnected echo that is rooted - with echo down
+    # through the 0 C level - is a tower, not an anvil, and stays cumulus. The first version
+    # called every unconnected -20 C echo a detached anvil, so "cumulus topping below -20 C"
+    # could never occur and a 25 dBZ tower with no core nearby got a 3 nmi anvil standoff
+    # instead of the 10 nmi cumulus one: the unsafe direction. A decayed shield that is still
+    # raining out now reads as cumulus - the more conservative call - until loop history can
+    # keep it anvil properly.
+    floating = anvil & ~has_core[lab] & ~e["r0"]
+    # Origin: floating echo is a detached anvil only where an attached anvil was recently
+    # (the drift-grown history mask). With no history at all - the first runs after deploying
+    # - fall back to calling it detached anvil, the conservative choice.
+    if history is None:
+        detached = floating
+        elevated = np.zeros(comp.shape, bool)
+    else:
+        detached = floating & history
+        elevated = floating & ~history
+    anvil = attached | detached
 
     # LLCCR 18 exception, CONSERVATIVE: any echo at the 0 C slice under an anvil within 5 nmi
     # fails it, because radar cannot separate the anvil from the precipitation it drops.
@@ -542,9 +611,16 @@ def evaluate(F, z0, la, lo):
     # scored as cumulus by its own anvil echo. The parent cumulonimbus tower IS cumulus, so a
     # point near a core can still trip the cumulus rules - from the core, not the anvil.
     anvil_any = attached | detached
-    cu_echo = echo & ~anvil_any
-    cu10 = e["r10"] & ~anvil_any
-    cu20 = e["r20"] & ~anvil_any
+    # An elevated layer is not cumulus either: it must not drive a cumulus standoff.
+    not_cu = anvil_any | elevated
+    cu_echo = echo & ~not_cu
+    cu10 = e["r10"] & ~not_cu
+    cu20 = e["r20"] & ~not_cu
+    # Thick cloud layer: echo spanning at least ~4,500 ft inside the 0 to -20 C band. Adjacent
+    # isotherm slices 10 C apart are ~1.5 km (~5,000 ft) apart, so echo at both ends of any
+    # 10-degree span counts. The first version only tested 0 to -10 C, so an elevated layer
+    # spanning -5 to -15 C was never scored at all.
+    thick = ((e["r0"] & e["r10"]) | (e["r5"] & e["r15"]) | (e["r10"] & e["r20"])) & ~anvil_any
 
     def rules(m):
         lit = near(lightning, L["lightning_nm"] + m)
@@ -559,7 +635,7 @@ def evaluate(F, z0, la, lo):
             # Off: see RULES_OFF. Kept as an all-false grid so the bit layout of the per-cell
             # data file does not shift under the frames already in the loop.
             "disturbed":       np.zeros(comp.shape, bool),
-            "thick_layer":     near(e["r0"] & e["r10"] & ~(attached | detached), m),
+            "thick_layer":     near(thick, m),
         }
 
     red_rules = rules(0.0)
@@ -585,14 +661,16 @@ def evaluate(F, z0, la, lo):
     cls[(top == 2) | (top == 3)] = 2
     cls[(top == 4) | (top == 5)] = 3
     cls[top == 6] = 4
-    cls[top == 7] = 7            # elevated echo with no core under it is detached until joined
+    cls[top == 7] = 7 if history is None else 8   # aloft-only echo: detached or elevated layer
+    cls[elevated] = 8
     cls[detached] = 7
     cls[attached] = 6
     cls[core] = 5
     cls[~echo] = 0
 
     dist_km = distance_transform_edt(~echo, sampling=(dlat_km, dlon_km))
-    diag = {"attached": attached, "detached": detached, "core": core, "echo": echo,
+    diag = {"attached": attached, "detached": detached, "elevated": elevated,
+            "core": core, "echo": echo,
             "dist_echo_nm": dist_km / 1.852, "lightning": lightning}
     return status, red_rules, yel_rules, cls, top, diag
 
@@ -600,7 +678,8 @@ def evaluate(F, z0, la, lo):
 # Significance order for summarising what surrounds a pad. Deliberately NOT the class id:
 # the first version took the highest id inside the window, and since detached anvil has the
 # highest id, a few detached specks outranked a sky full of attached anvil and cores.
-CLASS_RANK = {"core": 7, "att": 6, "det": 5, "cu20": 4, "cu10": 3, "cu0": 2, "warm": 1}
+CLASS_RANK = {"core": 8, "att": 7, "det": 6, "cu20": 5, "cu10": 4, "elev": 3, "cu0": 2,
+              "warm": 1}
 SPECK_PCT = 1.0      # classes covering less of the 10 nmi disc than this are not listed
 
 
@@ -774,7 +853,7 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
 # --------------------------------------------------------------------------------------
 # Frames
 # --------------------------------------------------------------------------------------
-def build_frame(sess, sources, z0, levels=None):
+def build_frame(sess, sources, z0, levels=None, prior=None):
     """One complete frame from a {key: url} mapping.
 
     Always returns (frame, la, lo). On failure all three are None - one shape on every path,
@@ -815,7 +894,9 @@ def build_frame(sess, sources, z0, levels=None):
     if z0 is None or z0.shape != (la.size, lo.size):
         z0 = np.full((la.size, lo.size), 4800.0, np.float32)
 
-    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo)
+    valid0 = valid_times.get("comp") or max((v for v in valid_times.values() if v), default=None)
+    history = attached_history(prior or [], valid0, la, lo) if valid0 else None
+    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history)
     pads = pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo)
 
     valid = valid_times.get("comp") or max((v for v in valid_times.values() if v), default=None)
@@ -1035,7 +1116,7 @@ def main():
         logging.warning(f"3-D level list unavailable ({e}); this frame stays 2-D")
         levels = None
     newest, la, lo = build_frame(sess, {k: latest_url(p) for k, (p, _, _) in PRODUCTS.items()},
-                                 z0, levels)
+                                 z0, levels, prior=prev.get("frames", []))
     if newest is None:
         logging.error("latest frame withheld; previous frames left in place")
         return
@@ -1054,7 +1135,7 @@ def main():
             if time.monotonic() - t0 > BACKFILL_BUDGET_S:
                 logging.info("backfill budget spent; the rest fill on later runs")
                 break
-            frame, _, _ = build_frame(sess, src, z0)
+            frame, _, _ = build_frame(sess, src, z0, prior=frames)
             if frame is not None:
                 frames.append(frame)
                 done += 1
