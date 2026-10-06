@@ -170,6 +170,15 @@
   .def b{font-weight:600}
   .def p{grid-column:2; margin:0; color:var(--steel); font-size:14px; line-height:1.45}
   .ro-how{color:var(--steel); font-size:13.5px; line-height:1.45; margin:-4px 0 12px}
+  .xs{margin-top:14px}
+  .xswrap{position:relative; background:var(--well); border-radius:4px; line-height:0}
+  #xs-canvas{display:block; width:100%; height:320px}
+  .xsmsg{position:absolute; inset:0; display:grid; place-items:center; color:var(--steel);
+         font-size:14px; line-height:1.4; padding:20px; text-align:center; pointer-events:none}
+  .xsline{stroke:#FFFFFF; stroke-width:2; vector-effect:non-scaling-stroke; stroke-dasharray:6 4}
+  .xsend{fill:#FFFFFF; stroke:#141D29; stroke-width:1.5; vector-effect:non-scaling-stroke}
+  .xslbl{fill:#FFFFFF; font:600 13px "Barlow Condensed",sans-serif; paint-order:stroke;
+         stroke:#141D29; stroke-width:3px}
   footer{margin-top:22px; padding-top:12px; border-top:1px solid var(--line); color:var(--dim);
          font-size:13.5px; max-width:86ch}
   footer p{margin:0 0 8px}
@@ -202,6 +211,7 @@
     <button id="v-pair" aria-pressed="true">Side by side</button>
     <button id="v-over" aria-pressed="false">Overlay on radar</button>
   </div>
+  <div class="seg"><button id="xs-btn" aria-pressed="false" title="Tap two points on either map">Cross-section</button></div>
   <label class="chk"><input type="checkbox" id="rings" checked> Range rings</label>
   <a class="export" id="gif" download hidden>Export GIF</a>
 </div>
@@ -237,6 +247,13 @@
   <div class="now" id="now">--:--Z</div>
 </div>
 
+<section class="panel xs" id="xs-panel" hidden>
+  <h3><span>Vertical cross-section</span><small id="xs-sub">tap a start point on either map</small></h3>
+  <div class="xswrap"><canvas id="xs-canvas" height="320"></canvas>
+    <div class="xsmsg" id="xs-msg"></div></div>
+  <div class="scale" id="xs-legend"></div>
+</section>
+
 <div class="lower">
   <section class="poll">
     <div class="head"><h3>Pads</h3><div class="tally" id="tally"></div></div>
@@ -255,7 +272,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v5";
+const VIEWER_VERSION = "mrms-v8";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -268,6 +285,8 @@ const SHORT = {
 
 let M = null, idx = 0, timer = null, STAMP = "", mode = "status", view = "pair", pin = null;
 let firstLoad = true;
+let xsOn = false, xsA = null, xsB = null;
+const VOLS = {};
 const DATA = {};
 const $ = id => document.getElementById(id);
 const bust = u => u + (u.includes("?") ? "&" : "?") + "v=" + STAMP;
@@ -341,6 +360,7 @@ function show(i){
   $("now").textContent = hhmm(f.valid);
   pads(f);
   if (pin) readout(pin.lat, pin.lon, pin.label);
+  if (xsOn) drawSection();
 }
 
 // ---- geometry: the PNGs are Mercator with the axes filling the figure ------------------
@@ -378,6 +398,17 @@ function drawSvg(svgId, imgId){
       out += `<text class="ringlbl" x="${cx * W + r * Math.cos(a) + 4}" y="${cy * H - r * Math.sin(a) + 4}">${nm} nmi</text>`;
     });
   }
+  if (xsA){
+    const [ax, ay] = toFrac(xsA.lat, xsA.lon);
+    if (xsB){
+      const [bx, by] = toFrac(xsB.lat, xsB.lon);
+      out += `<line class="xsline" x1="${ax * W}" y1="${ay * H}" x2="${bx * W}" y2="${by * H}"/>
+              <circle class="xsend" cx="${bx * W}" cy="${by * H}" r="5"/>
+              <text class="xslbl" x="${bx * W + 8}" y="${by * H - 6}">B</text>`;
+    }
+    out += `<circle class="xsend" cx="${ax * W}" cy="${ay * H}" r="5"/>
+            <text class="xslbl" x="${ax * W + 8}" y="${ay * H - 6}">A</text>`;
+  }
   if (pin){
     const [px, py] = toFrac(pin.lat, pin.lon);
     const x = px * W, y = py * H;
@@ -408,6 +439,13 @@ function onTap(ev){
   const fx = Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width));
   const fy = Math.min(1, Math.max(0, (ev.clientY - r.top) / r.height));
   const [lat, lon] = fromFrac(fx, fy);
+  if (xsOn){
+    // first tap is A, second is B, a third starts a new line
+    if (!xsA || xsB){ xsA = {lat, lon}; xsB = null; }
+    else { xsB = {lat, lon}; }
+    redraw(); drawSection();
+    return;
+  }
   pin = {lat, lon, label: null};
   readout(lat, lon, null); redraw();
 }
@@ -420,6 +458,19 @@ function getData(f){
   DATA[f.data] = fetch(bust(f.data)).then(r => r.arrayBuffer())
     .then(b => (DATA[f.data] = new Uint8Array(b)));
   return DATA[f.data];
+}
+
+// Measured echo base and top from the 3-D volume, when this frame has one.
+const KFT = km => Math.round(km * 3.28084 * 10) / 10;
+function volRows(d, n, c){
+  if (d.length < 8 * n) return "";
+  const b = d[6 * n + c], t = d[7 * n + c], L = M.levels_km || [];
+  if (b === 253) return `<dt>3-D</dt><dd style="color:var(--dim)">No volume for this frame</dd>`;
+  if (b === 255) return `<dt>3-D</dt><dd>No echo in the column</dd>`;
+  const bk = L[b & 63], tk = L[t];
+  const blind = (b & 64) ? " (radar cannot see lower here)" : "";
+  return `<dt>Echo base</dt><dd>${bk} km, ${KFT(bk)} kft${blind}</dd>
+          <dt>Echo top</dt><dd>${tk} km, ${KFT(tk)} kft</dd>`;
 }
 
 function readout(lat, lon, label){
@@ -447,8 +498,13 @@ function readout(lat, lon, label){
       <div class="ro-how">${C.how || ""}</div>
       <dl>
         <dt>Composite</dt><dd>${dbz === 255 ? "no echo" : (dbz / 2).toFixed(1) + " dBZ"}</dd>
-        <dt>Echo reaches</dt><dd>${M.top_levels[top]}</dd>
+        <dt>Echo top</dt><dd>${M.top_levels[top]}</dd>
+        ${volRows(d, n, c)}
       </dl>
+      ${cls >= 1 && cls <= 4 && ((red.includes("cumulus_5nm") && top < 4) ||
+                                 (red.includes("cumulus_10nm") && top < 6)) ?
+        `<div class="ro-how">This point's own echo does not reach that level. The cumulus
+         standoff comes from colder cumulus nearby.</div>` : ""}
       ${(cls === 6 || cls === 7) && red.some(k => k.startsWith("cumulus")) ?
         `<div class="ro-how">This point is anvil, which is never scored as cumulus. The cumulus
          rules here come from a cumulonimbus core within their standoff, not from this anvil.</div>` : ""}
@@ -459,7 +515,167 @@ function readout(lat, lon, label){
   });
 }
 
+// ---- vertical cross-section ----------------------------------------------------------
+function getVol(f){
+  if (!f.volume) return Promise.resolve(null);
+  if (VOLS[f.volume] instanceof Uint8Array) return Promise.resolve(VOLS[f.volume]);
+  if (VOLS[f.volume]) return VOLS[f.volume];
+  VOLS[f.volume] = fetch(bust(f.volume)).then(r => r.arrayBuffer()).then(async buf => {
+    let b = new Uint8Array(buf);
+    // gzip magic: decompress here. If a server already did it, use the bytes as they are.
+    if (b[0] === 0x1f && b[1] === 0x8b){
+      if (typeof DecompressionStream === "undefined") throw new Error("browser cannot gunzip");
+      const ds = new Blob([b]).stream().pipeThrough(new DecompressionStream("gzip"));
+      b = new Uint8Array(await new Response(ds).arrayBuffer());
+    }
+    return (VOLS[f.volume] = b);
+  });
+  return VOLS[f.volume];
+}
+
+function reflColor(dbz){
+  const R = M.refl;
+  for (let k = R.levels.length - 2; k >= 0; k--) if (dbz >= R.levels[k]) return R.colors[k];
+  return null;
+}
+
+function kmBetween(a, b){
+  const k = Math.cos((a.lat + b.lat) / 2 * Math.PI / 180);
+  return Math.hypot((b.lat - a.lat) * 111.32, (b.lon - a.lon) * 111.32 * k);
+}
+
+async function drawSection(){
+  const panel = $("xs-panel"), cv = $("xs-canvas"), msg = $("xs-msg");
+  panel.hidden = !xsOn;
+  if (!xsOn) return;
+  const f = frameAt(idx);
+  if (!xsA || !xsB){
+    $("xs-sub").textContent = xsA ? "now tap the end point" : "tap a start point on either map";
+    msg.textContent = xsA ? "Tap a second point to draw the section." :
+      "Tap two points on either map to draw a vertical cross-section between them.";
+    cv.getContext("2d").clearRect(0, 0, cv.width, cv.height);
+    return;
+  }
+  const km = kmBetween(xsA, xsB);
+  $("xs-sub").textContent = `A to B, ${(km / 1.852).toFixed(1)} nmi, frame ${hhmm(f.valid)}`;
+  let vol, dat;
+  try { [vol, dat] = await Promise.all([getVol(f), getData(f)]); }
+  catch (e){ msg.textContent = "Could not load this frame's volume (" + e.message + ")."; return; }
+  if (frameAt(idx) !== f) return;            // the user moved on while it loaded
+  if (!vol){
+    msg.textContent = "No 3-D volume for this frame. Only the newest frame of each run gets " +
+      "one, so the loop fills in as runs go by; archive-filled frames are 2-D.";
+    cv.getContext("2d").clearRect(0, 0, cv.width, cv.height);
+    return;
+  }
+  msg.textContent = "";
+
+  const g = M.grid, n = g.ny * g.nx, H = M.levels_km, L = H.length;
+  const dpr = window.devicePixelRatio || 1;
+  const Wc = cv.clientWidth, Hc = 320;
+  cv.width = Wc * dpr; cv.height = Hc * dpr;
+  const x = cv.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  x.clearRect(0, 0, Wc, Hc);
+  const pl = 46, pr = 50, pt = 26, pb = 34, PW = Wc - pl - pr, PH = Hc - pt - pb;
+  const ZMAX = 16;
+  const yOf = z => pt + PH * (1 - Math.min(z, ZMAX) / ZMAX);
+
+  const N = Math.max(2, Math.min(400, Math.ceil(km / 0.5)));
+  const cols = [];
+  for (let s = 0; s < N; s++){
+    const t = (s + 0.5) / N;
+    const lat = xsA.lat + (xsB.lat - xsA.lat) * t, lon = xsA.lon + (xsB.lon - xsA.lon) * t;
+    const j = Math.round((g.lat_n - lat) / g.dlat), i = Math.round((lon - g.lon_w) / g.dlon);
+    cols.push(j >= 0 && i >= 0 && j < g.ny && i < g.nx ? j * g.nx + i : -1);
+  }
+  const sw = PW / N;
+  // level bands: each level owns the space halfway to its neighbours
+  const lo = k => k === 0 ? Math.max(0, H[0] - (H[1] - H[0]) / 2) : (H[k - 1] + H[k]) / 2;
+  const hi = k => k === L - 1 ? H[k] + (H[k] - H[k - 1]) / 2 : (H[k] + H[k + 1]) / 2;
+  for (let s = 0; s < N; s++){
+    const c = cols[s]; if (c < 0) continue;
+    const x0 = pl + s * sw;
+    for (let k = 0; k < L; k++){
+      const v = vol[k * n + c];
+      if (v === 255) continue;
+      x.fillStyle = v === 254 ? "#26313F" : (reflColor(v / 2) || "#26313F");
+      const y1 = yOf(hi(k)), y0 = yOf(lo(k));
+      x.fillRect(x0, y1, Math.ceil(sw) + 0.5, y0 - y1 + 0.5);
+    }
+    // traffic light and class along the line, as strips above the section
+    x.fillStyle = M.status[String(dat[c] - 1)].color; x.fillRect(x0, 4, Math.ceil(sw) + 0.5, 7);
+    const cl = M.classes[dat[n + c]];
+    if (dat[n + c] > 0){ x.fillStyle = cl.color; x.fillRect(x0, 13, Math.ceil(sw) + 0.5, 7); }
+  }
+
+  // axes
+  x.strokeStyle = "#3A4B61"; x.lineWidth = 1; x.fillStyle = "#9FB2C4";
+  x.font = '500 11.5px "Barlow", sans-serif';
+  x.textAlign = "right";
+  for (let z = 0; z <= ZMAX; z += 2){
+    const y = yOf(z);
+    x.beginPath(); x.moveTo(pl, y + 0.5); x.lineTo(pl + PW, y + 0.5);
+    x.globalAlpha = 0.25; x.stroke(); x.globalAlpha = 1;
+    x.fillText(z + " km", pl - 6, y + 4);
+  }
+  x.textAlign = "left";
+  for (let kft = 0; kft <= ZMAX * 3.28084; kft += 10){
+    x.fillText(kft + " kft", pl + PW + 6, yOf(kft / 3.28084) + 4);
+  }
+  // isotherms
+  const z0 = f.freezing_km || 4.8, z20 = z0 + 20 / 6.5;
+  [[z0, "0 °C"], [z20, "−20 °C"]].forEach(([z, lbl]) => {
+    const y = yOf(z);
+    x.setLineDash([5, 4]); x.strokeStyle = "#E8EEF3"; x.globalAlpha = 0.8;
+    x.beginPath(); x.moveTo(pl, y + 0.5); x.lineTo(pl + PW, y + 0.5); x.stroke();
+    x.setLineDash([]); x.globalAlpha = 1;
+    x.fillStyle = "#E8EEF3"; x.textAlign = "left"; x.fillText(lbl, pl + 6, y - 4);
+  });
+  // distance axis
+  x.fillStyle = "#9FB2C4"; x.textAlign = "center";
+  const nmi = km / 1.852, step = nmi > 40 ? 10 : nmi > 15 ? 5 : 2;
+  for (let d = 0; d <= nmi + 1e-6; d += step){
+    const xx = pl + PW * (d / nmi);
+    x.fillRect(xx, pt + PH, 1, 5); x.fillText(d + " nmi", xx, pt + PH + 17);
+  }
+  x.textAlign = "left";  x.fillStyle = "#E8EEF3"; x.font = '600 13px "Barlow Condensed", sans-serif';
+  x.fillText("A", pl - 2, Hc - 4); x.textAlign = "right"; x.fillText("B", pl + PW + 2, Hc - 4);
+  // pads within 2.5 km of the line
+  x.textAlign = "center"; x.font = '600 11px "Barlow Condensed", sans-serif';
+  Object.entries(M.sites).forEach(([name, [la, lo2]]) => {
+    const k = Math.cos(la * Math.PI / 180);
+    const ax = (xsB.lon - xsA.lon) * 111.32 * k, ay = (xsB.lat - xsA.lat) * 111.32;
+    const px = (lo2 - xsA.lon) * 111.32 * k, py = (la - xsA.lat) * 111.32;
+    const t = (px * ax + py * ay) / (ax * ax + ay * ay);
+    if (t < 0 || t > 1) return;
+    if (Math.hypot(px - t * ax, py - t * ay) > 2.5) return;
+    const xx = pl + PW * t, yy = pt + PH;
+    x.fillStyle = "#E8EEF3";
+    x.beginPath(); x.moveTo(xx, yy - 9); x.lineTo(xx - 5, yy); x.lineTo(xx + 5, yy); x.fill();
+    x.fillText(name, xx, yy - 12);
+  });
+  $("xs-legend").innerHTML =
+    `<span><i style="background:var(--red)"></i>Top strip: status along the line</span>` +
+    `<span><i style="background:#B892F2"></i>Second strip: cloud class</span>` +
+    `<span><i style="background:#26313F"></i>Radar cannot see this low</span>` +
+    `<span>Isotherms: 0 °C from the model freezing level, −20 °C estimated at 6.5 °C/km</span>`;
+}
+addEventListener("resize", () => { if (xsOn) drawSection(); });
+
 // ---- pads -----------------------------------------------------------------------------
+// Most significant first, each with its share of the 10 nmi disc, specks under 1% dropped.
+// Falls back to the single label for frames built before the breakdown existed.
+const SHORTCLASS = {core: "core", att: "attached anvil", det: "detached anvil",
+  cu20: "cumulus below −20 °C", cu10: "cumulus −10 to −20 °C", cu0: "cumulus 0 to −10 °C",
+  warm: "shallow shower"};
+function padClasses(p){
+  if (p.classes_10nm){
+    if (!p.classes_10nm.length) return "No echo within 10 nmi";
+    return "Within 10 nmi: " + p.classes_10nm.slice(0, 3)
+      .map(c => `${SHORTCLASS[c.key] || lcFirst(c.name)} ${c.pct}%`).join(", ");
+  }
+  return p.class_10nm ? "Within 10 nmi: " + lcFirst(p.class_10nm) : "No echo within 10 nmi";
+}
 function pads(f){
   const P = f.pads || {};
   const t = {"2": 0, "1": 0, "0": 0};
@@ -478,7 +694,7 @@ function pads(f){
     return `<div class="row" data-pad="${name}" tabindex="0">
       <span class="lamp s${p.status}"></span>
       <span class="pname">${name}</span>
-      <span class="pclass">${p.class_10nm ? "Within 10 nmi: " + lcFirst(p.class_10nm) : "No echo within 10 nmi"}</span>
+      <span class="pclass">${padClasses(p)}</span>
       <span class="pnum">${num.join("&ensp;")}</span>
       ${reason ? `<span class="reason s${p.status}">${reason}</span>` : ""}
     </div>`;
@@ -575,6 +791,13 @@ $("v-over").onclick = () => { view = "over"; press("v-over", "v-pair");
   mode = "status"; press("m-status", "m-class");
   $("maps").classList.add("overlay"); $("p-right").hidden = true; legendLeft(); gifLink(); show(idx); };
 $("rings").onchange = redraw;
+$("xs-btn").onclick = () => {
+  xsOn = !xsOn;
+  $("xs-btn").setAttribute("aria-pressed", String(xsOn));
+  if (!xsOn){ xsA = xsB = null; }
+  redraw(); drawSection();
+  if (xsOn) $("xs-panel").scrollIntoView({behavior: "smooth", block: "nearest"});
+};
 
 function start(){ $("play").textContent = "Pause";
   timer = setInterval(() => show((idx + 1) % M.frames.length), 700); }
