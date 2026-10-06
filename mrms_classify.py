@@ -78,7 +78,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v10"
+VIEWER_VERSION_EXPECTED = "mrms-v11"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -235,7 +235,7 @@ CLASSES = [
     {"id": 1, "key": "warm", "name": "Shallow shower, below freezing", "color": "#94A3B8",
      "how": "Echo of 0 dBZ or more that shows up at none of the isotherm levels: the column's "
             "strongest echo sits below the measured 0 °C height. Can still trip flight-through "
-            "cumulus if it reaches the +5 °C level, about 770 m below freezing."},
+            "cumulus if it reaches the +5 °C level, taken from the XMR model sounding."},
     {"id": 2, "key": "cu0", "name": "Cumulus topping 0 to −10 °C", "color": "#22D3EE",
      "how": "Echo of 0 dBZ or more at the 0 °C level, but none at −10 °C, so the top lies "
             "somewhere between 0 and −10 °C."},
@@ -411,6 +411,135 @@ def decode_crop(raw, fill):
     return sub, la, lo, valid
 
 
+# --------------------------------------------------------------------------------------
+# Isotherm heights from the XMR model sounding (Penn State BUFKIT)
+# --------------------------------------------------------------------------------------
+# Measured 6 Oct 2026: the +5 C and -20 C heights had been estimated from the MRMS freezing
+# level and an assumed 6.5 C/km lapse rate. The HRRR and RAP soundings over XMR put the 0 to
+# -20 C lapse at 5.9 and 5.2 C/km, which placed -20 C some 600 m (2,000 ft) higher than the
+# estimate - and that height decides whether echo counts as "aloft only" for the anvil. These
+# are MODEL soundings, not the balloon, but they exist every hour; the raob does not.
+#
+# PSU's robots policy discourages automated traffic, so both files are fetched at most once an
+# hour and cached - the rate they update anyway.
+BUFKIT = [("HRRR", "https://www.meteo.psu.edu/bufkit/data/HRRR/latest/hrrr_xmr.buf"),
+          ("RAP",  "https://www.meteo.psu.edu/bufkit/data/RAP/latest/rap_xmr.buf")]
+BUFKIT_REFETCH_MIN = 60
+BUFKIT_MAX_RUN_AGE_H = 6       # newest run older than this (relative to the frame) -> estimate
+BUFKIT_MAX_GAP_H = 2           # no profile within this of the frame -> estimate
+ISO_C = [5.0, 0.0, -5.0, -10.0, -15.0, -20.0]
+
+
+def parse_bufkit(text):
+    """[(valid, [(height_m, tmpc), ...])] - the probe's parser, proven on PSU's real files.
+
+    Each time block starts 'STID = ... TIME = YYMMDD/HHMM'. The profile header names the
+    parameters across one or more lines (PRES TMPC ... / CFRL HGHT); the numbers that follow are
+    those parameters per level, wrapped across lines, so they are read as one stream.
+    """
+    out = []
+    for b in re.split(r"(?=STID\s*=)", text):
+        m = re.search(r"TIME\s*=\s*(\d{6})/(\d{4})", b)
+        if not m:
+            continue
+        try:
+            valid = datetime.datetime.strptime(m.group(1) + m.group(2), "%y%m%d%H%M")
+        except ValueError:
+            continue
+        hm = re.search(r"\n\s*(PRES(?:\s+[A-Z]{4})+)\s*\n((?:\s*[A-Z]{4}(?:\s+[A-Z]{4})*\s*\n)*)", b)
+        if not hm:
+            continue
+        names = (hm.group(1) + " " + hm.group(2)).split()
+        body = b[hm.end():]
+        stop = re.search(r"\n\s*\n|\n[A-Z]{3,}\s*=|STN\s", body)
+        if stop:
+            body = body[:stop.start()]
+        nums = [float(x) for x in re.findall(r"-?\d+\.?\d*", body)]
+        k = len(names)
+        if "HGHT" not in names or "TMPC" not in names or len(nums) < k:
+            continue
+        ih, it = names.index("HGHT"), names.index("TMPC")
+        rows = (nums[i:i + k] for i in range(0, len(nums) - k + 1, k))
+        levels = sorted((r[ih], r[it]) for r in rows if r[it] > -900 and r[ih] > -900)
+        if levels:
+            out.append((valid, levels))
+    return out
+
+
+def isotherm_heights(levels):
+    """Lowest warm-to-cold crossing of each ISO_C temperature, metres MSL."""
+    out = {}
+    for tc in ISO_C:
+        for (z1, t1), (z2, t2) in zip(levels, levels[1:]):
+            if z2 > z1 and t1 >= tc > t2:
+                out[tc] = z1 + (t1 - tc) / (t1 - t2) * (z2 - z1)
+                break
+    return out
+
+
+def load_soundings(sess, prev, state_dir):
+    """The newest XMR model run, from cache unless it is over an hour old.
+    Returns {model, init, fetched, profiles:[[valid_iso, levels]]} or None."""
+    path = os.path.join(state_dir, "bufkit.json")
+    now = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        with open(path) as fp:
+            cache = json.load(fp)
+        age = (now - datetime.datetime.fromisoformat(cache["fetched"])).total_seconds() / 60
+    except Exception:
+        cache, age = None, None
+    if cache is not None and age is not None and age < BUFKIT_REFETCH_MIN:
+        return cache
+    best = None
+    for model, url in BUFKIT:
+        try:
+            r = sess.get(url, timeout=40)
+            r.raise_for_status()
+            profs = parse_bufkit(r.text)
+        except Exception as e:
+            logging.warning(f"BUFKIT {model}: {type(e).__name__}: {e}")
+            continue
+        if not profs:
+            logging.warning(f"BUFKIT {model}: no profiles parsed")
+            continue
+        init = profs[0][0]
+        if best is None or init > best["init_dt"]:       # newest run wins; HRRR keeps a tie
+            best = {"model": model, "init_dt": init, "profiles": profs}
+    if best is None:
+        if cache is not None:
+            logging.warning("BUFKIT: refresh failed; keeping the cached run")
+        return cache
+    cache = {"fetched": now.isoformat(), "model": best["model"],
+             "init": best["init_dt"].strftime("%Y-%m-%dT%H:%MZ"),
+             "profiles": [[v.strftime("%Y-%m-%dT%H:%MZ"), lv] for v, lv in best["profiles"]]}
+    os.makedirs(state_dir, exist_ok=True)
+    with open(path, "w") as fp:
+        json.dump(cache, fp)
+    logging.info(f"BUFKIT: {best['model']} {best['init_dt']:%H}Z run, "
+                 f"{len(best['profiles'])} hourly profiles")
+    return cache
+
+
+def isotherms_for(snd, valid_iso):
+    """(heights in m keyed by temperature, label) from the profile nearest the frame - or
+    (None, reason) when the lapse-rate estimate should be used instead."""
+    if not snd or not valid_iso:
+        return None, "estimated: no BUFKIT sounding available"
+    t = datetime.datetime.strptime(valid_iso[:16], "%Y-%m-%dT%H:%M")
+    init = datetime.datetime.strptime(snd["init"], "%Y-%m-%dT%H:%MZ")
+    vt = lambda p: datetime.datetime.strptime(p[0], "%Y-%m-%dT%H:%MZ")
+    best = min(snd["profiles"], key=lambda p: abs((vt(p) - t).total_seconds()))
+    gap_h = abs((vt(best) - t).total_seconds()) / 3600
+    if gap_h > BUFKIT_MAX_GAP_H:
+        return None, f"estimated: nearest BUFKIT profile is {gap_h:.0f} h from this frame"
+    if (t - init).total_seconds() / 3600 > 18 + BUFKIT_MAX_RUN_AGE_H:
+        return None, f"estimated: newest BUFKIT run ({snd['model']} {init:%H}Z) is too old"
+    iso = isotherm_heights([tuple(x) for x in best[1]])
+    if 5.0 not in iso or -20.0 not in iso:
+        return None, "estimated: sounding does not cross +5 and -20 C"
+    return iso, f"{snd['model']} {init:%H}Z run, profile valid {vt(best):%H}Z (PSU BUFKIT, XMR)"
+
+
 def freezing_level(sess, prev, state_dir):
     """The 0 C height, refetched only when the cached copy is over an hour old."""
     path = os.path.join(state_dir, "z0.npy")
@@ -541,7 +670,7 @@ def attached_history(frames, valid_iso, la, lo):
     return union if seen else None
 
 
-def evaluate(F, z0, la, lo, history=None):
+def evaluate(F, z0, la, lo, history=None, iso=None):
     """Traffic light, per-rule grids, cloud class and echo-top level for every cell."""
     L = LLCC
     dlat_km, dlon_km = _spacing(la, lo)
@@ -562,11 +691,30 @@ def evaluate(F, z0, la, lo, history=None):
     any_iso = e["r0"] | e["r5"] | e["r10"] | e["r15"] | e["r20"]
     hmax = F["hmax"]
 
-    z5 = z0 - L["plus5_c"] / LAPSE_C_PER_KM * 1000.0
-    z20 = z0 + 20.0 / LAPSE_C_PER_KM * 1000.0
+    # Measured from the XMR sounding when available; otherwise the freezing level plus an
+    # assumed lapse rate, which ran ~600 m low at -20 C on the day it was checked.
+    if iso:
+        z5 = np.full(comp.shape, iso[5.0], np.float32)
+        z20 = np.full(comp.shape, iso[-20.0], np.float32)
+    else:
+        z5 = z0 - L["plus5_c"] / LAPSE_C_PER_KM * 1000.0
+        z20 = z0 + 20.0 / LAPSE_C_PER_KM * 1000.0
 
     aloft = echo & ~any_iso & ((hmax >= z20) | (F["super"] >= 0.0))
-    top_below_0c = any_iso | aloft
+
+    # Echo that missed every isotherm slice but whose strongest return sits ABOVE freezing:
+    # it lies BETWEEN two slices. The fallback treated all echo with no slice hits as below
+    # freezing, so a thin layer at 8.0 km between the -15 and -20 C slices was called a shallow
+    # warm shower and could trip no cumulus rule. Its top temperature is read off its height
+    # instead - from the sounding when there is one, otherwise the freezing level and assumed
+    # lapse rate. Worked out here, before the rules, so they can use it.
+    def z_of(tc):
+        if iso and tc in iso:
+            return np.full(comp.shape, iso[tc], np.float32)
+        return z0 + (-tc) / LAPSE_C_PER_KM * 1000.0
+    gap = echo & ~any_iso & ~aloft & (hmax >= z_of(0.0))
+    gap_m10 = gap & (hmax >= z_of(-10.0))
+    top_below_0c = any_iso | aloft | gap
     top_to_plus5 = any_iso | (echo & (hmax >= z5))
 
     core = (comp >= L["core_dbz"]) | (F["vii"] > 0.0)
@@ -614,7 +762,7 @@ def evaluate(F, z0, la, lo, history=None):
     # An elevated layer is not cumulus either: it must not drive a cumulus standoff.
     not_cu = anvil_any | elevated
     cu_echo = echo & ~not_cu
-    cu10 = e["r10"] & ~not_cu
+    cu10 = (e["r10"] | gap_m10) & ~not_cu
     cu20 = e["r20"] & ~not_cu
     # Thick cloud layer: echo spanning at least ~4,500 ft inside the 0 to -20 C band. Adjacent
     # isotherm slices 10 C apart are ~1.5 km (~5,000 ft) apart, so echo at both ends of any
@@ -655,6 +803,12 @@ def evaluate(F, z0, la, lo, history=None):
     for lvl, k in ((2, "r0"), (3, "r5"), (4, "r10"), (5, "r15"), (6, "r20")):
         top[e[k]] = lvl
     top[aloft] = 7
+
+    # Between-slice echo (see `gap` above): level from its height.
+    top[gap] = 2
+    top[gap & (hmax >= z_of(-5.0))] = 3
+    top[gap & (hmax >= z_of(-10.0))] = 4
+    top[gap & (hmax >= z_of(-15.0))] = 5
 
     cls = np.zeros(comp.shape, np.uint8)
     cls[echo & (top == 1)] = 1
@@ -853,7 +1007,7 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
 # --------------------------------------------------------------------------------------
 # Frames
 # --------------------------------------------------------------------------------------
-def build_frame(sess, sources, z0, levels=None, prior=None):
+def build_frame(sess, sources, z0, levels=None, prior=None, snd=None):
     """One complete frame from a {key: url} mapping.
 
     Always returns (frame, la, lo). On failure all three are None - one shape on every path,
@@ -896,7 +1050,8 @@ def build_frame(sess, sources, z0, levels=None, prior=None):
 
     valid0 = valid_times.get("comp") or max((v for v in valid_times.values() if v), default=None)
     history = attached_history(prior or [], valid0, la, lo) if valid0 else None
-    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history)
+    iso, iso_src = isotherms_for(snd, valid0)
+    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history, iso)
     pads = pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo)
 
     valid = valid_times.get("comp") or max((v for v in valid_times.values() if v), default=None)
@@ -933,7 +1088,11 @@ def build_frame(sess, sources, z0, levels=None, prior=None):
              "pads": pads, "counts": counts, "class_counts": cls_counts,
              "missing": missing, "skew_min": skew,
              "volume": vol_rel, "volume_valid": vol_valid, "volume_note": vol_note,
-             "freezing_km": round(float(np.nanmean(z0)) / 1000.0, 2)}
+             "freezing_km": round((iso[0.0] if iso and 0.0 in iso
+                                   else float(np.nanmean(z0))) / 1000.0, 2),
+             "isotherms_km": ({f"{int(t):+d}": round(z / 1000.0, 2) for t, z in iso.items()}
+                              if iso else None),
+             "iso_source": iso_src}
     red_pads = [n for n, p in pads.items() if p["status"] == 2]
     yel_pads = [n for n, p in pads.items() if p["status"] == 1]
     logging.info(f"frame {valid}: pads violating {red_pads or '-'} watch {yel_pads or '-'}; "
@@ -1115,8 +1274,13 @@ def main():
     except Exception as e:
         logging.warning(f"3-D level list unavailable ({e}); this frame stays 2-D")
         levels = None
+    try:
+        snd = load_soundings(sess, prev, state_dir)
+    except Exception as e:
+        logging.warning(f"BUFKIT unavailable ({e}); isotherms estimated")
+        snd = None
     newest, la, lo = build_frame(sess, {k: latest_url(p) for k, (p, _, _) in PRODUCTS.items()},
-                                 z0, levels, prior=prev.get("frames", []))
+                                 z0, levels, prior=prev.get("frames", []), snd=snd)
     if newest is None:
         logging.error("latest frame withheld; previous frames left in place")
         return
@@ -1135,7 +1299,7 @@ def main():
             if time.monotonic() - t0 > BACKFILL_BUDGET_S:
                 logging.info("backfill budget spent; the rest fill on later runs")
                 break
-            frame, _, _ = build_frame(sess, src, z0, prior=frames)
+            frame, _, _ = build_frame(sess, src, z0, prior=frames, snd=snd)
             if frame is not None:
                 frames.append(frame)
                 done += 1
