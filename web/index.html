@@ -19,6 +19,11 @@
     --shell:1320px;
   }
   *{box-sizing:border-box}
+  /* The `hidden` attribute is only a user-agent display:none, and any author rule that sets
+     display - like `.map img{display:block}` below - silently beats it. That kept the overlay's
+     outline layer on screen in side-by-side mode, frozen on whatever frame overlay last showed,
+     which is what made the status contours look static while the fill underneath moved. */
+  [hidden]{display:none !important}
   html,body{margin:0;padding:0}
   body{background:var(--bg); color:var(--ink);
        font-family:"Barlow",system-ui,sans-serif; font-size:15px; line-height:1.45;
@@ -59,10 +64,13 @@
   .chk{display:inline-flex; gap:7px; align-items:center; color:var(--steel); cursor:pointer;
        font-size:14px}
   .chk input{accent-color:var(--steel)}
+  .export{margin-left:auto; color:var(--ink); text-decoration:none; font-weight:500;
+          border:1px solid var(--line-2); border-radius:6px; padding:6px 14px}
+  .export:hover{background:var(--panel-2)}
 
   /* ---- maps ---------------------------------------------------------------------- */
   .maps{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-  .maps.overlay{grid-template-columns:1fr; max-width:760px}
+  .maps.overlay{grid-template-columns:1fr}
   @media (max-width:760px){ .maps{grid-template-columns:1fr} }
   .panel{background:var(--panel); border:1px solid var(--line); border-radius:8px;
          padding:10px 10px 8px}
@@ -71,9 +79,15 @@
             align-items:baseline}
   .panel h3 small{font-family:"Barlow",sans-serif; font-weight:400; font-size:13px;
                   color:var(--dim)}
+  /* Every layer shares one aspect ratio, so the map is sized by HEIGHT: as large as fits
+     under the header and above the timeline, never taller than the screen. --ar is replaced
+     with the real ratio once the first image loads. */
   .map{position:relative; background:var(--well); border-radius:4px; overflow:hidden;
-       line-height:0; cursor:crosshair; touch-action:manipulation}
-  .map img{display:block; width:100%; height:auto; image-rendering:pixelated}
+       line-height:0; cursor:crosshair; touch-action:manipulation; --ar:.882;
+       aspect-ratio:var(--ar); margin:0 auto;
+       width:min(100%, max(calc(300px * var(--ar)), calc((100vh - 330px) * var(--ar))))}
+  .maps.overlay .map{width:min(100%, max(calc(320px * var(--ar)), calc((100vh - 300px) * var(--ar))))}
+  .map img{display:block; width:100%; height:100%; image-rendering:pixelated}
   .map img.layer{position:absolute; inset:0}
   .map svg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
   .map .empty{position:absolute; inset:0; display:grid; place-items:center; color:var(--dim);
@@ -145,6 +159,17 @@
                     border-radius:50%}
   .rules li.r::before{background:var(--red)} .rules li.y::before{background:var(--yellow)}
 
+  .how{margin-top:22px; display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media (max-width:900px){ .how{grid-template-columns:1fr} }
+  .how > div{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px}
+  .how h3{margin:0 0 4px; font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:20px}
+  .how .lead{color:var(--steel); font-size:14px; margin:0 0 12px; max-width:70ch}
+  .def{display:grid; grid-template-columns:14px 1fr; gap:3px 10px; padding:9px 0;
+       border-top:1px solid var(--line)}
+  .def i{width:12px; height:12px; border-radius:2px; margin-top:4px}
+  .def b{font-weight:600}
+  .def p{grid-column:2; margin:0; color:var(--steel); font-size:14px; line-height:1.45}
+  .ro-how{color:var(--steel); font-size:13.5px; line-height:1.45; margin:-4px 0 12px}
   footer{margin-top:22px; padding-top:12px; border-top:1px solid var(--line); color:var(--dim);
          font-size:13.5px; max-width:86ch}
   footer p{margin:0 0 8px}
@@ -178,6 +203,7 @@
     <button id="v-over" aria-pressed="false">Overlay on radar</button>
   </div>
   <label class="chk"><input type="checkbox" id="rings" checked> Range rings</label>
+  <a class="export" id="gif" download hidden>Export GIF</a>
 </div>
 
 <div class="maps" id="maps">
@@ -223,12 +249,13 @@
   </section>
 </div>
 
+<section class="how" id="how"></section>
 <footer id="method"></footer>
 </div>
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v2";
+const VIEWER_VERSION = "mrms-v5";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -277,13 +304,25 @@ function boot(prevValid){
   // studying an older one. Follow the newest only if that is where they already were.
   const keep = prevValid ? M.frames.findIndex(f => f.valid === prevValid) : -1;
   idx = keep >= 0 ? keep : M.frames.length - 1;
-  drawRefl(); drawTicks(); drawMethod(); legendLeft();
+  drawRefl(); drawTicks(); drawMethod(); drawHow(); legendLeft(); gifLink();
   M.frames.forEach(f => Object.values(f.images).forEach(u => { const i = new Image(); i.src = bust(u); }));
   show(idx);
   checkStale();
 }
 
 function frameAt(i){ return M.frames[i]; }
+
+// The GIF is built on the server each run, one per view, so the button simply points at
+// the one matching what is on screen.
+function gifLink(){
+  const a = $("gif"), g = M && M.gifs || {};
+  const key = view === "over" ? "overlay" : mode;
+  if (!g[key]){ a.hidden = true; return; }
+  a.hidden = false;
+  a.href = bust(g[key]);
+  a.setAttribute("download", `cloudscope-radar-${key}-${(M.valid || "").slice(0, 16).replace(/[-:T]/g, "")}.gif`);
+  a.title = `Loop of the last ${M.frames.length} frames, oldest to newest`;
+}
 
 function show(i){
   idx = i; const f = frameAt(i); if (!f) return;
@@ -334,7 +373,9 @@ function drawSvg(svgId, imgId){
       // Mercator is conformal, so at this scale the standoff is a true circle.
       const r = (nm * 1.852 / (111.32 * Math.cos(clat * Math.PI / 180))) / span * W;
       out += `<circle class="ring" cx="${cx * W}" cy="${cy * H}" r="${r}"/>`;
-      out += `<text class="ringlbl" x="${cx * W + r * 0.707 + 3}" y="${cy * H - r * 0.707 - 3}">${nm} nmi</text>`;
+      // Staggered so the 3 and 5 nmi labels stop colliding; matched in the GIF renderer.
+      const a = ({3: -20, 5: 22, 10: 40, 20: 48}[nm] ?? 45) * Math.PI / 180;
+      out += `<text class="ringlbl" x="${cx * W + r * Math.cos(a) + 4}" y="${cy * H - r * Math.sin(a) + 4}">${nm} nmi</text>`;
     });
   }
   if (pin){
@@ -348,7 +389,14 @@ function drawSvg(svgId, imgId){
   }
   svg.innerHTML = out;
 }
-function redraw(){ drawSvg("svg-left", "img-left"); drawSvg("svg-right", "img-right"); }
+function redraw(){
+  const im = $("img-right").naturalWidth ? $("img-right") : $("img-left");
+  if (im.naturalWidth){
+    const ar = (im.naturalWidth / im.naturalHeight).toFixed(4);
+    document.querySelectorAll(".map").forEach(m => m.style.setProperty("--ar", ar));
+  }
+  drawSvg("svg-left", "img-left"); drawSvg("svg-right", "img-right");
+}
 $("img-left").addEventListener("load", redraw);
 $("img-right").addEventListener("load", redraw);
 addEventListener("resize", redraw);
@@ -396,10 +444,14 @@ function readout(lat, lon, label){
       <div class="ro-status"><span class="lamp s${st}"></span>${S.name}</div>
       <div class="ro-class"><i style="background:${cls ? C.color : "transparent"};
            ${cls ? "" : "box-shadow:inset 0 0 0 1px var(--line-2)"}"></i>${C.name}</div>
+      <div class="ro-how">${C.how || ""}</div>
       <dl>
         <dt>Composite</dt><dd>${dbz === 255 ? "no echo" : (dbz / 2).toFixed(1) + " dBZ"}</dd>
         <dt>Echo reaches</dt><dd>${M.top_levels[top]}</dd>
       </dl>
+      ${(cls === 6 || cls === 7) && red.some(k => k.startsWith("cumulus")) ?
+        `<div class="ro-how">This point is anvil, which is never scored as cumulus. The cumulus
+         rules here come from a cumulonimbus core within their standoff, not from this anvil.</div>` : ""}
       ${red.length || yel.length ? `<ul class="rules">
         ${red.map(k => `<li class="r">${SHORT[k] || k}</li>`).join("")}
         ${yel.map(k => `<li class="y">Within 2 nmi: ${lcFirst(SHORT[k] || k)}</li>`).join("")}
@@ -468,6 +520,20 @@ function drawTicks(){
   $("ticks").innerHTML = M.frames.filter((_, k) => k % step === 0 || k === n - 1)
     .map(f => `<span>${hhmm(f.valid)}</span>`).join("");
 }
+function drawHow(){
+  const cls = M.classes.filter(c => c.id > 0).map(c => `
+    <div class="def"><i style="background:${c.color}"></i><b>${c.name}</b><p>${c.how || ""}</p></div>`).join("");
+  const off = new Set(M.rules_off || []);
+  const rules = M.rule_keys.filter(k => !off.has(k)).map(k => `
+    <div class="def"><i style="background:var(--red)"></i><b>${SHORT[k] || k}</b>
+      <p>${(M.rule_how || {})[k] || ""} <span style="color:var(--dim)">${(M.rules[k].match(/\(([^)]+)\)$/) || ["", ""])[1]}</span></p></div>`).join("");
+  $("how").innerHTML = `
+    <div><h3>How each echo is classed</h3><p class="lead">${M.class_note || ""}</p>${cls}</div>
+    <div><h3>How the colours are decided</h3>
+      <p class="lead">A point is red if any test below is true there, with every distance measured
+      from that point and every test gated on echo of 0 dBZ or more. ${M.watch_how || ""}</p>${rules}</div>`;
+}
+
 function drawMethod(){
   $("method").innerHTML =
     `<p>Every point is scored against ${M.standard} as if the flight path passed through it, ` +
@@ -475,7 +541,8 @@ function drawMethod(){
     `cloud. <b>Watch</b> means a rule would be broken if its standoff were 2 nmi longer, or ` +
     `cloud-to-ground lightning is within 20 nmi. <b>Clear</b> means no violation the radar can ` +
     `see. It is not a GO.</p>` +
-    `<p><b>Evaluated:</b> ${Object.values(M.rules).join("; ")}.</p>` +
+    `<p><b>Evaluated:</b> ${M.rule_keys.filter(k => !(M.rules_off || []).includes(k))
+        .map(k => M.rules[k]).join("; ")}.</p>` +
     `<p><b>Not evaluated:</b> ${M.not_evaluated.join("; ")}.</p>` +
     `<p><b>Anvil base is conservative.</b> Radar cannot separate an anvil from the precipitation ` +
     `it drops, so any echo at the 0 °C level beneath an anvil counts as the anvil reaching 0 °C, ` +
@@ -499,14 +566,14 @@ function checkStale(){
 
 // ---- controls -------------------------------------------------------------------------
 function press(a, b){ $(a).setAttribute("aria-pressed", "true"); $(b).setAttribute("aria-pressed", "false"); }
-$("m-status").onclick = () => { mode = "status"; press("m-status", "m-class"); legendLeft(); show(idx); };
-$("m-class").onclick  = () => { mode = "class";  press("m-class", "m-status"); legendLeft(); show(idx); };
+$("m-status").onclick = () => { mode = "status"; press("m-status", "m-class"); legendLeft(); gifLink(); show(idx); };
+$("m-class").onclick  = () => { mode = "class";  press("m-class", "m-status"); legendLeft(); gifLink(); show(idx); };
 $("v-pair").onclick = () => { view = "pair"; press("v-pair", "v-over");
-  $("maps").classList.remove("overlay"); $("p-right").hidden = false; legendLeft(); show(idx); };
+  $("maps").classList.remove("overlay"); $("p-right").hidden = false; legendLeft(); gifLink(); show(idx); };
 $("v-over").onclick = () => { view = "over"; press("v-over", "v-pair");
   // Overlay is status outlines on radar; class mode has no outline form, so it steps back.
   mode = "status"; press("m-status", "m-class");
-  $("maps").classList.add("overlay"); $("p-right").hidden = true; legendLeft(); show(idx); };
+  $("maps").classList.add("overlay"); $("p-right").hidden = true; legendLeft(); gifLink(); show(idx); };
 $("rings").onchange = redraw;
 
 function start(){ $("play").textContent = "Pause";
