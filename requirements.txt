@@ -1,0 +1,6 @@
+numpy
+scipy
+requests
+pygrib
+matplotlib
+cartopy
