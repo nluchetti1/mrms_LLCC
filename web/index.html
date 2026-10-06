@@ -3,80 +3,153 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CloudScope Radar — LLCC nowcast</title>
+<title>CloudScope Radar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* Range console. Colour means status and nothing else: red, yellow, green and grey are
+     reserved for the traffic light, and every piece of chrome is steel so nothing competes
+     with them. */
   :root{
-    --paper:#E9EBE4; --paper-2:#DFE2D9; --ink:#14181B; --ink-3:#5D6A6E; --rule:#C3C8BC;
-    --red:#C0392B; --yellow:#E3B23C; --green:#3E9B5F; --nodata:#B9BEC4;
-    --shell:1200px;
+    --bg:#141D29; --panel:#1B2635; --panel-2:#223042; --well:#111A25;
+    --line:#2C3A4D; --line-2:#3A4B61;
+    --steel:#9FB2C4; --dim:#6F8296; --ink:#E8EEF3;
+    --red:#E5484D; --yellow:#F2C14E; --green:#3FB97A; --grey:#6B7785;
+    --shell:1320px;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{background:var(--paper); color:var(--ink);
-       font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:13px; line-height:1.5;
-       padding:clamp(12px,2.4vw,24px)}
+  body{background:var(--bg); color:var(--ink);
+       font-family:"Barlow",system-ui,sans-serif; font-size:15px; line-height:1.45;
+       font-variant-numeric:tabular-nums; padding:clamp(12px,2.2vw,26px)}
   .shell{max-width:var(--shell); margin:0 auto}
+  button,input,select{font:inherit}
+  :focus-visible{outline:2px solid var(--steel); outline-offset:2px}
 
-  header{display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
-         flex-wrap:wrap; border-bottom:1.5px solid var(--ink); padding-bottom:8px;
-         margin-bottom:12px}
-  h1{font-family:"Bricolage Grotesque",system-ui,sans-serif; font-weight:800;
-     font-size:clamp(22px,3.4vw,34px); line-height:.92; margin:0; letter-spacing:-.025em}
-  h1 em{font-style:normal; color:var(--ink-3)}
-  .sub{font-size:11px; color:var(--ink-3); margin-top:4px}
-  .stamp{text-align:right; font-size:11px; color:var(--ink-3)}
-  .stamp b{display:block; color:var(--ink); font-size:14px; font-variant-numeric:tabular-nums}
+  /* ---- header -------------------------------------------------------------------- */
+  header{display:grid; grid-template-columns:1fr auto; gap:14px 24px; align-items:end;
+         padding-bottom:14px; border-bottom:1px solid var(--line)}
+  .brand{font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:clamp(28px,4.2vw,44px);
+         line-height:.9; letter-spacing:.01em}
+  .brand span{color:var(--steel); font-weight:500}
+  .tag{color:var(--steel); font-size:14px; margin-top:6px; max-width:62ch}
+  .clock{text-align:right}
+  .clock .t{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:clamp(26px,3.6vw,38px);
+            line-height:1}
+  .clock .d{color:var(--steel); font-size:14px; margin-top:4px}
+  .age{display:inline-block; margin-left:8px; padding:1px 8px; border-radius:999px;
+       font-size:13px; background:var(--panel-2); color:var(--steel)}
+  .age.warn{background:#4A3B14; color:var(--yellow)}
+  .age.bad{background:#4A1A1C; color:#FF8A8D}
 
-  /* Staleness is the most important thing this page can tell you, so it is loud. A radar
-     nowcast that is twenty minutes old is a different and much worse product. */
-  .stale{display:none; margin:0 0 12px; padding:9px 12px; border:1.5px solid var(--red);
-         background:#F6E2DF; color:#7A1E14; font-weight:600}
+  .stale{display:none; margin:14px 0 0; padding:10px 14px; border-radius:6px;
+         background:#3A1517; border:1px solid var(--red); color:#FFC2C3; font-weight:500}
   .stale.on{display:block}
 
-  .grid{display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:18px; align-items:start}
-  @media (max-width:900px){ .grid{grid-template-columns:1fr} }
+  /* ---- controls ------------------------------------------------------------------ */
+  .bar{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; margin:16px 0 12px}
+  .seg{display:inline-flex; background:var(--panel); border:1px solid var(--line);
+       border-radius:6px; padding:2px}
+  .seg button{background:none; border:0; color:var(--steel); padding:6px 12px; cursor:pointer;
+              border-radius:4px; font-weight:500}
+  .seg button[aria-pressed=true]{background:var(--panel-2); color:var(--ink)}
+  .seg button:hover{color:var(--ink)}
+  .lbl{color:var(--dim); font-size:13px}
+  .chk{display:inline-flex; gap:7px; align-items:center; color:var(--steel); cursor:pointer;
+       font-size:14px}
+  .chk input{accent-color:var(--steel)}
 
-  figure{margin:0; background:#fff; border:1px solid var(--rule); width:max-content;
-         max-width:100%; line-height:0; position:relative}
-  figure img{display:block; max-width:100%; width:auto;
-             max-height:max(360px, calc(100vh - 230px)); image-rendering:pixelated}
-  .loading{position:absolute; inset:0; display:grid; place-items:center; color:var(--ink-3);
-           font-size:11.5px; letter-spacing:.08em; line-height:1.5}
+  /* ---- maps ---------------------------------------------------------------------- */
+  .maps{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .maps.overlay{grid-template-columns:1fr; max-width:760px}
+  @media (max-width:760px){ .maps{grid-template-columns:1fr} }
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:8px;
+         padding:10px 10px 8px}
+  .panel h3{margin:0 0 8px; font-family:"Barlow Condensed",sans-serif; font-weight:600;
+            font-size:18px; letter-spacing:.01em; display:flex; justify-content:space-between;
+            align-items:baseline}
+  .panel h3 small{font-family:"Barlow",sans-serif; font-weight:400; font-size:13px;
+                  color:var(--dim)}
+  .map{position:relative; background:var(--well); border-radius:4px; overflow:hidden;
+       line-height:0; cursor:crosshair; touch-action:manipulation}
+  .map img{display:block; width:100%; height:auto; image-rendering:pixelated}
+  .map img.layer{position:absolute; inset:0}
+  .map svg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
+  .map .empty{position:absolute; inset:0; display:grid; place-items:center; color:var(--dim);
+              font-size:14px; line-height:1.4; padding:20px; text-align:center}
+  .ring{fill:none; stroke:#9FB2C4; stroke-opacity:.42; stroke-width:1; stroke-dasharray:4 5;
+        vector-effect:non-scaling-stroke}
+  .ringlbl{fill:#9FB2C4; fill-opacity:.75; font:500 11px "Barlow",sans-serif}
+  .xh{stroke:#FFFFFF; stroke-width:1.6; vector-effect:non-scaling-stroke}
+  .xhc{fill:none; stroke:#FFFFFF; stroke-width:1.4; vector-effect:non-scaling-stroke}
 
-  .transport{display:flex; align-items:center; gap:12px; margin-top:10px; flex-wrap:wrap}
-  button{font:inherit; font-weight:600; letter-spacing:.05em; cursor:pointer;
-         background:var(--ink); color:var(--paper); border:none; border-radius:2px;
-         padding:6px 14px}
-  input[type=range]{flex:1; min-width:140px; accent-color:var(--ink)}
-  .valid{font-size:15px; font-weight:600; font-variant-numeric:tabular-nums}
-  .age{color:var(--ink-3); font-size:11.5px}
+  .scale{display:flex; flex-wrap:wrap; gap:4px 12px; margin-top:8px; font-size:12.5px;
+         color:var(--steel); line-height:1.3}
+  .scale i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px;
+           vertical-align:-1px}
+  .refl{display:flex; height:9px; margin-top:8px; border-radius:2px; overflow:hidden}
+  .refl span{flex:1}
+  .reflticks{display:flex; justify-content:space-between; font-size:11.5px; color:var(--dim);
+             margin-top:3px}
 
-  h2{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);
-     margin:0 0 6px; font-weight:500}
+  /* ---- timeline ------------------------------------------------------------------ */
+  .timeline{display:flex; align-items:center; gap:14px; margin:14px 0 6px; flex-wrap:wrap}
+  .play{background:var(--ink); color:var(--bg); border:0; border-radius:6px; padding:8px 16px;
+        font-weight:600; cursor:pointer; min-width:84px}
+  .scrubwrap{flex:1; min-width:220px}
+  input[type=range]{width:100%; accent-color:var(--steel)}
+  .ticks{display:flex; justify-content:space-between; font-size:12px; color:var(--dim);
+         margin-top:2px}
+  .now{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:20px; min-width:7ch}
 
-  /* Pads first: this is what the page is for. */
-  .pads{border:1.5px solid var(--ink)}
-  .pad{display:grid; grid-template-columns:auto 1fr auto; gap:2px 10px; align-items:center;
-       padding:7px 10px; border-bottom:1px solid var(--rule)}
-  .pad:last-child{border-bottom:none}
-  .light{width:14px; height:14px; border-radius:50%; box-shadow:0 0 0 1px rgba(0,0,0,.25) inset}
-  .pname{font-weight:600}
-  .pmeta{font-size:10.5px; color:var(--ink-3); text-align:right; font-variant-numeric:tabular-nums}
-  .why{grid-column:2/-1; font-size:10.5px; line-height:1.4}
-  .why.r{color:#8B2318} .why.y{color:#7A5A08}
+  /* ---- lower: pads + readout ----------------------------------------------------- */
+  .lower{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:14px;
+         margin-top:14px}
+  @media (max-width:900px){ .lower{grid-template-columns:1fr} }
 
-  .summary{display:flex; gap:14px; margin:10px 0 14px; font-size:12px}
-  .summary span{display:flex; align-items:center; gap:6px}
+  .poll{background:var(--panel); border:1px solid var(--line); border-radius:8px}
+  .poll .head{display:flex; justify-content:space-between; align-items:baseline;
+              padding:10px 14px; border-bottom:1px solid var(--line)}
+  .poll .head h3{margin:0; font-family:"Barlow Condensed",sans-serif; font-weight:600;
+                 font-size:18px}
+  .tally{display:flex; gap:12px; font-size:14px; color:var(--steel)}
+  .tally b{color:var(--ink); font-weight:600}
+  .row{display:grid; grid-template-columns:18px 76px 1fr auto; gap:2px 12px; align-items:center;
+       padding:9px 14px; border-bottom:1px solid var(--line); cursor:pointer}
+  .row:last-child{border-bottom:0}
+  .row:hover{background:var(--panel-2)}
+  .lamp{width:14px; height:14px; border-radius:50%}
+  .lamp.s2{background:var(--red); box-shadow:0 0 10px rgba(229,72,77,.65)}
+  .lamp.s1{background:var(--yellow); box-shadow:0 0 9px rgba(242,193,78,.5)}
+  .lamp.s0{background:var(--green)}
+  .lamp.s-1{background:var(--grey)}
+  .pname{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:18px}
+  .pclass{color:var(--steel); font-size:14px}
+  .pnum{color:var(--dim); font-size:13px; text-align:right; white-space:nowrap}
+  .reason{grid-column:3/-1; font-size:13.5px; line-height:1.35}
+  .reason.s2{color:#FF9EA1} .reason.s1{color:#F7D586}
 
-  .legend{margin-top:14px; font-size:11px; line-height:1.55}
-  .legend .row{display:flex; gap:8px; align-items:flex-start; margin:4px 0}
-  .legend .chip{width:12px; height:12px; flex:none; margin-top:2px; border-radius:2px}
-  footer{margin-top:18px; border-top:1px solid var(--rule); padding-top:9px; font-size:10.5px;
-         color:var(--ink-3); max-width:80ch}
-  footer b{color:var(--ink)}
+  .readout{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px}
+  .readout h3{margin:0 0 4px; font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:18px}
+  .readout .hint{color:var(--steel); font-size:14px}
+  .ro-status{display:flex; align-items:center; gap:10px; margin:10px 0 6px;
+             font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:26px}
+  .ro-class{display:flex; align-items:center; gap:8px; font-size:16px; margin-bottom:10px}
+  .ro-class i{width:12px; height:12px; border-radius:2px; display:inline-block}
+  dl{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0; font-size:14.5px}
+  dt{color:var(--dim)} dd{margin:0}
+  .rules{margin:10px 0 0; padding:0; list-style:none; font-size:14px}
+  .rules li{padding:3px 0 3px 14px; position:relative}
+  .rules li::before{content:""; position:absolute; left:0; top:.7em; width:6px; height:6px;
+                    border-radius:50%}
+  .rules li.r::before{background:var(--red)} .rules li.y::before{background:var(--yellow)}
+
+  footer{margin-top:22px; padding-top:12px; border-top:1px solid var(--line); color:var(--dim);
+         font-size:13.5px; max-width:86ch}
+  footer p{margin:0 0 8px}
+  footer b{color:var(--steel); font-weight:600}
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important; animation:none !important} }
 </style>
 </head>
 <body>
@@ -84,179 +157,370 @@
 
 <header>
   <div>
-    <h1>Cloud<em>Scope</em> Radar</h1>
-    <div class="sub">MRMS LLCC nowcast for the Cape — NASA-STD-4010, every cell as the flight path</div>
+    <div class="brand">CloudScope <span>Radar</span></div>
+    <div class="tag">Live MRMS radar and lightning scored against the lightning launch commit
+      criteria, as if the flight path ran through every point on the map.</div>
   </div>
-  <div class="stamp"><b id="valid-top">—</b><span id="gen"></span></div>
+  <div class="clock">
+    <div class="t" id="clock">--:--Z</div>
+    <div class="d"><span id="clockd">waiting for data</span><span class="age" id="age"></span></div>
+  </div>
 </header>
-
 <div class="stale" id="stale"></div>
 
-<div class="grid">
-  <div>
-    <figure>
-      <img id="frame" alt="Radar LLCC status map">
-      <div class="loading" id="loading">LOADING</div>
-    </figure>
-    <div class="transport">
-      <button id="play">PLAY</button>
-      <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Frame">
-      <span class="valid" id="valid">—</span><span class="age" id="age"></span>
-    </div>
+<div class="bar">
+  <div class="seg" role="group" aria-label="Left map shows">
+    <button id="m-status" aria-pressed="true">Status</button>
+    <button id="m-class" aria-pressed="false">Cloud class</button>
   </div>
+  <div class="seg" role="group" aria-label="Layout">
+    <button id="v-pair" aria-pressed="true">Side by side</button>
+    <button id="v-over" aria-pressed="false">Overlay on radar</button>
+  </div>
+  <label class="chk"><input type="checkbox" id="rings" checked> Range rings</label>
+</div>
 
-  <aside>
-    <h2>Pads — newest frame</h2>
-    <div class="summary" id="summary"></div>
-    <div class="pads" id="pads"></div>
-
-    <div class="legend">
-      <h2 style="margin-top:14px">What the colours mean</h2>
-      <div class="row"><span class="chip" style="background:var(--red)"></span>
-        <span><b>Red</b> — a rule below is violated at this point.</span></div>
-      <div class="row"><span class="chip" style="background:var(--yellow)"></span>
-        <span><b>Yellow</b> — no violation, but one would be if its standoff were 2 nmi
-        longer, or CG lightning is within 20 nmi. Look closer.</span></div>
-      <div class="row"><span class="chip" style="background:var(--green)"></span>
-        <span><b>Green</b> — no radar-visible violation. Not a GO.</span></div>
-      <div class="row"><span class="chip" style="background:var(--nodata)"></span>
-        <span><b>Grey</b> — outside radar coverage. Unknown, not clear.</span></div>
+<div class="maps" id="maps">
+  <section class="panel" id="p-left">
+    <h3><span id="left-title">Status</span><small id="left-sub">every cell as the flight path</small></h3>
+    <div class="map" id="map-left">
+      <img id="img-left" alt="Status map">
+      <img id="img-left-line" class="layer" alt="" hidden>
+      <svg id="svg-left" aria-hidden="true"></svg>
+      <div class="empty" id="empty-left">Loading the latest radar…</div>
     </div>
-  </aside>
+    <div class="scale" id="legend-left"></div>
+  </section>
+  <section class="panel" id="p-right">
+    <h3>Radar <small>composite reflectivity, lightning as ×</small></h3>
+    <div class="map" id="map-right">
+      <img id="img-right" alt="Composite reflectivity">
+      <svg id="svg-right" aria-hidden="true"></svg>
+    </div>
+    <div class="refl" id="refl"></div>
+    <div class="reflticks" id="reflticks"></div>
+  </section>
+</div>
+
+<div class="timeline">
+  <button class="play" id="play">Play</button>
+  <div class="scrubwrap">
+    <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Frame">
+    <div class="ticks" id="ticks"></div>
+  </div>
+  <div class="now" id="now">--:--Z</div>
+</div>
+
+<div class="lower">
+  <section class="poll">
+    <div class="head"><h3>Pads</h3><div class="tally" id="tally"></div></div>
+    <div id="pads"></div>
+  </section>
+  <section class="readout" id="readout">
+    <h3>Point readout</h3>
+    <div class="hint">Tap any point on either map, or a pad on the left, to see what the radar
+      classifies it as and which rules it trips.</div>
+  </section>
 </div>
 
 <footer id="method"></footer>
 </div>
 
 <script>
-// Bump on every viewer change and check the header: if it does not show this string, the
-// browser or Pages is serving an older copy.
-const VIEWER_VERSION = "mrms-v1";
+// Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
+const VIEWER_VERSION = "mrms-v2";
+const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
+const RINGS_NM = [3, 5, 10, 20];
 
-// Age past which the page shouts. Products update every two minutes and runs every five, so
-// anything over twelve means a run has been missed, and over twenty the picture is stale
-// enough to be misleading for a convective afternoon.
-const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20;
-const REFRESH_S = 60;
-
-const RULE_SHORT = {
-  lightning: "lightning ≤10 nmi", cumulus_through: "through cumulus ≤+5 °C",
-  cumulus_5nm: "cu −10 °C ≤5 nmi", cumulus_10nm: "cu −20 °C ≤10 nmi",
-  attached_anvil: "attached anvil", detached_anvil: "detached anvil",
-  disturbed: "disturbed wx", thick_layer: "thick layer",
+const SHORT = {
+  lightning: "Lightning within 10 nmi", cumulus_through: "Flight through cumulus at +5 °C or colder",
+  cumulus_5nm: "Cumulus colder than −10 °C within 5 nmi", cumulus_10nm: "Cumulus colder than −20 °C within 10 nmi",
+  attached_anvil: "Attached anvil within 3 nmi", detached_anvil: "Detached anvil within 3 nmi",
+  disturbed: "Disturbed weather", thick_layer: "Thick cloud layer, 0 to −10 °C",
 };
-const COLOR = {"-1":"var(--nodata)", "0":"var(--green)", "1":"var(--yellow)", "2":"var(--red)"};
-const WORD = {"-1":"NO DATA", "0":"GREEN", "1":"YELLOW", "2":"RED"};
 
-let M = null, i = 0, timer = null, STAMP = "";
+let M = null, idx = 0, timer = null, STAMP = "", mode = "status", view = "pair", pin = null;
+let firstLoad = true;
+const DATA = {};
 const $ = id => document.getElementById(id);
 const bust = u => u + (u.includes("?") ? "&" : "?") + "v=" + STAMP;
-
-function minutesSince(iso){
-  const t = Date.parse(iso || "");
-  return isFinite(t) ? (Date.now() - t) / 60000 : null;
-}
-function fmtValid(iso){
-  if (!iso) return "—";
-  const d = new Date(iso);
-  return d.toISOString().slice(11,16) + "Z " + d.toUTCString().slice(0,11);
-}
+const psi = d => Math.log(Math.tan(Math.PI / 4 + d * Math.PI / 360));
+const minsSince = iso => { const t = Date.parse(iso || ""); return isFinite(t) ? (Date.now() - t) / 6e4 : null; };
+// Lower-case only the first letter: a blanket toLowerCase() turns "°C" into "°c".
+const lcFirst = s => s ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+const hhmm = iso => iso ? iso.slice(11, 16) + "Z" : "--:--Z";
+const dayLabel = iso => iso ? new Date(iso).toLocaleDateString("en-GB",
+  {weekday: "short", day: "numeric", month: "short", timeZone: "UTC"}) : "";
 
 function load(){
-  $("gen").textContent = "page " + VIEWER_VERSION;
   fetch("manifest.json?" + Date.now())
-    .then(r => r.ok ? r.json() : Promise.reject(r.status))
-    .then(m => { const first = !M; M = m; STAMP = encodeURIComponent(m.generated || "");
-                 boot(first); })
-    .catch(e => { $("loading").textContent = "NO DATA YET (" + e + ")"; });
+    .then(r => r.ok ? r.json() : Promise.reject("HTTP " + r.status))
+    .then(m => {
+      const wasNewest = !M || idx === M.frames.length - 1;
+      const prevValid = (!wasNewest && M) ? M.frames[idx].valid : null;
+      M = m; STAMP = encodeURIComponent(m.generated || "");
+      boot(prevValid);
+      if (firstLoad){
+        firstLoad = false;
+        // Phones default to overlay: two stacked maps push the pads off the first screen.
+        if (matchMedia("(max-width:760px)").matches) $("v-over").onclick();
+      }
+    })
+    .catch(e => { $("empty-left").textContent = "No radar published yet (" + e + "). The first run creates it."; });
 }
 
-function boot(first){
-  const keepIndex = first ? 0 : 0;      // a refresh always jumps to the newest frame
+function boot(prevValid){
+  // oldest first in the scrubber, so left-to-right is the direction weather moves
+  M.frames.sort((a, b) => a.valid < b.valid ? -1 : 1);
   $("scrub").max = Math.max(0, M.frames.length - 1);
-  $("gen").textContent = "built " + (M.generated || "").slice(11,16) + "Z · page " + VIEWER_VERSION;
-  $("method").innerHTML =
-    "Each grid cell is treated as the flight path and scored against " + (M.standard || "") +
-    ", gated on echo ≥0 dBZ — the standard's own definition of a non-transparent cloud. " +
-    "<b>Evaluated:</b> " + Object.values(M.rules || {}).join("; ") + ". " +
-    "<b>Not evaluated:</b> " + (M.not_evaluated || []).join("; ") + ". " +
-    "<b>Anvil base is conservative:</b> radar cannot separate an anvil from the precipitation " +
-    "it drops, so any echo at the 0 °C level beneath an anvil counts as the anvil reaching " +
-    "0 °C, and the LLCCR 18 'entirely colder than 0 °C' exception is rarely granted. " +
-    (M.product_skew_min != null ? "Products in this frame span " + M.product_skew_min +
-      " min of valid times. " : "") +
-    (M.missing && M.missing.length ? "<b>Missing this run, treated as no echo:</b> " +
-      M.missing.join(", ") + ". " : "");
-  M.frames.forEach(f => { const im = new Image(); im.src = bust(f.image); });
-  show(keepIndex);
+  // A background refresh must not yank someone back to the newest frame while they are
+  // studying an older one. Follow the newest only if that is where they already were.
+  const keep = prevValid ? M.frames.findIndex(f => f.valid === prevValid) : -1;
+  idx = keep >= 0 ? keep : M.frames.length - 1;
+  drawRefl(); drawTicks(); drawMethod(); legendLeft();
+  M.frames.forEach(f => Object.values(f.images).forEach(u => { const i = new Image(); i.src = bust(u); }));
+  show(idx);
   checkStale();
 }
 
-function checkStale(){
-  const age = minutesSince(M.valid);
-  const box = $("stale");
-  if (age == null){ box.className = "stale"; return; }
-  if (age >= STALE_BAD_MIN){
-    box.className = "stale on";
-    box.textContent = "STALE — newest radar is " + Math.round(age) + " min old. Do not use for "
-      + "a current picture; the update job has missed runs.";
-  } else if (age >= STALE_WARN_MIN){
-    box.className = "stale on";
-    box.style.background = "#FBF1D9"; box.style.borderColor = "var(--yellow)";
-    box.style.color = "#6B4E07";
-    box.textContent = "Radar is " + Math.round(age) + " min old — a run may have been missed.";
+function frameAt(i){ return M.frames[i]; }
+
+function show(i){
+  idx = i; const f = frameAt(i); if (!f) return;
+  const left = mode === "class" ? f.images.class : f.images.status;
+  if (view === "over"){
+    $("img-left").src = bust(f.images.radar);
+    $("img-left-line").src = bust(f.images.statusline);
+    $("img-left-line").hidden = false;
   } else {
-    box.className = "stale";
+    $("img-left").src = bust(left);
+    $("img-left-line").hidden = true;
   }
-  $("age").textContent = Math.round(age) + " min old";
+  $("img-right").src = bust(f.images.radar);
+  $("empty-left").style.display = "none";
+  $("scrub").value = i;
+  $("now").textContent = hhmm(f.valid);
+  pads(f);
+  if (pin) readout(pin.lat, pin.lon, pin.label);
 }
 
-function show(n){
-  i = n; const f = M.frames[n]; if (!f) return;
-  $("frame").src = bust(f.image);
-  $("loading").style.display = "none";
-  $("valid").textContent = fmtValid(f.valid);
-  $("valid-top").textContent = fmtValid(M.frames[0].valid);
-  $("scrub").value = n;
-  if (n === 0) checkStale();
-  else $("age").textContent = Math.round(minutesSince(f.valid)) + " min old";
+// ---- geometry: the PNGs are Mercator with the axes filling the figure ------------------
+function toFrac(lat, lon){
+  const d = M.domain, p0 = psi(d.lat_min), p1 = psi(d.lat_max);
+  return [(lon - d.lon_min) / (d.lon_max - d.lon_min), (p1 - psi(lat)) / (p1 - p0)];
+}
+function fromFrac(fx, fy){
+  const d = M.domain, p0 = psi(d.lat_min), p1 = psi(d.lat_max);
+  const lon = d.lon_min + fx * (d.lon_max - d.lon_min);
+  const lat = (2 * Math.atan(Math.exp(p1 - fy * (p1 - p0))) - Math.PI / 2) * 180 / Math.PI;
+  return [lat, lon];
+}
+function centroid(){
+  const s = Object.values(M.sites);
+  return [s.reduce((a, p) => a + p[0], 0) / s.length, s.reduce((a, p) => a + p[1], 0) / s.length];
+}
 
-  const pads = f.pads || {};
-  const tally = {"2":0,"1":0,"0":0,"-1":0};
-  Object.values(pads).forEach(p => tally[String(p.status)]++);
-  $("summary").innerHTML = ["2","1","0"].filter(k => tally[k])
-    .map(k => `<span><span class="light" style="background:${COLOR[k]}"></span>
-               ${tally[k]} ${WORD[k].toLowerCase()}</span>`).join("") || "—";
+function drawSvg(svgId, imgId){
+  const svg = $(svgId), img = $(imgId);
+  const W = img.naturalWidth, H = img.naturalHeight;
+  if (!W || !H){ return; }
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  let out = "";
+  if ($("rings").checked){
+    const [clat, clon] = centroid();
+    const [cx, cy] = toFrac(clat, clon);
+    const span = M.domain.lon_max - M.domain.lon_min;
+    RINGS_NM.forEach(nm => {
+      // Mercator is conformal, so at this scale the standoff is a true circle.
+      const r = (nm * 1.852 / (111.32 * Math.cos(clat * Math.PI / 180))) / span * W;
+      out += `<circle class="ring" cx="${cx * W}" cy="${cy * H}" r="${r}"/>`;
+      out += `<text class="ringlbl" x="${cx * W + r * 0.707 + 3}" y="${cy * H - r * 0.707 - 3}">${nm} nmi</text>`;
+    });
+  }
+  if (pin){
+    const [px, py] = toFrac(pin.lat, pin.lon);
+    const x = px * W, y = py * H;
+    out += `<circle class="xhc" cx="${x}" cy="${y}" r="9"/>
+            <line class="xh" x1="${x - 16}" y1="${y}" x2="${x - 5}" y2="${y}"/>
+            <line class="xh" x1="${x + 5}" y1="${y}" x2="${x + 16}" y2="${y}"/>
+            <line class="xh" x1="${x}" y1="${y - 16}" x2="${x}" y2="${y - 5}"/>
+            <line class="xh" x1="${x}" y1="${y + 5}" x2="${x}" y2="${y + 16}"/>`;
+  }
+  svg.innerHTML = out;
+}
+function redraw(){ drawSvg("svg-left", "img-left"); drawSvg("svg-right", "img-right"); }
+$("img-left").addEventListener("load", redraw);
+$("img-right").addEventListener("load", redraw);
+addEventListener("resize", redraw);
 
-  // Worst first: red pads are what someone opening this page needs to see without scrolling.
-  const order = Object.entries(pads).sort((a,b) => b[1].status - a[1].status);
-  $("pads").innerHTML = order.map(([name, p]) => {
-    const meta = [];
-    if (p.max_dbz_10nm != null) meta.push(p.max_dbz_10nm + " dBZ ≤10nm");
-    if (p.nearest_echo_nm != null && p.nearest_echo_nm < 60)
-      meta.push("echo " + p.nearest_echo_nm + " nmi");
-    const why = p.status === 2 ? `<div class="why r">${p.red.map(r => RULE_SHORT[r]||r).join(" · ")}</div>`
-              : p.status === 1 && p.yellow.length
-                ? `<div class="why y">near: ${p.yellow.map(r => RULE_SHORT[r]||r).join(" · ")}</div>`
-              : p.status === 1 ? `<div class="why y">CG lightning within 20 nmi</div>` : "";
-    return `<div class="pad">
-      <span class="light" style="background:${COLOR[String(p.status)]}"></span>
+// ---- tap / click readout --------------------------------------------------------------
+function onTap(ev){
+  if (!M) return;
+  const r = ev.currentTarget.getBoundingClientRect();
+  const fx = Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width));
+  const fy = Math.min(1, Math.max(0, (ev.clientY - r.top) / r.height));
+  const [lat, lon] = fromFrac(fx, fy);
+  pin = {lat, lon, label: null};
+  readout(lat, lon, null); redraw();
+}
+$("map-left").addEventListener("click", onTap);
+$("map-right").addEventListener("click", onTap);
+
+function getData(f){
+  if (DATA[f.data] instanceof Uint8Array) return Promise.resolve(DATA[f.data]);
+  if (DATA[f.data]) return DATA[f.data];
+  DATA[f.data] = fetch(bust(f.data)).then(r => r.arrayBuffer())
+    .then(b => (DATA[f.data] = new Uint8Array(b)));
+  return DATA[f.data];
+}
+
+function readout(lat, lon, label){
+  const f = frameAt(idx), g = M.grid;
+  const j = Math.round((g.lat_n - lat) / g.dlat), i = Math.round((lon - g.lon_w) / g.dlon);
+  const box = $("readout");
+  if (j < 0 || i < 0 || j >= g.ny || i >= g.nx){
+    box.innerHTML = `<h3>Point readout</h3><div class="hint">That point is outside the scored area.</div>`;
+    return;
+  }
+  getData(f).then(d => {
+    const n = g.ny * g.nx, c = j * g.nx + i;
+    const st = d[c] - 1, cls = d[n + c], dbz = d[2 * n + c], top = d[3 * n + c];
+    const rb = d[4 * n + c], yb = d[5 * n + c];
+    const S = M.status[String(st)], C = M.classes[cls];
+    const red = M.rule_keys.filter((k, b) => rb & (1 << b));
+    const yel = M.rule_keys.filter((k, b) => yb & (1 << b));
+    const where = label || `${Math.abs(lat).toFixed(3)}° N, ${Math.abs(lon).toFixed(3)}° W`;
+    box.innerHTML = `
+      <h3>${where}</h3>
+      <div class="hint">frame ${hhmm(f.valid)}</div>
+      <div class="ro-status"><span class="lamp s${st}"></span>${S.name}</div>
+      <div class="ro-class"><i style="background:${cls ? C.color : "transparent"};
+           ${cls ? "" : "box-shadow:inset 0 0 0 1px var(--line-2)"}"></i>${C.name}</div>
+      <dl>
+        <dt>Composite</dt><dd>${dbz === 255 ? "no echo" : (dbz / 2).toFixed(1) + " dBZ"}</dd>
+        <dt>Echo reaches</dt><dd>${M.top_levels[top]}</dd>
+      </dl>
+      ${red.length || yel.length ? `<ul class="rules">
+        ${red.map(k => `<li class="r">${SHORT[k] || k}</li>`).join("")}
+        ${yel.map(k => `<li class="y">Within 2 nmi: ${lcFirst(SHORT[k] || k)}</li>`).join("")}
+      </ul>` : (st === 1 ? `<ul class="rules"><li class="y">CG lightning within 20 nmi</li></ul>` : "")}`;
+  });
+}
+
+// ---- pads -----------------------------------------------------------------------------
+function pads(f){
+  const P = f.pads || {};
+  const t = {"2": 0, "1": 0, "0": 0};
+  Object.values(P).forEach(p => { if (t[String(p.status)] != null) t[String(p.status)]++; });
+  $("tally").innerHTML = `<span><b>${t["2"]}</b> violating</span><span><b>${t["1"]}</b> watch</span>` +
+                         `<span><b>${t["0"]}</b> clear</span>`;
+  const rows = Object.entries(P).sort((a, b) => b[1].status - a[1].status);
+  $("pads").innerHTML = rows.map(([name, p]) => {
+    const num = [];
+    if (p.max_dbz_10nm != null) num.push(`${p.max_dbz_10nm} dBZ`);
+    if (p.nearest_echo_nm != null && p.nearest_echo_nm < 60) num.push(`echo ${p.nearest_echo_nm} nmi`);
+    const reason = p.status === 2 ? p.red.map(k => SHORT[k] || k).join(", ")
+                 : p.status === 1 ? (p.yellow.length ? "Within 2 nmi of: " +
+                     p.yellow.map(k => lcFirst(SHORT[k] || k)).join(", ")
+                   : "CG lightning within 20 nmi") : "";
+    return `<div class="row" data-pad="${name}" tabindex="0">
+      <span class="lamp s${p.status}"></span>
       <span class="pname">${name}</span>
-      <span class="pmeta">${meta.join(" · ") || "clear ≤10 nmi"}</span>
-      ${why}</div>`;
+      <span class="pclass">${p.class_10nm ? "Within 10 nmi: " + lcFirst(p.class_10nm) : "No echo within 10 nmi"}</span>
+      <span class="pnum">${num.join("&ensp;")}</span>
+      ${reason ? `<span class="reason s${p.status}">${reason}</span>` : ""}
+    </div>`;
   }).join("");
+  document.querySelectorAll(".row").forEach(el => {
+    const go = () => { const s = M.sites[el.dataset.pad];
+      pin = {lat: s[0], lon: s[1], label: el.dataset.pad}; readout(s[0], s[1], el.dataset.pad); redraw(); };
+    el.addEventListener("click", go);
+    el.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  });
 }
 
-function start(){ $("play").textContent = "PAUSE";
-  // play oldest -> newest, which is the direction weather actually moves
-  let k = M.frames.length - 1;
-  timer = setInterval(() => { show(k); k = k > 0 ? k - 1 : M.frames.length - 1; }, 650); }
-function stop(){ if (timer) clearInterval(timer); timer = null; $("play").textContent = "PLAY"; }
+// ---- chrome ---------------------------------------------------------------------------
+function legendLeft(){
+  if (mode === "class"){
+    $("left-title").textContent = "Cloud class"; $("left-sub").textContent = "what the echo is";
+    $("legend-left").innerHTML = M.classes.filter(c => c.id > 0)
+      .map(c => `<span><i style="background:${c.color}"></i>${c.name}</span>`).join("");
+  } else if (view === "over"){
+    $("left-title").textContent = "Status on radar";
+    $("left-sub").textContent = "outlines over reflectivity";
+    $("legend-left").innerHTML =
+      `<span><i style="background:var(--red)"></i>Violating, inside the line</span>` +
+      `<span><i style="background:var(--yellow)"></i>Watch, inside the line</span>`;
+  } else {
+    $("left-title").textContent = "Status"; $("left-sub").textContent = "every cell as the flight path";
+    $("legend-left").innerHTML = ["2", "1", "0", "-1"].map(k =>
+      `<span><i style="background:${M.status[k].color}"></i>${M.status[k].name}</span>`).join("");
+  }
+}
+function drawRefl(){
+  const R = M.refl;
+  $("refl").innerHTML = R.colors.map(c => `<span style="background:${c}"></span>`).join("");
+  $("reflticks").innerHTML = [0, 20, 40, 60, 75].map(v => `<span>${v}</span>`).join("") +
+                             "<span>dBZ</span>";
+}
+function drawTicks(){
+  const n = M.frames.length, step = Math.max(1, Math.ceil(n / 6));
+  $("ticks").innerHTML = M.frames.filter((_, k) => k % step === 0 || k === n - 1)
+    .map(f => `<span>${hhmm(f.valid)}</span>`).join("");
+}
+function drawMethod(){
+  $("method").innerHTML =
+    `<p>Every point is scored against ${M.standard} as if the flight path passed through it, ` +
+    `gated on echo of 0 dBZ or more, which is how the standard itself defines a non-transparent ` +
+    `cloud. <b>Watch</b> means a rule would be broken if its standoff were 2 nmi longer, or ` +
+    `cloud-to-ground lightning is within 20 nmi. <b>Clear</b> means no violation the radar can ` +
+    `see. It is not a GO.</p>` +
+    `<p><b>Evaluated:</b> ${Object.values(M.rules).join("; ")}.</p>` +
+    `<p><b>Not evaluated:</b> ${M.not_evaluated.join("; ")}.</p>` +
+    `<p><b>Anvil base is conservative.</b> Radar cannot separate an anvil from the precipitation ` +
+    `it drops, so any echo at the 0 °C level beneath an anvil counts as the anvil reaching 0 °C, ` +
+    `and the exception for an anvil entirely colder than 0 °C is rarely granted.</p>` +
+    `<p>Page ${VIEWER_VERSION}. Built ${hhmm(M.generated)}.</p>`;
+}
+function checkStale(){
+  const f = M.frames[M.frames.length - 1];
+  $("clock").textContent = hhmm(f.valid);
+  $("clockd").textContent = dayLabel(f.valid);
+  const a = minsSince(f.valid), age = $("age"), box = $("stale");
+  if (a == null){ age.textContent = ""; return; }
+  age.textContent = Math.round(a) + " min old";
+  age.className = "age" + (a >= STALE_BAD_MIN ? " bad" : a >= STALE_WARN_MIN ? " warn" : "");
+  if (a >= STALE_BAD_MIN){
+    box.className = "stale on";
+    box.textContent = `The newest radar is ${Math.round(a)} minutes old. Updates have stopped, ` +
+      `so this does not show current conditions.`;
+  } else box.className = "stale";
+}
 
+// ---- controls -------------------------------------------------------------------------
+function press(a, b){ $(a).setAttribute("aria-pressed", "true"); $(b).setAttribute("aria-pressed", "false"); }
+$("m-status").onclick = () => { mode = "status"; press("m-status", "m-class"); legendLeft(); show(idx); };
+$("m-class").onclick  = () => { mode = "class";  press("m-class", "m-status"); legendLeft(); show(idx); };
+$("v-pair").onclick = () => { view = "pair"; press("v-pair", "v-over");
+  $("maps").classList.remove("overlay"); $("p-right").hidden = false; legendLeft(); show(idx); };
+$("v-over").onclick = () => { view = "over"; press("v-over", "v-pair");
+  // Overlay is status outlines on radar; class mode has no outline form, so it steps back.
+  mode = "status"; press("m-status", "m-class");
+  $("maps").classList.add("overlay"); $("p-right").hidden = true; legendLeft(); show(idx); };
+$("rings").onchange = redraw;
+
+function start(){ $("play").textContent = "Pause";
+  timer = setInterval(() => show((idx + 1) % M.frames.length), 700); }
+function stop(){ if (timer) clearInterval(timer); timer = null; $("play").textContent = "Play"; }
+$("play").onclick = () => timer ? stop() : start();
 $("scrub").addEventListener("input", e => { stop(); show(+e.target.value); });
-$("play").addEventListener("click", () => timer ? stop() : start());
-// Refresh quietly in the background so a phone left open stays current, and re-check
-// staleness every minute even when nothing new has arrived.
+addEventListener("keydown", e => {
+  if (!M || e.target.tagName === "INPUT") return;
+  if (e.key === "ArrowRight"){ stop(); show(Math.min(idx + 1, M.frames.length - 1)); }
+  if (e.key === "ArrowLeft"){ stop(); show(Math.max(idx - 1, 0)); }
+  if (e.key === " "){ e.preventDefault(); timer ? stop() : start(); }
+});
+
 setInterval(() => { if (!timer) load(); }, REFRESH_S * 1000);
 setInterval(() => { if (M) checkStale(); }, 30000);
 load();
