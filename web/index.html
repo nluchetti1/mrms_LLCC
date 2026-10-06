@@ -278,7 +278,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v10";
+const VIEWER_VERSION = "mrms-v11";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -698,15 +698,25 @@ async function drawSection(){
   for (let kft = 0; kft <= ZMAX * 3.28084; kft += 10){
     x.fillText(kft + " kft", pl + PW + 6, yOf(kft / 3.28084) + 4);
   }
-  // isotherms
-  const z0 = f.freezing_km || 4.8, z20 = z0 + 20 / 6.5;
-  [[z0, "0 °C"], [z20, "−20 °C"]].forEach(([z, lbl]) => {
+  // isotherms: all five from the XMR model sounding when this frame has one; otherwise the two
+  // the old estimate could give, marked as estimates so nobody mistakes them for measured.
+  const I = f.isotherms_km, z0e = f.freezing_km || 4.8;
+  const iso = I
+    ? [["+5", "+5 °C"], ["+0", "0 °C"], ["-5", "−5 °C"], ["-10", "−10 °C"], ["-20", "−20 °C"]]
+        .filter(([k]) => I[k] != null).map(([k, l]) => [I[k], l, k === "+0" || k === "-20"])
+    : [[z0e, "0 °C (est.)", true], [z0e + 20 / 6.5, "−20 °C (est.)", true]];
+  iso.forEach(([z, lbl, key]) => {
     const y = yOf(z);
-    x.setLineDash([5, 4]); x.strokeStyle = "#E8EEF3"; x.globalAlpha = 0.8;
+    // 0 and -20 C define the rules, so they read stronger than the intermediate levels
+    x.setLineDash(key ? [6, 4] : [2, 4]); x.strokeStyle = "#E8EEF3"; x.globalAlpha = key ? 0.9 : 0.55;
+    x.lineWidth = key ? 1.4 : 1;
     x.beginPath(); x.moveTo(pl, y + 0.5); x.lineTo(pl + PW, y + 0.5); x.stroke();
-    x.setLineDash([]); x.globalAlpha = 1;
-    x.fillStyle = "#E8EEF3"; x.textAlign = "left"; x.fillText(lbl, pl + 6, y - 4);
+    x.setLineDash([]); x.globalAlpha = 1; x.lineWidth = 1;
+    x.fillStyle = "#E8EEF3"; x.textAlign = "left";
+    x.font = (key ? "600 " : "500 ") + '11.5px "Barlow", sans-serif';
+    x.fillText(lbl, pl + 6, y - 3);
   });
+  x.font = '500 11.5px "Barlow", sans-serif';
   // distance axis
   x.fillStyle = "#9FB2C4"; x.textAlign = "center";
   const nmi = km / 1.852, step = nmi > 40 ? 10 : nmi > 15 ? 5 : 2;
@@ -734,7 +744,7 @@ async function drawSection(){
     `<span><i style="background:var(--red)"></i>Top strip: status along the line</span>` +
     `<span><i style="background:#B892F2"></i>Second strip: cloud class</span>` +
     `<span><i style="background:#26313F"></i>Radar cannot see this low</span>` +
-    `<span>Isotherms: 0 °C from the model freezing level, −20 °C estimated at 6.5 °C/km</span>`;
+    `<span>Isotherms: ${f.iso_source || "estimated"}</span>`;
 }
 addEventListener("resize", () => { if (xsOn) drawSection(); });
 $("xs-smooth").onchange = () => drawSection();
