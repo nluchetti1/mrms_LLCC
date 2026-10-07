@@ -78,7 +78,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v11"
+VIEWER_VERSION_EXPECTED = "mrms-v14"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -205,7 +205,8 @@ RULE_HOW = {
                        "more within 5 nmi.",
     "thick_layer":     "The point has echo at both ends of a 10-degree span inside the 0 to "
                        "−20 °C band (0 and −10, −5 and −15, or −10 and −20 °C): a layer at least "
-                       "~5,000 ft deep. Not applied to anvil.",
+                       "~5,000 ft deep. Not applied to anvil or to cumulus - convective echo and "
+                       "cores are excluded; echo whose type is unknown is still tested.",
 }
 WATCH_HOW = ("Watch means no rule is broken, but one would be if its standoff were 2 nmi longer, "
              "or there is a cloud-to-ground flash within 20 nmi.")
@@ -258,11 +259,12 @@ CLASSES = [
             "upper-level echo, no echo at 0 °C beneath it, no unbroken path back to a core now - "
             "and lying where an attached anvil was in the last hour, allowing ~32 kt of drift. "
             "Unconnected echo rooted down through 0 °C is a tower and stays cumulus."},
-    {"id": 8, "key": "elev", "name": "Elevated layer, not convective", "color": "#C9A66B",
-     "how": "Floating echo above freezing with no convective origin in the last hour of the "
-            "loop: a mid- or upper-level layer cloud, not anvil. Scored by the thick-cloud-layer "
-            "rule when it spans about 4,500 ft of the 0 to −20 °C band, never by the anvil or "
-            "cumulus standoffs."},
+    {"id": 8, "key": "elev", "name": "Layered cloud, not convective", "color": "#C9A66B",
+     "how": "Echo the convective/stratiform separation (Steiner et al. 1995, run on the 3-D "
+            "volume's ~3 km level) calls stratiform and that is not anvil, or floating echo with "
+            "no convective origin in the last hour. Layered cloud, not cumulus: scored by the "
+            "thick-cloud-layer rule when it spans about 4,500 ft of the 0 to −20 °C band, never by "
+            "the cumulus or anvil standoffs."},
 ]
 # Radar cannot reliably tell convective from layered cloud, so a broad stratiform shield that
 # reaches -20 C is classed as "cumulus topping below -20 C". The classes are named for the
@@ -330,22 +332,24 @@ def latest_url(product):
 _STAMP_RE = re.compile(r'href="(MRMS_[^"]+?_(\d{8}-\d{6})\.grib2\.gz)"')
 
 
-def listing(sess, product, cache):
+def listing(sess, product, cache, root=None):
     """[(datetime, url)] of the timestamped files MRMS keeps for a product, newest first."""
-    if product in cache:
-        return cache[product]
+    ck = (root or ROOT, product)
+    if ck in cache:
+        return cache[ck]
     try:
-        r = sess.get(f"{ROOT}/{product}/", timeout=60)
+        root = root or ROOT
+        r = sess.get(f"{root}/{product}/", timeout=60)
         r.raise_for_status()
         out = []
         for name, stamp in _STAMP_RE.findall(r.text):
             t = datetime.datetime.strptime(stamp, "%Y%m%d-%H%M%S")
-            out.append((t, f"{ROOT}/{product}/{name}"))
+            out.append((t, f"{root}/{product}/{name}"))
         out.sort(reverse=True)
     except Exception as e:
         logging.warning(f"listing {product}: {type(e).__name__}: {e}")
         out = []
-    cache[product] = out
+    cache[ck] = out
     return out
 
 
@@ -598,6 +602,113 @@ def encode_volume(vol):
     return enc
 
 
+# --------------------------------------------------------------------------------------
+# Convective / stratiform separation - Steiner, Houze & Yuter (1995)
+# --------------------------------------------------------------------------------------
+# Without it, any non-anvil echo reaching -10 C was "cumulus": a stratiform rain shield picked
+# up a 5 nmi cumulus standoff, and the readout invented a cumulonimbus core to explain it.
+# Steiner et al. (1995, J. Appl. Meteor. 34, 1978-2007) is the standard separation, and is what
+# Py-ART's steiner_conv_strat implements. It wants reflectivity on a constant-height surface
+# BELOW the melting layer, which the 3-D volume supplies: the level nearest 3 km and at least
+# 1 km under the freezing level, so the bright band cannot masquerade as a convective peak.
+#
+#   background   linear-Z mean of echo within 11 km
+#   centre       Z >= 40 dBZ, or Z - Zbg >= dZcc, where dZcc = 10 - Zbg^2/180 (0 <= Zbg < 42.43),
+#                10 below 0 dBZ background, 0 above 42.43
+#   radius       1 to 5 km around each centre, growing with Zbg (<25, 25-30, 30-35, 35-40, 40+)
+STEINER = {"bg_radius_km": 11.0, "intense_dbz": 40.0, "target_km": 3.0,
+           "below_freezing_km": 1.0, "min_km": 1.5}
+# Isolated cells. Steiner judges peakedness against the mean of ECHO within 11 km, so a lone
+# cell is measured against itself and is never peaked: a uniform 34 dBZ tower in clear air was
+# classed stratiform in testing - layered cloud, no cumulus standoffs, the unsafe direction, and
+# exactly Florida's isolated afternoon cumulus. Powell, Houze & Brodzik (2016) added explicit
+# isolated-convective categories for this weakness. Here: an echo object small enough to fit in
+# the background window has no meaningful background, so it is convective. Every error this
+# makes is conservative - a small stratiform patch gets called convective, never the reverse.
+ISOLATED_KM2 = float(np.pi * 11.0 ** 2)      # ~380 km2, the background window's area
+
+
+def steiner_level(heights, z0_km):
+    """Index of the volume level Steiner runs on: highest level at or below both 3 km and
+    1 km under freezing, and not below 1.5 km."""
+    top = min(STEINER["target_km"], z0_km - STEINER["below_freezing_km"])
+    ok = [k for k, h in enumerate(heights) if STEINER["min_km"] <= h <= top + 1e-6]
+    if ok:
+        return ok[-1]
+    near = [k for k, h in enumerate(heights) if h >= STEINER["min_km"]]
+    return near[0] if near else 0
+
+
+def steiner_conv_strat(z, dlat_km, dlon_km):
+    """(convective, stratiform) masks from one constant-height reflectivity field in dBZ.
+    Sentinels (-99 no echo, -999 no coverage) are simply not echo."""
+    from scipy.ndimage import convolve
+    echo = z >= 0.0
+    zlin = np.where(echo, 10.0 ** (z / 10.0), 0.0)
+    k = _disc(STEINER["bg_radius_km"] / 1.852, dlat_km, dlon_km).astype(float)
+    num = convolve(zlin, k, mode="constant", cval=0.0)
+    cnt = convolve(echo.astype(float), k, mode="constant", cval=0.0)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        zbg = np.where(cnt > 0, 10.0 * np.log10(np.maximum(num / np.maximum(cnt, 1e-9), 1e-9)), -99.0)
+    dzcc = np.where(zbg < 0, 10.0, np.where(zbg < 42.43, 10.0 - zbg ** 2 / 180.0, 0.0))
+    centre = echo & ((z >= STEINER["intense_dbz"]) | ((z - zbg) >= dzcc))
+    radius = np.select([zbg < 25, zbg < 30, zbg < 35, zbg < 40], [1, 2, 3, 4], 5)
+    conv = np.zeros(z.shape, bool)
+    for r in range(1, 6):
+        m = centre & (radius == r)
+        if m.any():
+            conv |= maximum_filter(m.astype(np.uint8),
+                                   footprint=_disc(r / 1.852, dlat_km, dlon_km)) > 0
+    conv &= echo
+    lab, n = label(echo, structure=np.ones((3, 3)))
+    if n:
+        area = np.bincount(lab.ravel(), minlength=n + 1) * dlat_km * dlon_km
+        small = area <= ISOLATED_KM2
+        small[0] = False
+        conv |= small[lab]
+    return conv, echo & ~conv
+
+
+def separation(vol, heights, vbase, z0, iso, la, lo):
+    """Everything the classifier reads from the volume.
+
+    convective / stratiform   Steiner at the chosen level
+    known                     columns where that level is not blind - elsewhere the split is
+                              unknown and the conservative cumulus treatment stays
+    below0                    echo base below the 0 C height, or a base the radar cannot see
+                              under: what fails part (a) of the anvil exception
+    """
+    z0_m = iso[0.0] if iso and 0.0 in iso else float(np.nanmean(z0))
+    k = steiner_level(list(heights), z0_m / 1000.0)
+    lvl = vol[k]
+    dlat_km, dlon_km = _spacing(la, lo)
+    conv, strat = steiner_conv_strat(lvl, dlat_km, dlon_km)
+    known = lvl > -900.0
+    base_idx = (vbase & 63).astype(int)
+    has = vbase != 255
+    base_h = np.where(has, np.asarray(heights)[np.clip(base_idx, 0, len(heights) - 1)] * 1000.0,
+                      np.inf)
+    blind_below = has & ((vbase & 64) > 0)
+    return {"conv": conv, "strat": strat & known, "known": known,
+            "below0": has & ((base_h < z0_m) | blind_below), "level_km": float(heights[k])}
+
+
+def separation_lite(lvl, height_km, la, lo):
+    """Steiner from ONE level, for frames without a full volume (archive frames, or a volume
+    that failed). Measured 7 Oct 2026, MRMS PrecipFlag agreed with Steiner on 96.8% of cells -
+    but every disagreement (611 cells) was Steiner convective / PrecipFlag stratiform, never the
+    reverse, so PrecipFlag is the LESS conservative of the two exactly where it matters; and it
+    said nothing at all about 52% of the box, where weak elevated echo sits under its "no
+    precipitation" code. One 3-D level is ~600 KB and a second to decode, so every frame runs
+    the same algorithm instead. Part (a) of the anvil exception still needs echo bases, so it
+    falls back to the 0 C slice on these frames."""
+    dlat_km, dlon_km = _spacing(la, lo)
+    conv, strat = steiner_conv_strat(lvl, dlat_km, dlon_km)
+    known = lvl > -900.0
+    return {"conv": conv, "strat": strat & known, "known": known, "below0": None,
+            "level_km": float(height_km)}
+
+
 def column_base_top(enc):
     """Echo base and top as level indices per column.
 
@@ -670,7 +781,7 @@ def attached_history(frames, valid_iso, la, lo):
     return union if seen else None
 
 
-def evaluate(F, z0, la, lo, history=None, iso=None):
+def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
     """Traffic light, per-rule grids, cloud class and echo-top level for every cell."""
     L = LLCC
     dlat_km, dlon_km = _spacing(la, lo)
@@ -746,7 +857,12 @@ def evaluate(F, z0, la, lo, history=None, iso=None):
 
     # LLCCR 18 exception, CONSERVATIVE: any echo at the 0 C slice under an anvil within 5 nmi
     # fails it, because radar cannot separate the anvil from the precipitation it drops.
-    anvil_warm = near((attached | detached) & e["r0"], L["excep_nm"])
+    # Part (a), conservatively: the anvil within 5 nmi must lie entirely where it is colder than
+    # 0 C. With a volume that is tested on the echo base itself against the 0 C height (from the
+    # sounding when there is one) - any anvil column with echo below 0 C, or a base the radar is
+    # blind under, fails it. Without one it falls back to echo at the 0 C isotherm slice.
+    warm_cols = sep["below0"] if (sep is not None and sep.get("below0") is not None) else e["r0"]
+    anvil_warm = near((attached | detached) & warm_cols, L["excep_nm"])
     mrr = peak(np.where(comp > -90, comp, -99.0).astype(np.float32), L["mrr_search_nm"])
     mrr_ok = peak(mrr, L["mrr_eval_nm"]) < L["mrr_dbz"]
     exception = ~anvil_warm & mrr_ok
@@ -759,8 +875,13 @@ def evaluate(F, z0, la, lo, history=None, iso=None):
     # scored as cumulus by its own anvil echo. The parent cumulonimbus tower IS cumulus, so a
     # point near a core can still trip the cumulus rules - from the core, not the anvil.
     anvil_any = attached | detached
-    # An elevated layer is not cumulus either: it must not drive a cumulus standoff.
-    not_cu = anvil_any | elevated
+    # Stratiform echo (Steiner) that is not anvil is layered cloud, not cumulus. Columns where
+    # the separation is unknown - no volume, or blind at the Steiner level - keep the
+    # conservative cumulus treatment.
+    layered = (echo & sep["strat"] & ~anvil_any & ~core) if sep is not None \
+        else np.zeros(comp.shape, bool)
+    # Neither an elevated layer nor stratiform cloud is cumulus: neither drives a cumulus standoff.
+    not_cu = anvil_any | elevated | layered
     cu_echo = echo & ~not_cu
     cu10 = (e["r10"] | gap_m10) & ~not_cu
     cu20 = e["r20"] & ~not_cu
@@ -768,7 +889,13 @@ def evaluate(F, z0, la, lo, history=None, iso=None):
     # isotherm slices 10 C apart are ~1.5 km (~5,000 ft) apart, so echo at both ends of any
     # 10-degree span counts. The first version only tested 0 to -10 C, so an elevated layer
     # spanning -5 to -15 C was never scored at all.
-    thick = ((e["r0"] & e["r10"]) | (e["r5"] & e["r15"]) | (e["r10"] & e["r20"])) & ~anvil_any
+    # Cumulus is not scored by the thick-layer rule - 45 WS practice, confirmed 7 Oct 2026. So
+    # known-convective echo (Steiner) and convective cores are excluded along with anvil. Where
+    # the separation is UNKNOWN - no volume level, or blind there - the rule still applies,
+    # because the echo cannot be confirmed to be cumulus.
+    known_cu = core | (sep["conv"] if sep is not None else np.zeros(comp.shape, bool))
+    thick = (((e["r0"] & e["r10"]) | (e["r5"] & e["r15"]) | (e["r10"] & e["r20"]))
+             & ~anvil_any & ~known_cu)
 
     def rules(m):
         lit = near(lightning, L["lightning_nm"] + m)
@@ -817,13 +944,23 @@ def evaluate(F, z0, la, lo, history=None, iso=None):
     cls[top == 6] = 4
     cls[top == 7] = 7 if history is None else 8   # aloft-only echo: detached or elevated layer
     cls[elevated] = 8
+    cls[layered] = 8
     cls[detached] = 7
     cls[attached] = 6
     cls[core] = 5
     cls[~echo] = 0
 
     dist_km = distance_transform_edt(~echo, sampling=(dlat_km, dlon_km))
+    # The anvil exception, per point, for the readout: does an anvil standoff even apply here,
+    # and which part fails. MRR is the 4 nmi composite maximum, taken within 1 nmi.
+    exc_near = near(anvil_any, L["attached_3nm"])
+    mrr_here = peak(mrr, L["mrr_eval_nm"])
     diag = {"attached": attached, "detached": detached, "elevated": elevated,
+            "layered": layered, "sep": sep is not None,
+            "conv": sep["conv"] if sep is not None else None,
+            "strat": sep["strat"] if sep is not None else None,
+            "exc_near": exc_near, "exc_a_fail": anvil_warm, "exc_b_fail": ~mrr_ok,
+            "mrr": mrr_here,
             "core": core, "echo": echo,
             "dist_echo_nm": dist_km / 1.852, "lightning": lightning}
     return status, red_rules, yel_rules, cls, top, diag
@@ -974,7 +1111,7 @@ def render_layers(status, cls, F, diag, la, lo, stem):
     return paths
 
 
-def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop=None):
+def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop=None, diag=None):
     """Per-cell readout for the viewer: eight uint8 planes, north-up, row-major.
 
         0 status + 1        (0 no coverage, 1 clear, 2 watch, 3 violating)
@@ -985,8 +1122,12 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
         5 yellow rule bits
         6 3-D echo base     (level index, +64 if the radar is blind below; 255 none; 253 no volume)
         7 3-D echo top      (level index; 255 none; 253 no volume)
+        8 MRR * 2           (largest composite within 4 nmi, taken within 1 nmi; 255 none)
+        9 flags             bit0 an anvil standoff applies here (anvil within 3 nmi)
+                            bit1 exception part (a) fails   bit2 part (b) fails
+                            bit3 convective   bit4 stratiform   bit5 separation was available
 
-    Older frames have only the first six; the viewer checks the length.
+    Older frames have six or eight planes; the viewer checks the length.
     """
     dbz = np.where(F["comp"] >= 0, np.clip(np.round(F["comp"] * 2), 0, 254), 255)
     rbits = np.zeros(status.shape, np.uint8)
@@ -995,9 +1136,21 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
         rbits |= (red_rules[k].astype(np.uint8) << b)
         ybits |= ((yel_rules[k] & ~red_rules[k]).astype(np.uint8) << b)
     none = np.full(status.shape, VOL_NONE, np.uint8)
+    if diag is not None:
+        m = diag["mrr"]
+        mrr = np.where(m >= 0, np.clip(np.round(m * 2), 0, 254), 255).astype(np.uint8)
+        fl = (diag["exc_near"].astype(np.uint8)
+              | (diag["exc_a_fail"].astype(np.uint8) << 1)
+              | (diag["exc_b_fail"].astype(np.uint8) << 2))
+        if diag["sep"]:
+            fl |= (diag["conv"].astype(np.uint8) << 3) | (diag["strat"].astype(np.uint8) << 4) | 32
+    else:
+        mrr = np.full(status.shape, 255, np.uint8)
+        fl = np.zeros(status.shape, np.uint8)
     planes = [(status + 1).astype(np.uint8), cls.astype(np.uint8), dbz.astype(np.uint8),
               top.astype(np.uint8), rbits, ybits,
-              vbase if vbase is not None else none, vtop if vtop is not None else none]
+              vbase if vbase is not None else none, vtop if vtop is not None else none,
+              mrr, fl.astype(np.uint8)]
     rel = f"{stem}.bin"
     with open(os.path.join(OUT_DIR, rel), "wb") as fp:
         fp.write(b"".join(p.tobytes() for p in planes))
@@ -1007,7 +1160,7 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
 # --------------------------------------------------------------------------------------
 # Frames
 # --------------------------------------------------------------------------------------
-def build_frame(sess, sources, z0, levels=None, prior=None, snd=None):
+def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_src=None):
     """One complete frame from a {key: url} mapping.
 
     Always returns (frame, la, lo). On failure all three are None - one shape on every path,
@@ -1051,17 +1204,15 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None):
     valid0 = valid_times.get("comp") or max((v for v in valid_times.values() if v), default=None)
     history = attached_history(prior or [], valid0, la, lo) if valid0 else None
     iso, iso_src = isotherms_for(snd, valid0)
-    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history, iso)
-    pads = pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo)
-
-    valid = valid_times.get("comp") or max((v for v in valid_times.values() if v), default=None)
+    valid = valid0
     stamp = valid.replace(":", "").replace("-", "")[:13]
     stem = f"frames/{stamp}"
-    images = render_layers(status, cls, F, diag, la, lo, stem)
 
-    # The 3-D volume, for the newest frame only. Its failure never costs the 2-D frame.
+    # The 3-D volume, for the newest frame only - fetched BEFORE classifying, because the
+    # convective/stratiform separation and the anvil exception's part (a) both read it. Its
+    # failure never costs the 2-D frame.
     vbase = vtop = vol_rel = vol_valid = None
-    vol_note = "not fetched"
+    sep, vol_note = None, "not fetched"
     if levels:
         try:
             vol, heights, vol_valid, vol_note = fetch_volume(sess, levels, (la.size, lo.size))
@@ -1074,10 +1225,27 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None):
                 with open(os.path.join(OUT_DIR, vol_rel), "wb") as fp:
                     fp.write(gzip.compress(enc.tobytes(), compresslevel=6))
                 _VOL_LEVELS[:] = [float(h) for h in heights]
+                sep = separation(vol, heights, vbase, z0, iso, la, lo)
+                vol_note += f"; Steiner at {sep['level_km']:g} km"
         except Exception as e:
             vol_note = f"failed: {type(e).__name__}: {e}"
         logging.info(f"3-D volume: {vol_note}")
-    data = write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase, vtop)
+
+    # No full volume: fetch just the Steiner level, so the separation still runs.
+    if sep is None and steiner_src:
+        url, h_km = steiner_src
+        try:
+            lvl, _, _, _ = decode_crop(fetch_url(sess, url), -999.0)
+            if lvl.shape == (la.size, lo.size):
+                sep = separation_lite(lvl, h_km, la, lo)
+                vol_note += f"; Steiner on the single {h_km:g} km level"
+        except Exception as e:
+            logging.warning(f"Steiner level {h_km:g} km: {type(e).__name__}: {e}")
+
+    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history, iso, sep)
+    pads = pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo)
+    images = render_layers(status, cls, F, diag, la, lo, stem)
+    data = write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase, vtop, diag)
 
     vt = [datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ")
           for v in valid_times.values() if v]
@@ -1112,8 +1280,9 @@ def _nearest(items, t, tol_min):
     return best
 
 
-def backfill_sources(sess, have_valid, newest_valid, cache, budget):
-    """Archive sources for the frames the loop is missing, newest gap first."""
+def backfill_sources(sess, have_valid, newest_valid, cache, budget, steiner=None):
+    """Archive sources for the frames the loop is missing, newest gap first.
+    Returns [(sources, steiner_src or None)]; steiner = (level directory, height km)."""
     base = datetime.datetime.strptime(newest_valid, "%Y-%m-%dT%H:%M:%SZ")
     have = [datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ") for v in have_valid if v]
     comp_list = listing(sess, PRODUCTS["comp"][0], cache)
@@ -1133,7 +1302,12 @@ def backfill_sources(sess, have_valid, newest_valid, cache, budget):
             if key == "comp":
                 continue
             src[key] = _nearest(listing(sess, product, cache), t_comp, MATCH_TOL_MIN)
-        out.append(src)
+        st = None
+        if steiner:
+            name, h_km = steiner
+            u = _nearest(listing(sess, name, cache, root=ROOT3), t_comp, MATCH_TOL_MIN)
+            st = (u, h_km) if u else None
+        out.append((src, st))
     return out
 
 
@@ -1279,8 +1453,15 @@ def main():
     except Exception as e:
         logging.warning(f"BUFKIT unavailable ({e}); isotherms estimated")
         snd = None
+    # If the newest frame's full volume fails, it still gets Steiner from the single latest level.
+    steiner_latest = None
+    if levels:
+        z0_km = float(np.nanmean(z0)) / 1000.0 if z0 is not None else 4.8
+        name, h_km = levels[steiner_level([h for _, h in levels], z0_km)]
+        steiner_latest = (f"{ROOT3}/{name}/MRMS_{name}.latest.grib2.gz", h_km)
     newest, la, lo = build_frame(sess, {k: latest_url(p) for k, (p, _, _) in PRODUCTS.items()},
-                                 z0, levels, prior=prev.get("frames", []), snd=snd)
+                                 z0, levels, prior=prev.get("frames", []), snd=snd,
+                                 steiner_src=steiner_latest)
     if newest is None:
         logging.error("latest frame withheld; previous frames left in place")
         return
@@ -1292,14 +1473,19 @@ def main():
     if len(frames) < FRAMES_KEPT:
         t0 = time.monotonic()
         cache = {}
+        steiner = None
+        if levels:
+            z0_km = (newest.get("freezing_km") or 4.8)
+            k = steiner_level([h for _, h in levels], z0_km)
+            steiner = levels[k]
         srcs = backfill_sources(sess, [f["valid"] for f in frames], newest["valid"],
-                                cache, BACKFILL_PER_RUN)
+                                cache, BACKFILL_PER_RUN, steiner)
         done = 0
-        for src in srcs:
+        for src, st in srcs:
             if time.monotonic() - t0 > BACKFILL_BUDGET_S:
                 logging.info("backfill budget spent; the rest fill on later runs")
                 break
-            frame, _, _ = build_frame(sess, src, z0, prior=frames, snd=snd)
+            frame, _, _ = build_frame(sess, src, z0, prior=frames, snd=snd, steiner_src=st)
             if frame is not None:
                 frames.append(frame)
                 done += 1
