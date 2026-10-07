@@ -4,3 +4,5 @@ requests
 pygrib
 matplotlib
 cartopy
+Pillow
+netCDF4
