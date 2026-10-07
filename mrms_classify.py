@@ -78,7 +78,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v16"
+VIEWER_VERSION_EXPECTED = "mrms-v17"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -149,7 +149,9 @@ FREEZING = "Model_0degC_Height"
 
 # Products whose absence would make a frame read greener than reality. Without any of these
 # the frame is withheld.
-ESSENTIAL = ("comp", "r0", "r10", "r20", "cg")
+ESSENTIAL = ("comp", "r0", "r10", "r20")
+# Lightning is essential too, but from EITHER source: the frame is withheld only when neither
+# GLM nor the NLDN CG product could be read (see build_frame).
 
 # --------------------------------------------------------------------------------------
 # LLCC thresholds - NASA-STD-4010 (2017-06-27)
@@ -178,7 +180,7 @@ LAPSE_C_PER_KM = 6.5
 RULE_KEYS = ["lightning", "cumulus_through", "cumulus_5nm", "cumulus_10nm",
              "attached_anvil", "detached_anvil", "disturbed", "thick_layer"]
 RULE_NAMES = {
-    "lightning":       "Lightning within 10 nmi (4.1.1)",
+    "lightning":       "Lightning within 10 nmi (4.1.1) - GLM total lightning or NLDN CG",
     "cumulus_through": "Flight through cumulus topping at or colder than +5 °C (4.1.3.1)",
     "cumulus_5nm":     "Cumulus topping colder than −10 °C within 5 nmi (4.1.3.2)",
     "cumulus_10nm":    "Cumulus topping colder than −20 °C within 10 nmi (4.1.3.3)",
@@ -189,7 +191,9 @@ RULE_NAMES = {
 }
 # How each rule is tested on the radar grid, in the viewer's own words.
 RULE_HOW = {
-    "lightning":       "Any cloud-to-ground flash in the NLDN 30-minute density within 10 nmi.",
+    "lightning":       "Any lightning within 10 nmi in the last 30 minutes: a GOES-19 GLM flash "
+                       "(total lightning, intracloud included) or an NLDN cloud-to-ground strike. "
+                       "Either source counts, so a lone CG that GLM misses is still caught.",
     "cumulus_through": "The point itself is in cumulus (not anvil) echo reaching an isotherm "
                        "level, or whose strongest return sits above the +5 °C height.",
     "cumulus_5nm":     "Cumulus or cumulonimbus echo of 0 dBZ or more at the −10 °C level "
@@ -545,6 +549,150 @@ def isotherms_for(snd, valid_iso):
     return iso, f"{snd['model']} {init:%H}Z run, profile valid {vt(best):%H}Z (PSU BUFKIT, XMR)"
 
 
+# --------------------------------------------------------------------------------------
+# Lightning from GOES-19 GLM, alongside NLDN CG
+# --------------------------------------------------------------------------------------
+# The NLDN product is cloud-to-ground ONLY, and LLCC 4.1.1 covers any lightning; most flashes
+# are intracloud, and GLM sees total lightning. Measured 7 Oct 2026: one full-disk file per
+# ~20 s, ~270 KB each, under a minute behind real time - 23 MB for a 30-minute window, but only
+# ~15 files and ~4 MB per 5-minute run when just the new files are pulled. So flashes are kept in
+# a rolling cache covering the loop plus the 30-minute window.
+#
+# GLM detection efficiency is high but not perfect, lowest for small, weak flashes, so it does not
+# REPLACE NLDN: lightning is GLM or NLDN CG, and a lone CG that GLM misses still counts.
+GLM_BUCKET = "https://noaa-goes19.s3.amazonaws.com"
+GLM_WINDOW_MIN = 30        # 4.1.1
+GLM_KEEP_MIN = 95          # backfilled frames reach back ~55 min, plus the 30-minute window
+GLM_MAX_FILES = 320        # per run - a first run pulls ~285 files; later runs ~15
+GLM_MARGIN_NM = 25.0       # keep flashes this far outside the map: 20 nmi watch plus slack
+
+
+def _utcnow():
+    """Current UTC as a naive datetime. CLOUDSCOPE_FAKE_NOW (ISO) overrides it for offline tests
+    only - production never sets it, and without it the GLM path could not be tested at all."""
+    v = os.environ.get("CLOUDSCOPE_FAKE_NOW")
+    if v:
+        return datetime.datetime.fromisoformat(v)
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+
+
+def _glm_keys(sess, now):
+    out = []
+    for h in range(int(np.ceil(GLM_KEEP_MIN / 60.0)) + 1, -1, -1):
+        t = now - datetime.timedelta(hours=h)
+        prefix = f"GLM-L2-LCFA/{t:%Y}/{t.timetuple().tm_yday:03d}/{t:%H}/"
+        token = None
+        while True:
+            url = (f"{GLM_BUCKET}/?list-type=2&prefix={prefix}"
+                   + (f"&continuation-token={requests.utils.quote(token)}" if token else ""))
+            r = sess.get(url, timeout=60)
+            r.raise_for_status()
+            for key in re.findall(r"<Key>([^<]+)</Key>", r.text):
+                m = re.search(r"_s(\d{4})(\d{3})(\d{2})(\d{2})(\d{2})", key)
+                if m:
+                    y, d, H, M, S = map(int, m.groups())
+                    out.append((datetime.datetime(y, 1, 1, H, M, S)
+                                + datetime.timedelta(days=d - 1), key))
+            m = re.search(r"<NextContinuationToken>([^<]+)</NextContinuationToken>", r.text)
+            if not m:
+                break
+            token = m.group(1)
+    return sorted(set(out))
+
+
+def _glm_read(raw):
+    """[(lat, lon, time)] for good-quality flashes in one GLM L2 file."""
+    import netCDF4
+    try:
+        ds = netCDF4.Dataset("glm", memory=raw)
+    except Exception:
+        fd, path = tempfile.mkstemp(suffix=".nc")
+        with os.fdopen(fd, "wb") as f:
+            f.write(raw)
+        ds = netCDF4.Dataset(path)
+        os.remove(path)
+    try:
+        lat = np.asarray(ds.variables["flash_lat"][:], float)
+        lon = np.asarray(ds.variables["flash_lon"][:], float)
+        off = np.asarray(ds.variables["flash_time_offset_of_first_event"][:], float)
+        q = (np.asarray(ds.variables["flash_quality_flag"][:], int)
+             if "flash_quality_flag" in ds.variables else np.zeros(lat.shape, int))
+        base = datetime.datetime.strptime(ds.time_coverage_start[:19], "%Y-%m-%dT%H:%M:%S")
+    finally:
+        ds.close()
+    mlat, mlon = GLM_MARGIN_NM * 1.852 / 111.32, GLM_MARGIN_NM * 1.852 / (111.32 * 0.87)
+    keep = ((q == 0) & (lat >= DOMAIN["lat_min"] - mlat) & (lat <= DOMAIN["lat_max"] + mlat)
+            & (lon >= DOMAIN["lon_min"] - mlon) & (lon <= DOMAIN["lon_max"] + mlon))
+    return [(float(a), float(b), base + datetime.timedelta(seconds=float(s)))
+            for a, b, s in zip(lat[keep], lon[keep], off[keep])]
+
+
+def glm_update(sess, state_dir):
+    """Bring the rolling flash cache up to date, pulling only files not seen before.
+    Returns ({flashes:[(lat, lon, datetime)], ok, newest, note})."""
+    path = os.path.join(state_dir, "glm.json")
+    now = _utcnow()
+    try:
+        with open(path) as fp:
+            cache = json.load(fp)
+    except Exception:
+        cache = {"done": [], "flashes": []}
+    done = set(cache.get("done", []))
+    flashes = [(a, b, datetime.datetime.fromisoformat(t)) for a, b, t in cache.get("flashes", [])]
+    try:
+        keys = _glm_keys(sess, now)
+    except Exception as e:
+        return {"flashes": flashes, "ok": False, "newest": None,
+                "note": f"GLM listing failed ({type(e).__name__}); NLDN CG only"}
+    cutoff = now - datetime.timedelta(minutes=GLM_KEEP_MIN)
+    todo = [(t, k) for t, k in keys if t >= cutoff and k not in done]
+    if len(todo) > GLM_MAX_FILES:
+        todo = todo[-GLM_MAX_FILES:]          # newest first matters most for the newest frame
+    got = failed = 0
+    for t, k in todo:
+        try:
+            r = sess.get(f"{GLM_BUCKET}/{k}", timeout=60)
+            r.raise_for_status()
+            flashes += _glm_read(r.content)
+            done.add(k)
+            got += 1
+        except Exception:
+            failed += 1
+    flashes = [f for f in flashes if f[2] >= cutoff]
+    keep_keys = {k for t, k in keys if t >= cutoff}
+    done &= keep_keys
+    os.makedirs(state_dir, exist_ok=True)
+    with open(path, "w") as fp:
+        json.dump({"done": sorted(done),
+                   "flashes": [[a, b, t.isoformat()] for a, b, t in flashes]}, fp)
+    newest = max((t for t, k in keys), default=None)
+    ok = bool(keys) and (newest is not None and (now - newest).total_seconds() < 15 * 60)
+    note = (f"GLM: {got} new file(s)" + (f", {failed} failed" if failed else "")
+            + f", {len(flashes)} flashes cached")
+    logging.info(note)
+    return {"flashes": flashes, "ok": ok, "newest": newest, "note": note}
+
+
+def glm_distance(flashes, valid_iso, la, lo):
+    """(distance in nmi from every cell to the nearest flash in the 30 minutes up to the frame,
+    lats, lons of those flashes). Measured from the flashes themselves, so a flash just off the
+    map still reaches cells within 10 nmi of it."""
+    from scipy.spatial import cKDTree
+    t = datetime.datetime.strptime(valid_iso[:19], "%Y-%m-%dT%H:%M:%S")
+    t0 = t - datetime.timedelta(minutes=GLM_WINDOW_MIN)
+    pts = [(a, b) for a, b, tt in flashes if t0 < tt <= t]
+    if not pts:
+        return np.full((la.size, lo.size), np.inf, np.float32), np.array([]), np.array([])
+    lat0 = float(np.mean(la))
+    kx = 111.32 * np.cos(np.radians(lat0))
+    P = np.array([((b - lo[0]) * kx, (a - la[0]) * 111.32) for a, b in pts])
+    LO, LA = np.meshgrid(lo, la)
+    G = np.column_stack([((LO - lo[0]) * kx).ravel(), ((LA - la[0]) * 111.32).ravel()])
+    d, _ = cKDTree(P).query(G)
+    arr = np.array(pts)
+    return (d.reshape(la.size, lo.size) / 1.852).astype(np.float32), arr[:, 0], arr[:, 1]
+
+
 def freezing_level(sess, prev, state_dir):
     """The 0 C height, refetched only when the cached copy is over an hour old."""
     path = os.path.join(state_dir, "z0.npy")
@@ -783,7 +931,7 @@ def attached_history(frames, valid_iso, la, lo):
     return union if seen else None
 
 
-def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
+def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None):
     """Traffic light, per-rule grids, cloud class and echo-top level for every cell."""
     L = LLCC
     dlat_km, dlon_km = _spacing(la, lo)
@@ -887,7 +1035,14 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
     mrr_ok = peak(mrr, L["mrr_eval_nm"]) < L["mrr_dbz"]
     exception = ~anvil_warm & mrr_ok
 
-    lightning = F["cg"] > 0.0
+    lightning = F["cg"] > 0.0              # NLDN CG cells, 30-minute product
+
+    def lit_within(r):
+        """Lightning within r nmi: GLM total lightning OR NLDN CG - either source counts."""
+        m = near(lightning, r)
+        if ltg_nm is not None:
+            m |= ltg_nm <= r
+        return m
 
     # Once an anvil, always an anvil. Anvil echo is scored ONLY by the anvil rules - it is not
     # cumulus, so it must never trip a cumulus standoff, however cold it reaches. The first
@@ -918,7 +1073,7 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
              & ~anvil_any & ~known_cu)
 
     def rules(m):
-        lit = near(lightning, L["lightning_nm"] + m)
+        lit = lit_within(L["lightning_nm"] + m)
         return {
             "lightning":       lit,
             "cumulus_through": near(cu_echo & top_to_plus5, m),
@@ -937,7 +1092,7 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
     yel_rules = rules(L["yellow_margin_nm"])
     red = np.logical_or.reduce([red_rules[k] for k in RULE_KEYS])
     yellow = (np.logical_or.reduce([yel_rules[k] for k in RULE_KEYS])
-              | near(lightning, L["lightning_watch_nm"])) & ~red
+              | lit_within(L["lightning_watch_nm"])) & ~red
 
     status = np.zeros(comp.shape, np.int8)
     status[yellow] = 1
@@ -971,6 +1126,9 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
     cls[~echo] = 0
 
     dist_km = distance_transform_edt(~echo, sampling=(dlat_km, dlon_km))
+    cg_nm = (distance_transform_edt(~lightning, sampling=(dlat_km, dlon_km)) / 1.852
+             if lightning.any() else np.full(comp.shape, np.inf))
+    ltg_near = np.minimum(cg_nm, ltg_nm) if ltg_nm is not None else cg_nm
     # The anvil exception, per point, for the readout: does an anvil standoff even apply here,
     # and which part fails. MRR is the 4 nmi composite maximum, taken within 1 nmi.
     exc_near = near(anvil_any, L["attached_3nm"])
@@ -982,7 +1140,7 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
             "exc_near": exc_near, "exc_a_fail": anvil_warm, "exc_b_fail": ~mrr_ok,
             "mrr": mrr_here,
             "core": core, "echo": echo,
-            "dist_echo_nm": dist_km / 1.852, "lightning": lightning}
+            "dist_echo_nm": dist_km / 1.852, "lightning": lightning, "ltg_near_nm": ltg_near}
     return status, red_rules, yel_rules, cls, top, diag
 
 
@@ -1112,10 +1270,14 @@ def render_layers(status, cls, F, diag, la, lo, stem):
     rnorm = mcolors.BoundaryNorm(REFL_LEVELS, len(REFL_COLORS))
     ax.pcolormesh(LO, LA, comp, cmap=rcmap, norm=rnorm, shading="nearest",
                   transform=pc, zorder=2)
-    if diag["lightning"].any():
+    if diag["lightning"].any():                # NLDN CG cells
         jj, ii = np.where(diag["lightning"])
-        ax.scatter(lo[ii], la[jj], marker="x", s=9, linewidths=0.9, color="#FFFFFF",
+        ax.scatter(lo[ii], la[jj], marker="+", s=12, linewidths=1.0, color="#FDE047",
                    transform=pc, zorder=9)
+    gl = diag.get("glm_pts")
+    if gl is not None and len(gl[0]):          # GLM flashes, last 30 minutes
+        ax.scatter(gl[1], gl[0], marker="x", s=9, linewidths=0.9, color="#FFFFFF",
+                   transform=pc, zorder=10)
     _chrome(ax, pc)
     paths["radar"] = f"{stem}_radar.png"
     _save(fig, os.path.join(OUT_DIR, paths["radar"]))
@@ -1146,6 +1308,7 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
         9 flags             bit0 an anvil standoff applies here (anvil within 3 nmi)
                             bit1 exception part (a) fails   bit2 part (b) fails
                             bit3 convective   bit4 stratiform   bit5 separation was available
+       10 nearest lightning (GLM or NLDN CG, last 30 min), nmi * 5; 255 = none within 50 nmi
 
     Older frames have six or eight planes; the viewer checks the length.
     """
@@ -1170,7 +1333,9 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
     planes = [(status + 1).astype(np.uint8), cls.astype(np.uint8), dbz.astype(np.uint8),
               top.astype(np.uint8), rbits, ybits,
               vbase if vbase is not None else none, vtop if vtop is not None else none,
-              mrr, fl.astype(np.uint8)]
+              mrr, fl.astype(np.uint8),
+              (np.where(diag["ltg_near_nm"] <= 50.8, np.round(diag["ltg_near_nm"] * 5), 255)
+               .astype(np.uint8) if diag is not None else np.full(status.shape, 255, np.uint8))]
     rel = f"{stem}.bin"
     with open(os.path.join(OUT_DIR, rel), "wb") as fp:
         fp.write(b"".join(p.tobytes() for p in planes))
@@ -1180,7 +1345,7 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
 # --------------------------------------------------------------------------------------
 # Frames
 # --------------------------------------------------------------------------------------
-def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_src=None):
+def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_src=None, glm=None):
     """One complete frame from a {key: url} mapping.
 
     Always returns (frame, la, lo). On failure all three are None - one shape on every path,
@@ -1210,6 +1375,8 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
         logging.error("no product could be read for this frame")
         return None, None, None
     gone = [PRODUCTS[k][0] for k in ESSENTIAL if F.get(k) is None]
+    if F.get("cg") is None and not (glm and glm.get("ok")):
+        gone.append("lightning (neither NLDN CG nor GLM)")
     if gone:
         logging.error(f"essential product(s) missing: {gone}; frame withheld rather than "
                       f"published greener than reality")
@@ -1262,7 +1429,16 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
         except Exception as e:
             logging.warning(f"Steiner level {h_km:g} km: {type(e).__name__}: {e}")
 
-    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history, iso, sep)
+    ltg_nm, glat, glon = (glm_distance(glm["flashes"], valid0, la, lo) if glm and glm.get("ok")
+                          else (None, np.array([]), np.array([])))
+    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history, iso, sep, ltg_nm)
+    inside = ((glat >= DOMAIN["lat_min"]) & (glat <= DOMAIN["lat_max"])
+              & (glon >= DOMAIN["lon_min"]) & (glon <= DOMAIN["lon_max"])) if glat.size else glat
+    diag["glm_pts"] = (glat[inside], glon[inside]) if glat.size else (glat, glon)
+    ltg_src = ("GLM total lightning + NLDN CG" if (glm and glm.get("ok") and F.get("cg") is not None
+                                                  and "NLDN_CG_030min_AvgDensity" not in missing)
+               else "GLM only (NLDN CG missing)" if glm and glm.get("ok")
+               else "NLDN CG only (GLM unavailable)")
     pads = pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo)
     images = render_layers(status, cls, F, diag, la, lo, stem)
     data = write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase, vtop, diag)
@@ -1280,7 +1456,9 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
                                    else float(np.nanmean(z0))) / 1000.0, 2),
              "isotherms_km": ({f"{int(t):+d}": round(z / 1000.0, 2) for t, z in iso.items()}
                               if iso else None),
-             "iso_source": iso_src}
+             "iso_source": iso_src,
+             "lightning_source": ltg_src,
+             "glm_flashes_30min": int(len(diag["glm_pts"][0]))}
     red_pads = [n for n, p in pads.items() if p["status"] == 2]
     yel_pads = [n for n, p in pads.items() if p["status"] == 1]
     logging.info(f"frame {valid}: pads violating {red_pads or '-'} watch {yel_pads or '-'}; "
@@ -1469,6 +1647,11 @@ def main():
         logging.warning(f"3-D level list unavailable ({e}); this frame stays 2-D")
         levels = None
     try:
+        glm = glm_update(sess, state_dir)
+    except Exception as e:
+        logging.warning(f"GLM unavailable ({type(e).__name__}: {e}); NLDN CG only")
+        glm = None
+    try:
         snd = load_soundings(sess, prev, state_dir)
     except Exception as e:
         logging.warning(f"BUFKIT unavailable ({e}); isotherms estimated")
@@ -1481,7 +1664,7 @@ def main():
         steiner_latest = (f"{ROOT3}/{name}/MRMS_{name}.latest.grib2.gz", h_km)
     newest, la, lo = build_frame(sess, {k: latest_url(p) for k, (p, _, _) in PRODUCTS.items()},
                                  z0, levels, prior=prev.get("frames", []), snd=snd,
-                                 steiner_src=steiner_latest)
+                                 steiner_src=steiner_latest, glm=glm)
     if newest is None:
         logging.error("latest frame withheld; previous frames left in place")
         return
@@ -1505,7 +1688,7 @@ def main():
             if time.monotonic() - t0 > BACKFILL_BUDGET_S:
                 logging.info("backfill budget spent; the rest fill on later runs")
                 break
-            frame, _, _ = build_frame(sess, src, z0, prior=frames, snd=snd, steiner_src=st)
+            frame, _, _ = build_frame(sess, src, z0, prior=frames, snd=snd, steiner_src=st, glm=glm)
             if frame is not None:
                 frames.append(frame)
                 done += 1
