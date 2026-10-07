@@ -160,6 +160,9 @@
   .rules li::before{content:""; position:absolute; left:0; top:.7em; width:6px; height:6px;
                     border-radius:50%}
   .rules li.r::before{background:var(--red)} .rules li.y::before{background:var(--yellow)}
+  .rules li.g::before{background:var(--green)}
+  .exc{margin-top:12px; padding-top:10px; border-top:1px solid var(--line); font-size:14px}
+  .exc .rules{margin-top:4px}
 
   .how{margin-top:22px; display:grid; grid-template-columns:1fr 1fr; gap:14px}
   @media (max-width:900px){ .how{grid-template-columns:1fr} }
@@ -278,7 +281,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v11";
+const VIEWER_VERSION = "mrms-v14";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -466,6 +469,29 @@ function getData(f){
   return DATA[f.data];
 }
 
+// Convective/stratiform and the anvil exception, from planes 8-9 of newer frames.
+function sepRow(d, n, c){
+  if (d.length < 10 * n) return "";
+  const fl = d[9 * n + c];
+  if (!(fl & 32)) return `<dt>Echo type</dt><dd style="color:var(--dim)">Not separated (no 3-D volume)</dd>`;
+  if (fl & 8)  return `<dt>Echo type</dt><dd>Convective (Steiner)</dd>`;
+  if (fl & 16) return `<dt>Echo type</dt><dd>Stratiform (Steiner)</dd>`;
+  return `<dt>Echo type</dt><dd style="color:var(--dim)">Unknown here (blind at the separation level, or no low-level echo)</dd>`;
+}
+function exceptionBlock(d, n, c){
+  if (d.length < 10 * n) return "";
+  const fl = d[9 * n + c];
+  if (!(fl & 1)) return "";                       // no anvil within 3 nmi: the exception is moot
+  const m = d[8 * n + c], mrr = m === 255 ? null : m / 2;
+  const a = (fl & 2) ? `<li class="r">(a) fails: some of the anvil within 5 nmi has echo below the 0 °C level</li>`
+                     : `<li class="g">(a) passes: the anvil within 5 nmi lies entirely above 0 °C</li>`;
+  const b = (fl & 4) ? `<li class="r">(b) fails: MRR ${mrr == null ? "≥ 7.5" : mrr.toFixed(1)} dBZ within 1 nmi (must be below 7.5)</li>`
+                     : `<li class="g">(b) passes: MRR ${mrr == null ? "below 7.5" : mrr.toFixed(1)} dBZ within 1 nmi</li>`;
+  const ok = !(fl & 6);
+  return `<div class="exc"><b>Anvil exception (LLCCR 12, 22): ${ok ? "applies, anvil standoff lifted" : "does not apply"}</b>
+          <ul class="rules">${a}${b}</ul></div>`;
+}
+
 // Measured echo base and top from the 3-D volume, when this frame has one.
 const KFT = km => Math.round(km * 3.28084 * 10) / 10;
 function volRows(d, n, c){
@@ -506,6 +532,7 @@ function readout(lat, lon, label){
         <dt>Composite</dt><dd>${dbz === 255 ? "no echo" : (dbz / 2).toFixed(1) + " dBZ"}</dd>
         <dt>Echo top</dt><dd>${M.top_levels[top]}</dd>
         ${volRows(d, n, c)}
+        ${sepRow(d, n, c)}
       </dl>
       ${cls >= 1 && cls <= 4 && ((red.includes("cumulus_5nm") && top < 4) ||
                                  (red.includes("cumulus_10nm") && top < 6)) ?
@@ -513,7 +540,9 @@ function readout(lat, lon, label){
          standoff comes from colder cumulus nearby.</div>` : ""}
       ${(cls === 6 || cls === 7) && red.some(k => k.startsWith("cumulus")) ?
         `<div class="ro-how">This point is anvil, which is never scored as cumulus. The cumulus
-         rules here come from a cumulonimbus core within their standoff, not from this anvil.</div>` : ""}
+         rules here come from convective echo classed as cumulus within their standoff, not from
+         this anvil. Tap nearby to find it.</div>` : ""}
+      ${exceptionBlock(d, n, c)}
       ${red.length || yel.length ? `<ul class="rules">
         ${red.map(k => `<li class="r">${SHORT[k] || k}</li>`).join("")}
         ${yel.map(k => `<li class="y">Within 2 nmi: ${lcFirst(SHORT[k] || k)}</li>`).join("")}
