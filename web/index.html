@@ -235,7 +235,7 @@
     <div class="scale" id="legend-left"></div>
   </section>
   <section class="panel" id="p-right">
-    <h3>Radar <small>composite reflectivity, lightning as ×</small></h3>
+    <h3>Radar <small>composite reflectivity · GLM flashes × · NLDN CG +, last 30 min</small></h3>
     <div class="map" id="map-right">
       <img id="img-right" alt="Composite reflectivity">
       <svg id="svg-right" aria-hidden="true"></svg>
@@ -255,7 +255,7 @@
 </div>
 
 <section class="panel xs" id="xs-panel" hidden>
-  <h3><span>Vertical cross-section</span>
+  <h3><span>Vertical cross-section <small style="font-weight:400">tap it for the readout at that point</small></span>
     <span class="xsh"><label class="chk"><input type="checkbox" id="xs-smooth" checked> Smooth</label>
     <small id="xs-sub">tap a start point on either map</small></span></h3>
   <div class="xswrap"><canvas id="xs-canvas" height="320"></canvas>
@@ -281,7 +281,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v16";
+const VIEWER_VERSION = "mrms-v17";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -295,6 +295,7 @@ const SHORT = {
 let M = null, idx = 0, timer = null, STAMP = "", mode = "status", view = "pair", pin = null;
 let firstLoad = true;
 let xsOn = false, xsA = null, xsB = null;
+let xsT = null, XSG = null;            // tapped position along the section (0..1), and its geometry
 const VOLS = {};
 const DATA = {};
 const $ = id => document.getElementById(id);
@@ -450,7 +451,7 @@ function onTap(ev){
   const [lat, lon] = fromFrac(fx, fy);
   if (xsOn){
     // first tap is A, second is B, a third starts a new line
-    if (!xsA || xsB){ xsA = {lat, lon}; xsB = null; }
+    if (!xsA || xsB){ xsA = {lat, lon}; xsB = null; xsT = null; }
     else { xsB = {lat, lon}; }
     redraw(); drawSection();
     return;
@@ -477,6 +478,13 @@ function sepRow(d, n, c){
   if (fl & 8)  return `<dt>Echo type</dt><dd>Convective (Steiner)</dd>`;
   if (fl & 16) return `<dt>Echo type</dt><dd>Stratiform (Steiner)</dd>`;
   return `<dt>Echo type</dt><dd style="color:var(--dim)">Unknown here (blind at the separation level, or no low-level echo)</dd>`;
+}
+function ltgRow(d, n, c, f){
+  if (d.length < 11 * n) return "";
+  const v = d[10 * n + c];
+  const src = f.lightning_source ? ` <span style="color:var(--dim)">(${f.lightning_source})</span>` : "";
+  return v === 255 ? `<dt>Lightning</dt><dd>None within 50 nmi, last 30 min${src}</dd>`
+                   : `<dt>Lightning</dt><dd>Nearest ${(v / 5).toFixed(1)} nmi, last 30 min${src}</dd>`;
 }
 function exceptionBlock(d, n, c){
   if (d.length < 10 * n) return "";
@@ -533,6 +541,7 @@ function readout(lat, lon, label){
         <dt>Echo top</dt><dd>${M.top_levels[top]}</dd>
         ${volRows(d, n, c)}
         ${sepRow(d, n, c)}
+        ${ltgRow(d, n, c, f)}
       </dl>
       ${cls >= 1 && cls <= 4 && ((red.includes("cumulus_5nm") && top < 4) ||
                                  (red.includes("cumulus_10nm") && top < 6)) ?
@@ -746,6 +755,13 @@ async function drawSection(){
     x.fillText(lbl, pl + 6, y - 3);
   });
   x.font = '500 11.5px "Barlow", sans-serif';
+  XSG = {pl, PW, pt, PH, nmi: km / 1.852};
+  if (xsT != null){
+    const xx = pl + PW * xsT;
+    x.strokeStyle = "#FFFFFF"; x.lineWidth = 1.5; x.setLineDash([]);
+    x.beginPath(); x.moveTo(xx + 0.5, pt - 4); x.lineTo(xx + 0.5, pt + PH); x.stroke();
+    x.lineWidth = 1;
+  }
   // distance axis
   x.fillStyle = "#9FB2C4"; x.textAlign = "center";
   const nmi = km / 1.852, step = nmi > 40 ? 10 : nmi > 15 ? 5 : 2;
@@ -776,6 +792,19 @@ async function drawSection(){
     `<span>Isotherms: ${f.iso_source || "estimated"}</span>`;
 }
 addEventListener("resize", () => { if (xsOn) drawSection(); });
+// Tap the section: the readout jumps to that exact point along the line - which rules fire there,
+// and how far the nearest lightning is - with a cursor on the section and a crosshair on the maps.
+// Built to answer "why is this clear-air gap red?" without having to guess.
+$("xs-canvas").addEventListener("click", e => {
+  if (!XSG || !xsA || !xsB) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  const t = Math.min(1, Math.max(0, (e.clientX - r.left - XSG.pl) / XSG.PW));
+  xsT = t;
+  const lat = xsA.lat + (xsB.lat - xsA.lat) * t, lon = xsA.lon + (xsB.lon - xsA.lon) * t;
+  pin = {lat, lon, label: `Section, ${(t * XSG.nmi).toFixed(1)} nmi from A`};
+  readout(lat, lon, pin.label); redraw(); drawSection();
+  $("readout").scrollIntoView({behavior: "smooth", block: "nearest"});
+});
 $("xs-smooth").onchange = () => drawSection();
 
 // ---- pads -----------------------------------------------------------------------------
@@ -912,7 +941,7 @@ $("rings").onchange = redraw;
 $("xs-btn").onclick = () => {
   xsOn = !xsOn;
   $("xs-btn").setAttribute("aria-pressed", String(xsOn));
-  if (!xsOn){ xsA = xsB = null; }
+  if (!xsOn){ xsA = xsB = null; xsT = null; }
   redraw(); drawSection();
   if (xsOn) $("xs-panel").scrollIntoView({behavior: "smooth", block: "nearest"});
 };
