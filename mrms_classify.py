@@ -78,7 +78,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v14"
+VIEWER_VERSION_EXPECTED = "mrms-v16"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -255,10 +255,11 @@ CLASSES = [
             "strongest echo above the −20 °C height, or in the upper layer composite), and is "
             "joined to a convective core by unbroken echo."},
     {"id": 7, "key": "det", "name": "Detached anvil", "color": "#F5F5F4",
-     "how": "An anvil that came from a convective core and has separated from it. Floating "
-            "upper-level echo, no echo at 0 °C beneath it, no unbroken path back to a core now - "
-            "and lying where an attached anvil was in the last hour, allowing ~32 kt of drift. "
-            "Unconnected echo rooted down through 0 °C is a tower and stays cumulus."},
+     "how": "An anvil that came from a convective core and has separated from it, lying where an "
+            "attached anvil was in the last hour (allowing ~32 kt of drift) with no unbroken path "
+            "back to a core now. Either floating - no echo at 0 °C beneath it - or still raining "
+            "out as stratiform echo: anvil until it rains out. Unconnected convective echo rooted "
+            "through 0 °C is a new tower and stays cumulus."},
     {"id": 8, "key": "elev", "name": "Layered cloud, not convective", "color": "#C9A66B",
      "how": "Echo the convective/stratiform separation (Steiner et al. 1995, run on the 3-D "
             "volume's ~3 km level) calls stratiform and that is not anvil, or floating echo with "
@@ -690,6 +691,7 @@ def separation(vol, heights, vbase, z0, iso, la, lo):
                       np.inf)
     blind_below = has & ((vbase & 64) > 0)
     return {"conv": conv, "strat": strat & known, "known": known,
+            "clear_low": known & (lvl < 0.0),
             "below0": has & ((base_h < z0_m) | blind_below), "level_km": float(heights[k])}
 
 
@@ -706,7 +708,7 @@ def separation_lite(lvl, height_km, la, lo):
     conv, strat = steiner_conv_strat(lvl, dlat_km, dlon_km)
     known = lvl > -900.0
     return {"conv": conv, "strat": strat & known, "known": known, "below0": None,
-            "level_km": float(height_km)}
+            "clear_low": known & (lvl < 0.0), "level_km": float(height_km)}
 
 
 def column_base_top(enc):
@@ -829,7 +831,16 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
     top_to_plus5 = any_iso | (echo & (hmax >= z5))
 
     core = (comp >= L["core_dbz"]) | (F["vii"] > 0.0)
-    anvil = ((e["r20"] | aloft) & ~core) & echo
+    # ELEVATED echo: above freezing (it shows at an isotherm level, or sits only aloft) but with
+    # nothing at the ~3 km Steiner level where the radar can see. Its base is well above where
+    # cumulus bases sit here (~1 km), so it is never cumulus. Found at a shield's thinning edge:
+    # the top there sags below -20 C, so the fringe dropped out of the anvil test, Steiner could
+    # not judge it (no echo at 3 km), and it fell to the cumulus fallback. Now it joins the anvil
+    # candidates - contiguous with an attached anvil it is that anvil's fringe; otherwise it
+    # becomes detached anvil or an elevated layer by the same origin test as floating echo.
+    elev = (echo & sep["clear_low"] & (any_iso | aloft)) if sep is not None \
+        else np.zeros(comp.shape, bool)
+    anvil = ((e["r20"] | aloft | elev) & ~core) & echo
     lab, n = label(anvil | core, structure=np.ones((3, 3)))
     has_core = np.zeros(n + 1, bool)
     if n:
@@ -843,7 +854,7 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
     # instead of the 10 nmi cumulus one: the unsafe direction. A decayed shield that is still
     # raining out now reads as cumulus - the more conservative call - until loop history can
     # keep it anvil properly.
-    floating = anvil & ~has_core[lab] & ~e["r0"]
+    floating = anvil & ~has_core[lab] & (~e["r0"] | elev)
     # Origin: floating echo is a detached anvil only where an attached anvil was recently
     # (the drift-grown history mask). With no history at all - the first runs after deploying
     # - fall back to calling it detached anvil, the conservative choice.
@@ -853,6 +864,15 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None):
     else:
         detached = floating & history
         elevated = floating & ~history
+        # Anvil until it rains out (45 WS): a shield whose cores have died but which is still
+        # RAINING - echo down through 0 C - is a decayed anvil, not cumulus and not layered
+        # cloud. The test: rooted, unconnected anvil-level echo, lying where an attached anvil
+        # recently was, and STRATIFORM. Convective echo there is a new tower and stays cumulus,
+        # so a cell building under an old anvil never gets downgraded to a 3 nmi standoff.
+        # Without the separation this case stays cumulus, the conservative stand-in.
+        if sep is not None:
+            raining_out = anvil & ~has_core[lab] & e["r0"] & history & sep["strat"]
+            detached = detached | raining_out
     anvil = attached | detached
 
     # LLCCR 18 exception, CONSERVATIVE: any echo at the 0 C slice under an anvil within 5 nmi
