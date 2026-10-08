@@ -78,7 +78,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v18"
+VIEWER_VERSION_EXPECTED = "mrms-v19"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -169,6 +169,7 @@ LLCC = {
     "mrr_dbz": 7.5,                # exception: MRR < +7.5 dBZ within 1 nmi
     "mrr_search_nm": 4.0,          # 4.2.2c
     "mrr_eval_nm": 1.0,
+    "thick_mrr_dbz": 7.5,          # thick-layer exception: MRR < +7.5 dBZ within 1 nmi (45 WS)
     "disturbed_nm": 5.0,           # 4.1.7
     "disturbed_dbz": 30.0,
     "core_dbz": 40.0,
@@ -210,7 +211,8 @@ RULE_HOW = {
     "thick_layer":     "The point has echo at both ends of a 10-degree span inside the 0 to "
                        "−20 °C band (0 and −10, −5 and −15, or −10 and −20 °C): a layer at least "
                        "~5,000 ft deep. Not applied to anvil or to cumulus - convective echo and "
-                       "cores are excluded; echo whose type is unknown is still tested.",
+                       "cores are excluded; echo whose type is unknown is still tested. Exception: "
+                       "MRR below 7.5 dBZ within 1 nmi.",
 }
 WATCH_HOW = ("Watch means no rule is broken, but one would be if its standoff were 2 nmi longer, "
              "or there is a cloud-to-ground flash within 20 nmi.")
@@ -1284,6 +1286,11 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=N
     mrr = peak(np.where(comp > -90, comp, -99.0).astype(np.float32), L["mrr_search_nm"])
     mrr_ok = peak(mrr, L["mrr_eval_nm"]) < L["mrr_dbz"]
     exception = ~anvil_warm & mrr_ok
+    mrr1 = peak(mrr, L["mrr_eval_nm"])     # the MRR the exceptions test, per point
+    # Thick cloud layer exception (45 WS, confirmed 8 Oct 2026): no violation when MRR is below
+    # +7.5 dBZ within 1 nmi - the same MRR as anvil exception part (b). Until now the rule was
+    # applied without it, the conservative side.
+    thick_exc = mrr1 < L["thick_mrr_dbz"]
 
     lightning = F["cg"] > 0.0              # NLDN CG cells, 30-minute product
 
@@ -1356,7 +1363,7 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=N
             # Off: see RULES_OFF. Kept as an all-false grid so the bit layout of the per-cell
             # data file does not shift under the frames already in the loop.
             "disturbed":       np.zeros(comp.shape, bool),
-            "thick_layer":     near(thick, m),
+            "thick_layer":     near(thick, m) & ~thick_exc,
         }
 
     red_rules = rules(0.0)
@@ -1407,7 +1414,12 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=N
     # and which part fails. MRR is the 4 nmi composite maximum, taken within 1 nmi.
     exc_near = near(anvil_any, L["attached_3nm"])
     mrr_here = peak(mrr, L["mrr_eval_nm"])
-    diag = {"sat_ok": sat_ok, "sat_up": sat_up, "sat": sat,
+    # The masks each rule is built from, and the MRR - recorded by the climatology as distances so
+    # the standoffs and thresholds can be re-applied later without re-scoring the radar.
+    feat = {"cuthru": cu_echo & top_to_plus5, "cu10": cu10, "cu20": cu20, "att": attached,
+            "det": detached, "warm": (attached | detached) & warm_cols, "thick": thick,
+            "ltg": lightning, "mrr1": mrr1}
+    diag = {"feat": feat, "sat_ok": sat_ok, "sat_up": sat_up, "sat": sat,
             "attached": attached, "detached": detached, "elevated": elevated,
             "layered": layered, "sep": sep is not None,
             "conv": sep["conv"] if sep is not None else None,
