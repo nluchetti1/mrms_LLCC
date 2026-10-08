@@ -281,7 +281,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v17";
+const VIEWER_VERSION = "mrms-v18";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -479,6 +479,19 @@ function sepRow(d, n, c){
   if (fl & 16) return `<dt>Echo type</dt><dd>Stratiform (Steiner)</dd>`;
   return `<dt>Echo type</dt><dd style="color:var(--dim)">Unknown here (blind at the separation level, or no low-level echo)</dd>`;
 }
+// Satellite cloud top for this cell (planes 11-12), and whether the classifier used it.
+function satRow(d, n, c){
+  if (d.length < 13 * n) return "";
+  const b = d[11 * n + c], hh = d[12 * n + c], fl = d[9 * n + c], echo = d[2 * n + c] !== 255;
+  if (b === 255) return `<dt>Satellite top</dt><dd style="color:var(--dim)">No cloud-top match here</dd>`;
+  const t = b - 100, km = hh === 255 ? null : hh / 10;
+  const why = !echo ? "not used: no radar echo here, and satellite never adds cloud"
+            : (fl & 64) ? "consistent with this echo (it can only raise a cumulus class)"
+            : "ignored: more than 3 km above the radar echo top, likely a higher layer";
+  return `<dt>Satellite top</dt><dd>${t} °C${km != null ? `, ${km.toFixed(1)} km` : ""} · ${why}` +
+         `${(fl & 128) ? " · <b>raised this cumulus class</b>" : ""}</dd>`;
+}
+
 function ltgRow(d, n, c, f){
   if (d.length < 11 * n) return "";
   const v = d[10 * n + c];
@@ -542,7 +555,10 @@ function readout(lat, lon, label){
         ${volRows(d, n, c)}
         ${sepRow(d, n, c)}
         ${ltgRow(d, n, c, f)}
+        ${satRow(d, n, c)}
       </dl>
+      ${cls === 7 ? `<div class="ro-how">Detached-anvil drift: ${f.anvil_wind ? f.anvil_wind.label
+        : "32 kt in every direction (too few anvil-level satellite winds)"}</div>` : ""}
       ${cls >= 1 && cls <= 4 && ((red.includes("cumulus_5nm") && top < 4) ||
                                  (red.includes("cumulus_10nm") && top < 6)) ?
         `<div class="ro-how">This point's own echo does not reach that level. The cumulus
