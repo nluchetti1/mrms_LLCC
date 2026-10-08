@@ -78,7 +78,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v17"
+VIEWER_VERSION_EXPECTED = "mrms-v18"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -673,6 +673,240 @@ def glm_update(sess, state_dir):
     return {"flashes": flashes, "ok": ok, "newest": newest, "note": note}
 
 
+# --------------------------------------------------------------------------------------
+# GOES-19 ABI: cloud-top temperature over echo, and anvil-level winds for detached-anvil drift
+# --------------------------------------------------------------------------------------
+# Ground rule (45 WS): satellite never creates cloud where radar shows nothing. The LLCC
+# footprint stays defined by echo >= 0 dBZ; satellite only refines how that echo is classed.
+#
+# Measured 8 Oct 2026: band 13 CONUS every 5 min, ~4 min behind, 3.7 MB; the 2 km cloud-top
+# height (ACHA2KMC - the plain ACHAC product is a ~10 km grid, too coarse); band 14 derived motion
+# winds every 15 min, ~17 min behind, with 14 anvil-level vectors near the Cape that morning
+# (24 kt from 235). At the Cape GOES-East looks 33.9 deg off vertical, so a 12 km top APPEARS
+# 8 km (4.4 nmi) out of place toward ~349 deg - more than the anvil standoff. Every pixel is moved
+# back by its own height before it is matched to a radar column.
+GOES_ABI = "https://noaa-goes19.s3.amazonaws.com"
+SAT_TOL_MIN = {"CMIPC": 12, "ACHA2KMC": 20}
+SAT_MATCH_KM = 2.5            # a radar cell takes the nearest corrected pixel within this
+SAT_CONSISTENCY_M = 3000.0    # satellite top counts only within this above the radar echo top
+WIND_RADIUS_KM = 150.0
+WIND_TOP_HPA = 400.0          # anvil level: above this pressure
+WIND_MIN_VECTORS = 5
+WIND_MIN_UNC_KT = 10.0        # never trust the mean to better than this
+WIND_MAX_AGE_MIN = 45
+# Centre of the pads - the same point the range rings and the GIF rings use.
+CAPE_LAT = float(np.mean([p[0] for p in SITES.values()]))
+CAPE_LON = float(np.mean([p[1] for p in SITES.values()]))
+
+
+def _goes_keys(sess, product, t, cache):
+    """[(start, key)] for one ABI product in the hours around t, cached for the run."""
+    out = []
+    for h in (-1, 0, 1):
+        tt = t + datetime.timedelta(hours=h)
+        prefix = f"ABI-L2-{product}/{tt:%Y}/{tt.timetuple().tm_yday:03d}/{tt:%H}/"
+        if prefix not in cache:
+            keys, token = [], None
+            try:
+                while True:
+                    url = (f"{GOES_ABI}/?list-type=2&prefix={prefix}"
+                           + (f"&continuation-token={requests.utils.quote(token)}" if token else ""))
+                    r = sess.get(url, timeout=60)
+                    r.raise_for_status()
+                    keys += re.findall(r"<Key>([^<]+)</Key>", r.text)
+                    m = re.search(r"<NextContinuationToken>([^<]+)</NextContinuationToken>", r.text)
+                    if not m:
+                        break
+                    token = m.group(1)
+            except Exception:
+                keys = []
+            cache[prefix] = keys
+        for k in cache[prefix]:
+            m = re.search(r"_s(\d{4})(\d{3})(\d{2})(\d{2})(\d{2})", k)
+            if m:
+                y, d, H, M, S = map(int, m.groups())
+                out.append((datetime.datetime(y, 1, 1, H, M, S) + datetime.timedelta(days=d - 1), k))
+    return sorted(set(out))
+
+
+def _nc_open(raw):
+    import netCDF4
+    try:
+        return netCDF4.Dataset("abi", memory=raw), None
+    except Exception:
+        fd, path = tempfile.mkstemp(suffix=".nc")
+        with os.fdopen(fd, "wb") as f:
+            f.write(raw)
+        return netCDF4.Dataset(path), path
+
+
+def _fixed_grid(ds, margin_deg=0.35):
+    """(lat, lon, values-slicer, geometry) for the window of a GOES-R fixed grid around DOMAIN,
+    per the GOES-R Product User Guide."""
+    p = ds.variables["goes_imager_projection"]
+    req, rpol = float(p.semi_major_axis), float(p.semi_minor_axis)
+    H = float(p.perspective_point_height) + req
+    lam0 = np.radians(float(p.longitude_of_projection_origin))
+    def to_xy(lat, lon):
+        lat, lon = np.radians(lat), np.radians(lon)
+        e2 = (req ** 2 - rpol ** 2) / req ** 2
+        pc = np.arctan((rpol ** 2 / req ** 2) * np.tan(lat))
+        rc = rpol / np.sqrt(1 - e2 * np.cos(pc) ** 2)
+        sx = H - rc * np.cos(pc) * np.cos(lon - lam0)
+        sy = -rc * np.cos(pc) * np.sin(lon - lam0)
+        sz = rc * np.sin(pc)
+        return np.arcsin(-sy / np.sqrt(sx ** 2 + sy ** 2 + sz ** 2)), np.arctan(sz / sx)
+    xs, ys = [], []
+    for la_ in (DOMAIN["lat_min"] - margin_deg, DOMAIN["lat_max"] + margin_deg):
+        for lo_ in (DOMAIN["lon_min"] - margin_deg, DOMAIN["lon_max"] + margin_deg):
+            a, b = to_xy(la_, lo_); xs.append(a); ys.append(b)
+    x = np.asarray(ds.variables["x"][:], float); y = np.asarray(ds.variables["y"][:], float)
+    ix = np.where((x >= min(xs)) & (x <= max(xs)))[0]
+    iy = np.where((y >= min(ys)) & (y <= max(ys)))[0]
+    if ix.size == 0 or iy.size == 0:
+        raise ValueError("domain outside this file's grid")
+    sl = (slice(iy.min(), iy.max() + 1), slice(ix.min(), ix.max() + 1))
+    X, Y = np.meshgrid(x[sl[1]], y[sl[0]])
+    a = np.sin(X) ** 2 + np.cos(X) ** 2 * (np.cos(Y) ** 2 + (req ** 2 / rpol ** 2) * np.sin(Y) ** 2)
+    b = -2 * H * np.cos(X) * np.cos(Y)
+    c = H ** 2 - req ** 2
+    with np.errstate(invalid="ignore"):
+        rs = (-b - np.sqrt(b ** 2 - 4 * a * c)) / (2 * a)
+        sx = rs * np.cos(X) * np.cos(Y); sy = -rs * np.sin(X); sz = rs * np.cos(X) * np.sin(Y)
+        lat = np.degrees(np.arctan((req ** 2 / rpol ** 2) * sz / np.sqrt((H - sx) ** 2 + sy ** 2)))
+        lon = np.degrees(lam0 - np.arctan(sy / (H - sx)))
+    return lat, lon, sl, (req, rpol, H, lam0)
+
+
+def parallax_shift(lat, lon, h_m, geom):
+    """(dlat, dlon) by which a cloud top h_m above (lat, lon) APPEARS displaced: the ray from the
+    satellite through the top, continued to the first point it meets the ellipsoid. Vectorized.
+    Checked against height x tan(zenith) at LC-39A: 8.1 km for a 12 km top."""
+    req, rpol, H, lam0 = geom
+    e2 = 1 - rpol ** 2 / req ** 2
+    la, lo = np.radians(lat), np.radians(lon)
+    N = req / np.sqrt(1 - e2 * np.sin(la) ** 2)
+    P = np.stack([(N + h_m) * np.cos(la) * np.cos(lo), (N + h_m) * np.cos(la) * np.sin(lo),
+                  (N * (1 - e2) + h_m) * np.sin(la)])
+    S = np.array([H * np.cos(lam0), H * np.sin(lam0), 0.0]).reshape(3, *([1] * np.ndim(lat)))
+    d = P - S
+    A = (d[0] ** 2 + d[1] ** 2) / req ** 2 + d[2] ** 2 / rpol ** 2
+    B = 2 * ((S[0] * d[0] + S[1] * d[1]) / req ** 2 + S[2] * d[2] / rpol ** 2)
+    C = (S[0] ** 2 + S[1] ** 2) / req ** 2 + S[2] ** 2 / rpol ** 2 - 1
+    t = (-B - np.sqrt(B ** 2 - 4 * A * C)) / (2 * A)          # the NEAR root
+    Q = S + t * d
+    qlat = np.degrees(np.arctan2(Q[2], np.hypot(Q[0], Q[1]) * (1 - e2)))
+    qlon = np.degrees(np.arctan2(Q[1], Q[0]))
+    return qlat - lat, qlon - lon
+
+
+def goes_tops(sess, valid_iso, la, lo, cache):
+    """Parallax-corrected band-13 cloud-top temperature (C) and cloud-top height (m) on the MRMS
+    grid, from the files nearest the frame. Returns ({bt_c, top_m}, label) or (None, reason)."""
+    from scipy.spatial import cKDTree
+    t = datetime.datetime.strptime(valid_iso[:19], "%Y-%m-%dT%H:%M:%S")
+    picks = {}
+    for prod, match in (("CMIPC", "C13_"), ("ACHA2KMC", "")):
+        cands = [(abs((st - t).total_seconds()) / 60, st, k) for st, k in _goes_keys(sess, prod, t, cache)
+                 if match in k]
+        cands = [c for c in cands if c[0] <= SAT_TOL_MIN[prod]]
+        if not cands:
+            return None, f"no {prod} file within {SAT_TOL_MIN[prod]} min of this frame"
+        picks[prod] = min(cands)
+    out = {}
+    for prod, var in (("CMIPC", "CMI"), ("ACHA2KMC", "HT")):
+        r = sess.get(f"{GOES_ABI}/{picks[prod][2]}", timeout=120)
+        r.raise_for_status()
+        ds, tmp = _nc_open(r.content)
+        try:
+            lat, lon, sl, geom = _fixed_grid(ds)
+            v = ds.variables[var][sl]
+            v = np.asarray(v.filled(np.nan) if np.ma.isMaskedArray(v) else v, float)
+        finally:
+            ds.close()
+            if tmp:
+                os.remove(tmp)
+        out[prod] = (lat, lon, v, geom)
+    blat, blon, bt, geom = out["CMIPC"]
+    hlat, hlon, ht, _ = out["ACHA2KMC"]
+    lat0 = float(np.mean(la)); kx = 111.32 * np.cos(np.radians(lat0))
+    km_xy = lambda a, b: np.column_stack([((b - lo[0]) * kx).ravel(), ((a - la[0]) * 111.32).ravel()])
+    hv = np.isfinite(ht) & np.isfinite(hlat) & (ht > 0)
+    if not hv.any():
+        return None, "no cloud-top heights in the window (clear sky)"
+    # 1. each band-13 pixel takes the cloud-top height of its OWN footprint (both products sit on
+    #    the 2 km grid, at their apparent positions). 1.5 km, not wider: with 4 km, clear pixels
+    #    beside a cloud borrowed its height and were moved as if they were cloud.
+    d, i = cKDTree(km_xy(hlat[hv], hlon[hv])).query(km_xy(blat, blon), distance_upper_bound=1.5)
+    h_pix = np.full(blat.size, np.nan)
+    ok = np.isfinite(d)
+    h_pix[ok] = ht[hv][i[ok]]
+    use = ok & np.isfinite(bt.ravel()) & np.isfinite(blat.ravel())
+    if not use.any():
+        return None, "no band-13 pixels with a cloud-top height"
+    # 2. move each pixel back to where its cloud top really is
+    dla, dlo = parallax_shift(blat.ravel()[use], blon.ravel()[use], h_pix[use], geom)
+    tla, tlo = blat.ravel()[use] - dla, blon.ravel()[use] - dlo
+    # 3. nearest corrected pixel for each radar cell
+    LO, LA = np.meshgrid(lo, la)
+    d2, i2 = cKDTree(km_xy(tla, tlo)).query(km_xy(LA, LO), distance_upper_bound=SAT_MATCH_KM)
+    bt_c = np.full(LA.size, np.nan, np.float32); top_m = np.full(LA.size, np.nan, np.float32)
+    hit = np.isfinite(d2)
+    bt_c[hit] = bt.ravel()[use][i2[hit]] - 273.15
+    top_m[hit] = h_pix[use][i2[hit]]
+    label = (f"GOES-19 band 13 {picks['CMIPC'][1]:%H:%M}Z, cloud-top height "
+             f"{picks['ACHA2KMC'][1]:%H:%M}Z, parallax-corrected")
+    return {"bt_c": bt_c.reshape(LA.shape), "top_m": top_m.reshape(LA.shape)}, label
+
+
+def goes_anvil_wind(sess, cache):
+    """Vector-mean anvil-level wind near the Cape from band-14 derived motion winds (band 8 as the
+    fallback). Returns {u_kmh, v_kmh (motion TOWARD east/north), unc_kmh, kt, from_deg, n, label}
+    or None, when there are too few vectors - drift then uses the all-directions allowance."""
+    now = _utcnow()
+    keys = _goes_keys(sess, "DMWC", now, cache)
+    for band in ("C14", "C08"):
+        cands = [(st, k) for st, k in keys if f"-M6{band}_" in k or f"{band}_G19" in k]
+        cands = [c for c in cands if (now - c[0]).total_seconds() / 60 <= WIND_MAX_AGE_MIN]
+        if not cands:
+            continue
+        st, key = max(cands)
+        try:
+            r = sess.get(f"{GOES_ABI}/{key}", timeout=60)
+            r.raise_for_status()
+            ds, tmp = _nc_open(r.content)
+            try:
+                g = lambda n: np.asarray(ds.variables[n][:], float)
+                lat, lon, spd, dirn, p = (g("lat"), g("lon"), g("wind_speed"), g("wind_direction"),
+                                          g("pressure"))
+                dqf = g("DQF") if "DQF" in ds.variables else np.zeros(lat.shape)
+            finally:
+                ds.close()
+                if tmp:
+                    os.remove(tmp)
+        except Exception as e:
+            logging.warning(f"DMW {band}: {type(e).__name__}: {e}")
+            continue
+        k = np.cos(np.radians(CAPE_LAT))
+        near = ((dqf == 0) & (p <= WIND_TOP_HPA)
+                & (np.hypot((lat - CAPE_LAT) * 111.32, (lon - CAPE_LON) * 111.32 * k) <= WIND_RADIUS_KM))
+        n = int(near.sum())
+        if n < WIND_MIN_VECTORS:
+            continue
+        # direction is where the wind blows FROM; the anvil moves the opposite way
+        u = -spd[near] * np.sin(np.radians(dirn[near])) * 3.6
+        v = -spd[near] * np.cos(np.radians(dirn[near])) * 3.6
+        U, V = float(u.mean()), float(v.mean())
+        spread = float(np.sqrt(u.var() + v.var()))
+        unc = max(WIND_MIN_UNC_KT * 1.852, spread)
+        kt = np.hypot(U, V) / 1.852
+        frm = float(np.degrees(np.arctan2(-U, -V)) % 360)
+        return {"u_kmh": U, "v_kmh": V, "unc_kmh": unc, "kt": round(kt, 1), "from_deg": round(frm),
+                "n": n, "band": band, "label": f"GOES-19 band {int(band[1:])} winds {st:%H:%M}Z, "
+                f"{n} anvil-level vectors: {kt:.0f} kt from {frm:.0f} deg, +/-{unc / 1.852:.0f} kt"}
+    return None
+
+
 def glm_distance(flashes, valid_iso, la, lo):
     """(distance in nmi from every cell to the nearest flash in the 30 minutes up to the frame,
     lats, lons of those flashes). Measured from the flashes themselves, so a flash just off the
@@ -818,7 +1052,7 @@ def steiner_conv_strat(z, dlat_km, dlon_km):
     return conv, echo & ~conv
 
 
-def separation(vol, heights, vbase, z0, iso, la, lo):
+def separation(vol, heights, vbase, z0, iso, la, lo, vtop=None):
     """Everything the classifier reads from the volume.
 
     convective / stratiform   Steiner at the chosen level
@@ -838,7 +1072,11 @@ def separation(vol, heights, vbase, z0, iso, la, lo):
     base_h = np.where(has, np.asarray(heights)[np.clip(base_idx, 0, len(heights) - 1)] * 1000.0,
                       np.inf)
     blind_below = has & ((vbase & 64) > 0)
-    return {"conv": conv, "strat": strat & known, "known": known,
+    top_m = None
+    if vtop is not None:
+        top_m = np.where(vtop != 255, np.asarray(heights)[np.clip(vtop.astype(int), 0, len(heights) - 1)]
+                         * 1000.0, np.nan)
+    return {"conv": conv, "strat": strat & known, "known": known, "top_m": top_m,
             "clear_low": known & (lvl < 0.0),
             "below0": has & ((base_h < z0_m) | blind_below), "level_km": float(heights[k])}
 
@@ -897,7 +1135,7 @@ def _disc(nm, dlat_km, dlon_km):
     return np.hypot(jj * dlat_km, ii * dlon_km) <= km
 
 
-def attached_history(frames, valid_iso, la, lo):
+def attached_history(frames, valid_iso, la, lo, wind=None):
     """Where attached anvil has been in the last HISTORY_MIN minutes, grown by drift.
 
     Read from the class plane of earlier frames' data files. Returns None when no earlier frame
@@ -925,13 +1163,25 @@ def attached_history(frames, valid_iso, la, lo):
         seen = True
         att = raw[n:2 * n].reshape(la.size, lo.size) == 6
         if att.any():
-            r_nm = DRIFT_KMH * dt / 60.0 / 1.852
-            union |= maximum_filter(att.astype(np.uint8),
-                                    footprint=_disc(r_nm, dlat_km, dlon_km)) > 0
+            if wind is not None:
+                # Moved DOWNWIND by the measured anvil-level wind, then grown by its uncertainty -
+                # instead of grown 32 kt in every direction, including upwind where an anvil
+                # cannot go, and short of where a fast jet can carry one.
+                from scipy.ndimage import shift as _shift
+                hrs = dt / 60.0
+                dj = -wind["v_kmh"] * hrs / dlat_km          # rows run north to south
+                di = wind["u_kmh"] * hrs / dlon_km
+                moved = _shift(att.astype(np.float32), (dj, di), order=0, cval=0.0) > 0.5
+                r_nm = wind["unc_kmh"] * hrs / 1.852
+            else:
+                moved = att
+                r_nm = DRIFT_KMH * dt / 60.0 / 1.852
+            union |= maximum_filter(moved.astype(np.uint8),
+                                    footprint=_disc(max(r_nm, 0.5), dlat_km, dlon_km)) > 0
     return union if seen else None
 
 
-def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None):
+def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=None):
     """Traffic light, per-rule grids, cloud class and echo-top level for every cell."""
     L = LLCC
     dlat_km, dlon_km = _spacing(la, lo)
@@ -1058,8 +1308,29 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None):
     # Neither an elevated layer nor stratiform cloud is cumulus: neither drives a cumulus standoff.
     not_cu = anvil_any | elevated | layered
     cu_echo = echo & ~not_cu
-    cu10 = (e["r10"] | gap_m10) & ~not_cu
-    cu20 = e["r20"] & ~not_cu
+    # Satellite cloud tops over echo. The 0 dBZ echo top is a LOWER bound on the cloud top, so a
+    # satellite top colder than the radar shows can raise a cumulus to the -10 or -20 C class - but
+    # only where it plausibly belongs to that cloud: within SAT_CONSISTENCY_M above the radar echo
+    # top. The satellite sees the HIGHEST cloud, so a cirrus deck over shallow cumulus sits far
+    # above the echo top and is ignored. Never on non-echo cells, never on anvil or layered cloud,
+    # never lowering a class. The radar echo top is the 3-D volume's when there is one, otherwise
+    # the upper edge of the isotherm bracket the echo reaches.
+    sat_ok = np.zeros(comp.shape, bool)
+    sat_m10 = np.zeros(comp.shape, bool)
+    sat_m20 = np.zeros(comp.shape, bool)
+    if sat is not None:
+        rtop = np.select([e["r15"], e["r10"], e["r5"], e["r0"]],
+                         [z_of(-20.0), z_of(-15.0), z_of(-10.0), z_of(-5.0)], z_of(0.0))
+        rtop = np.where(gap, np.maximum(rtop, hmax), rtop)
+        if sep is not None and sep.get("top_m") is not None:
+            rtop = np.where(np.isfinite(sep["top_m"]), sep["top_m"], rtop)
+        have = echo & np.isfinite(sat["bt_c"]) & np.isfinite(sat["top_m"])
+        sat_ok = have & (sat["top_m"] <= rtop + SAT_CONSISTENCY_M)
+        sat_m10 = sat_ok & (sat["bt_c"] <= -10.0) & ~not_cu
+        sat_m20 = sat_ok & (sat["bt_c"] <= -20.0) & ~not_cu
+    cu10 = (e["r10"] | gap_m10 | sat_m10) & ~not_cu
+    cu20 = (e["r20"] | sat_m20) & ~not_cu
+    sat_up = (sat_m10 & ~(e["r10"] | gap_m10)) | (sat_m20 & ~e["r20"])
     # Thick cloud layer: echo spanning at least ~4,500 ft inside the 0 to -20 C band. Adjacent
     # isotherm slices 10 C apart are ~1.5 km (~5,000 ft) apart, so echo at both ends of any
     # 10-degree span counts. The first version only tested 0 to -10 C, so an elevated layer
@@ -1117,6 +1388,9 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None):
     cls[(top == 2) | (top == 3)] = 2
     cls[(top == 4) | (top == 5)] = 3
     cls[top == 6] = 4
+    # satellite-raised cumulus (only ever upward; anvil, layered and core overwrite below)
+    cls[sat_m10 & np.isin(cls, (1, 2))] = 3
+    cls[sat_m20 & np.isin(cls, (1, 2, 3))] = 4
     cls[top == 7] = 7 if history is None else 8   # aloft-only echo: detached or elevated layer
     cls[elevated] = 8
     cls[layered] = 8
@@ -1133,7 +1407,8 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None):
     # and which part fails. MRR is the 4 nmi composite maximum, taken within 1 nmi.
     exc_near = near(anvil_any, L["attached_3nm"])
     mrr_here = peak(mrr, L["mrr_eval_nm"])
-    diag = {"attached": attached, "detached": detached, "elevated": elevated,
+    diag = {"sat_ok": sat_ok, "sat_up": sat_up, "sat": sat,
+            "attached": attached, "detached": detached, "elevated": elevated,
             "layered": layered, "sep": sep is not None,
             "conv": sep["conv"] if sep is not None else None,
             "strat": sep["strat"] if sep is not None else None,
@@ -1293,6 +1568,13 @@ def render_layers(status, cls, F, diag, la, lo, stem):
     return paths
 
 
+def _sat_plane(diag, key, offset, scale):
+    if diag is None or diag.get("sat") is None:
+        return np.full(diag["echo"].shape if diag is not None else (1,), 255, np.uint8)
+    v = diag["sat"][key]
+    return np.where(np.isfinite(v), np.clip(np.round((v + offset) * scale), 0, 254), 255).astype(np.uint8)
+
+
 def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop=None, diag=None):
     """Per-cell readout for the viewer: eight uint8 planes, north-up, row-major.
 
@@ -1309,6 +1591,9 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
                             bit1 exception part (a) fails   bit2 part (b) fails
                             bit3 convective   bit4 stratiform   bit5 separation was available
        10 nearest lightning (GLM or NLDN CG, last 30 min), nmi * 5; 255 = none within 50 nmi
+       11 satellite cloud-top temperature, C + 100 (parallax-corrected); 255 = none
+       12 satellite cloud-top height, units of 100 m; 255 = none
+          (plane 9 bit6: satellite top accepted for this echo; bit7: it raised the class)
 
     Older frames have six or eight planes; the viewer checks the length.
     """
@@ -1327,6 +1612,7 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
               | (diag["exc_b_fail"].astype(np.uint8) << 2))
         if diag["sep"]:
             fl |= (diag["conv"].astype(np.uint8) << 3) | (diag["strat"].astype(np.uint8) << 4) | 32
+        fl |= (diag["sat_ok"].astype(np.uint8) << 6) | (diag["sat_up"].astype(np.uint8) << 7)
     else:
         mrr = np.full(status.shape, 255, np.uint8)
         fl = np.zeros(status.shape, np.uint8)
@@ -1335,7 +1621,8 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
               vbase if vbase is not None else none, vtop if vtop is not None else none,
               mrr, fl.astype(np.uint8),
               (np.where(diag["ltg_near_nm"] <= 50.8, np.round(diag["ltg_near_nm"] * 5), 255)
-               .astype(np.uint8) if diag is not None else np.full(status.shape, 255, np.uint8))]
+               .astype(np.uint8) if diag is not None else np.full(status.shape, 255, np.uint8)),
+              _sat_plane(diag, "bt_c", 100.0, 1.0), _sat_plane(diag, "top_m", 0.0, 0.01)]
     rel = f"{stem}.bin"
     with open(os.path.join(OUT_DIR, rel), "wb") as fp:
         fp.write(b"".join(p.tobytes() for p in planes))
@@ -1345,7 +1632,8 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
 # --------------------------------------------------------------------------------------
 # Frames
 # --------------------------------------------------------------------------------------
-def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_src=None, glm=None):
+def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_src=None, glm=None,
+                goes=None):
     """One complete frame from a {key: url} mapping.
 
     Always returns (frame, la, lo). On failure all three are None - one shape on every path,
@@ -1389,7 +1677,8 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
         z0 = np.full((la.size, lo.size), 4800.0, np.float32)
 
     valid0 = valid_times.get("comp") or max((v for v in valid_times.values() if v), default=None)
-    history = attached_history(prior or [], valid0, la, lo) if valid0 else None
+    wind = goes.get("wind") if goes else None
+    history = attached_history(prior or [], valid0, la, lo, wind) if valid0 else None
     iso, iso_src = isotherms_for(snd, valid0)
     valid = valid0
     stamp = valid.replace(":", "").replace("-", "")[:13]
@@ -1412,7 +1701,7 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
                 with open(os.path.join(OUT_DIR, vol_rel), "wb") as fp:
                     fp.write(gzip.compress(enc.tobytes(), compresslevel=6))
                 _VOL_LEVELS[:] = [float(h) for h in heights]
-                sep = separation(vol, heights, vbase, z0, iso, la, lo)
+                sep = separation(vol, heights, vbase, z0, iso, la, lo, vtop)
                 vol_note += f"; Steiner at {sep['level_km']:g} km"
         except Exception as e:
             vol_note = f"failed: {type(e).__name__}: {e}"
@@ -1431,7 +1720,14 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
 
     ltg_nm, glat, glon = (glm_distance(glm["flashes"], valid0, la, lo) if glm and glm.get("ok")
                           else (None, np.array([]), np.array([])))
-    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history, iso, sep, ltg_nm)
+    sat, sat_src = None, "not used"
+    if goes is not None:
+        try:
+            sat, sat_src = goes_tops(sess, valid0, la, lo, goes["cache"])
+        except Exception as e:
+            sat, sat_src = None, f"failed: {type(e).__name__}: {e}"
+    status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history, iso, sep, ltg_nm,
+                                                            sat)
     inside = ((glat >= DOMAIN["lat_min"]) & (glat <= DOMAIN["lat_max"])
               & (glon >= DOMAIN["lon_min"]) & (glon <= DOMAIN["lon_max"])) if glat.size else glat
     diag["glm_pts"] = (glat[inside], glon[inside]) if glat.size else (glat, glon)
@@ -1458,7 +1754,10 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
                               if iso else None),
              "iso_source": iso_src,
              "lightning_source": ltg_src,
-             "glm_flashes_30min": int(len(diag["glm_pts"][0]))}
+             "glm_flashes_30min": int(len(diag["glm_pts"][0])),
+             "sat_source": sat_src if sat is not None else f"none: {sat_src}",
+             "sat_upgraded_cells": int(diag["sat_up"].sum()),
+             "anvil_wind": wind}
     red_pads = [n for n, p in pads.items() if p["status"] == 2]
     yel_pads = [n for n, p in pads.items() if p["status"] == 1]
     logging.info(f"frame {valid}: pads violating {red_pads or '-'} watch {yel_pads or '-'}; "
@@ -1646,6 +1945,14 @@ def main():
     except Exception as e:
         logging.warning(f"3-D level list unavailable ({e}); this frame stays 2-D")
         levels = None
+    goes = {"cache": {}}
+    try:
+        goes["wind"] = goes_anvil_wind(sess, goes["cache"])
+        logging.info(goes["wind"]["label"] if goes["wind"] else
+                     "anvil wind: too few band-14/band-8 vectors; drift uses the 32 kt allowance")
+    except Exception as e:
+        goes["wind"] = None
+        logging.warning(f"anvil wind unavailable ({type(e).__name__}: {e})")
     try:
         glm = glm_update(sess, state_dir)
     except Exception as e:
@@ -1664,7 +1971,7 @@ def main():
         steiner_latest = (f"{ROOT3}/{name}/MRMS_{name}.latest.grib2.gz", h_km)
     newest, la, lo = build_frame(sess, {k: latest_url(p) for k, (p, _, _) in PRODUCTS.items()},
                                  z0, levels, prior=prev.get("frames", []), snd=snd,
-                                 steiner_src=steiner_latest, glm=glm)
+                                 steiner_src=steiner_latest, glm=glm, goes=goes)
     if newest is None:
         logging.error("latest frame withheld; previous frames left in place")
         return
@@ -1688,7 +1995,8 @@ def main():
             if time.monotonic() - t0 > BACKFILL_BUDGET_S:
                 logging.info("backfill budget spent; the rest fill on later runs")
                 break
-            frame, _, _ = build_frame(sess, src, z0, prior=frames, snd=snd, steiner_src=st, glm=glm)
+            frame, _, _ = build_frame(sess, src, z0, prior=frames, snd=snd, steiner_src=st, glm=glm,
+                                      goes=goes)
             if frame is not None:
                 frames.append(frame)
                 done += 1
