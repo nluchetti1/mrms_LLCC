@@ -1,0 +1,2468 @@
+{
+ "generated": "2026-10-10T17:56:34Z",
+ "gifs": {
+  "status": "loop_status.gif",
+  "class": "loop_class.gif",
+  "overlay": "loop_overlay.gif"
+ },
+ "viewer_expected": "mrms-v19",
+ "valid": "2026-10-10T17:54:39Z",
+ "freezing": {
+  "fetched": "2026-10-10T17:11:04.253660+00:00",
+  "valid": "2026-10-10T15:00:00Z"
+ },
+ "domain": {
+  "lat_min": 27.6,
+  "lat_max": 29.6,
+  "lon_min": -81.6,
+  "lon_max": -79.6
+ },
+ "grid": {
+  "ny": 200,
+  "nx": 200,
+  "lat_n": 29.594999999999995,
+  "lon_w": -81.595,
+  "dlat": 0.00999999999999801,
+  "dlon": 0.009999999999990905
+ },
+ "sites": {
+  "LC-39A": [
+   28.6084,
+   -80.6043
+  ],
+  "LC-39B": [
+   28.6272,
+   -80.6208
+  ],
+  "SLC-41": [
+   28.5833,
+   -80.5834
+  ],
+  "SLC-40": [
+   28.5619,
+   -80.5772
+  ],
+  "SLC-37B": [
+   28.5317,
+   -80.5657
+  ],
+  "SLC-20": [
+   28.5085,
+   -80.5546
+  ],
+  "LZ-1": [
+   28.4857,
+   -80.5444
+  ],
+  "SLC-36": [
+   28.4707,
+   -80.5379
+  ],
+  "SLC-46": [
+   28.4584,
+   -80.5271
+  ],
+  "KTTS": [
+   28.615,
+   -80.6944
+  ],
+  "KXMR": [
+   28.4675,
+   -80.5664
+  ]
+ },
+ "frames": [
+  {
+   "valid": "2026-10-10T17:54:39Z",
+   "stamp": "20261010T1754",
+   "images": {
+    "status": "frames/20261010T1754_status.png",
+    "statusline": "frames/20261010T1754_statusline.png",
+    "radar": "frames/20261010T1754_radar.png",
+    "class": "frames/20261010T1754_class.png"
+   },
+   "data": "frames/20261010T1754.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 17.2,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 15.9,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 18.4,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 19.2,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 20.3,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 21.5,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 22.5,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 23.3,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 24.3,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 12.4,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 22.2,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 26236,
+    "1": 4081,
+    "2": 9683
+   },
+   "class_counts": {
+    "clear": 37049,
+    "warm": 393,
+    "cu0": 137,
+    "cu10": 142,
+    "cu20": 14,
+    "core": 394,
+    "att": 1502,
+    "det": 20,
+    "elev": 349
+   },
+   "missing": [],
+   "skew_min": 2.0,
+   "volume": "frames/20261010T1754.vol",
+   "volume_valid": "2026-10-10T17:54:39Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.99,
+   "isotherms_km": {
+    "+5": 4.19,
+    "+0": 4.99,
+    "-5": 5.86,
+    "-10": 6.84,
+    "-15": 7.61,
+    "-20": 8.37
+   },
+   "iso_source": "HRRR 15Z run, profile valid 18Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 1,
+   "sat_source": "GOES-19 band 13 17:51Z, cloud-top height 17:51Z, parallax-corrected",
+   "sat_upgraded_cells": 8,
+   "anvil_wind": {
+    "u_kmh": 9.9201143390157,
+    "v_kmh": 36.75055888862956,
+    "unc_kmh": 18.52,
+    "kt": 20.6,
+    "from_deg": 195,
+    "n": 28,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:46Z, 28 anvil-level vectors: 21 kt from 195 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:48:42Z",
+   "stamp": "20261010T1748",
+   "images": {
+    "status": "frames/20261010T1748_status.png",
+    "statusline": "frames/20261010T1748_statusline.png",
+    "radar": "frames/20261010T1748_radar.png",
+    "class": "frames/20261010T1748_class.png"
+   },
+   "data": "frames/20261010T1748.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 20.6,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 19.5,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 21.8,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 22.5,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 23.3,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 24.3,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 25.2,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 25.9,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 26.8,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 15.8,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 24.6,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 26946,
+    "1": 3683,
+    "2": 9371
+   },
+   "class_counts": {
+    "clear": 37196,
+    "warm": 350,
+    "cu0": 169,
+    "cu10": 61,
+    "cu20": 25,
+    "core": 466,
+    "att": 1312,
+    "det": 31,
+    "elev": 390
+   },
+   "missing": [],
+   "skew_min": 0.3,
+   "volume": "frames/20261010T1748.vol",
+   "volume_valid": "2026-10-10T17:48:42Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.99,
+   "isotherms_km": {
+    "+5": 4.19,
+    "+0": 4.99,
+    "-5": 5.86,
+    "-10": 6.84,
+    "-15": 7.61,
+    "-20": 8.37
+   },
+   "iso_source": "HRRR 15Z run, profile valid 18Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 1,
+   "sat_source": "GOES-19 band 13 17:46Z, cloud-top height 17:46Z, parallax-corrected",
+   "sat_upgraded_cells": 17,
+   "anvil_wind": {
+    "u_kmh": 12.96941688319258,
+    "v_kmh": 35.766981867304516,
+    "unc_kmh": 18.52,
+    "kt": 20.5,
+    "from_deg": 200,
+    "n": 31,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:31Z, 31 anvil-level vectors: 21 kt from 200 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:46:42Z",
+   "stamp": "20261010T1746",
+   "images": {
+    "status": "frames/20261010T1746_status.png",
+    "statusline": "frames/20261010T1746_statusline.png",
+    "radar": "frames/20261010T1746_radar.png",
+    "class": "frames/20261010T1746_class.png"
+   },
+   "data": "frames/20261010T1746.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 32.4,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.8,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 34.0,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.3,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.1,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 38.3,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 38.5,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 38.4,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.5,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 29.8,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.3,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 27134,
+    "1": 3619,
+    "2": 9247
+   },
+   "class_counts": {
+    "clear": 37239,
+    "warm": 327,
+    "cu0": 126,
+    "cu10": 78,
+    "cu20": 26,
+    "core": 471,
+    "att": 1331,
+    "det": 13,
+    "elev": 389
+   },
+   "missing": [],
+   "skew_min": 0.7,
+   "volume": "frames/20261010T1746.vol",
+   "volume_valid": "2026-10-10T17:46:42Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.99,
+   "isotherms_km": {
+    "+5": 4.19,
+    "+0": 4.99,
+    "-5": 5.86,
+    "-10": 6.84,
+    "-15": 7.61,
+    "-20": 8.37
+   },
+   "iso_source": "HRRR 15Z run, profile valid 18Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 2,
+   "sat_source": "GOES-19 band 13 17:41Z, cloud-top height 17:41Z, parallax-corrected",
+   "sat_upgraded_cells": 12,
+   "anvil_wind": {
+    "u_kmh": 12.96941688319258,
+    "v_kmh": 35.766981867304516,
+    "unc_kmh": 18.52,
+    "kt": 20.5,
+    "from_deg": 200,
+    "n": 31,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:31Z, 31 anvil-level vectors: 21 kt from 200 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:44:38Z",
+   "stamp": "20261010T1744",
+   "images": {
+    "status": "frames/20261010T1744_status.png",
+    "statusline": "frames/20261010T1744_statusline.png",
+    "radar": "frames/20261010T1744_radar.png",
+    "class": "frames/20261010T1744_class.png"
+   },
+   "data": "frames/20261010T1744.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 32.4,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.8,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 34.0,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.3,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.1,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 38.3,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 38.5,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 38.4,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.5,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 29.8,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.3,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 27715,
+    "1": 3491,
+    "2": 8794
+   },
+   "class_counts": {
+    "clear": 37385,
+    "warm": 293,
+    "cu0": 106,
+    "cu10": 62,
+    "cu20": 50,
+    "core": 393,
+    "att": 1274,
+    "det": 14,
+    "elev": 423
+   },
+   "missing": [],
+   "skew_min": 1.6,
+   "volume": "frames/20261010T1744.vol",
+   "volume_valid": "2026-10-10T17:44:38Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.99,
+   "isotherms_km": {
+    "+5": 4.19,
+    "+0": 4.99,
+    "-5": 5.86,
+    "-10": 6.84,
+    "-15": 7.61,
+    "-20": 8.37
+   },
+   "iso_source": "HRRR 15Z run, profile valid 18Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 2,
+   "sat_source": "GOES-19 band 13 17:41Z, cloud-top height 17:41Z, parallax-corrected",
+   "sat_upgraded_cells": 15,
+   "anvil_wind": {
+    "u_kmh": 12.96941688319258,
+    "v_kmh": 35.766981867304516,
+    "unc_kmh": 18.52,
+    "kt": 20.5,
+    "from_deg": 200,
+    "n": 31,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:31Z, 31 anvil-level vectors: 21 kt from 200 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:38:41Z",
+   "stamp": "20261010T1738",
+   "images": {
+    "status": "frames/20261010T1738_status.png",
+    "statusline": "frames/20261010T1738_statusline.png",
+    "radar": "frames/20261010T1738_radar.png",
+    "class": "frames/20261010T1738_class.png"
+   },
+   "data": "frames/20261010T1738.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.0,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.6,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.4,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.3,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.5,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.9,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.0,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.8,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.0,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.8,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.5,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 28791,
+    "1": 3347,
+    "2": 7862
+   },
+   "class_counts": {
+    "clear": 37548,
+    "warm": 246,
+    "cu0": 95,
+    "cu10": 67,
+    "cu20": 76,
+    "core": 333,
+    "att": 1211,
+    "det": 10,
+    "elev": 414
+   },
+   "missing": [],
+   "skew_min": 0.7,
+   "volume": "frames/20261010T1738.vol",
+   "volume_valid": "2026-10-10T17:38:41Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.99,
+   "isotherms_km": {
+    "+5": 4.19,
+    "+0": 4.99,
+    "-5": 5.86,
+    "-10": 6.84,
+    "-15": 7.61,
+    "-20": 8.37
+   },
+   "iso_source": "HRRR 15Z run, profile valid 18Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 3,
+   "sat_source": "GOES-19 band 13 17:36Z, cloud-top height 17:36Z, parallax-corrected",
+   "sat_upgraded_cells": 22,
+   "anvil_wind": {
+    "u_kmh": 12.96941688319258,
+    "v_kmh": 35.766981867304516,
+    "unc_kmh": 18.52,
+    "kt": 20.5,
+    "from_deg": 200,
+    "n": 31,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:31Z, 31 anvil-level vectors: 21 kt from 200 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:34:40Z",
+   "stamp": "20261010T1734",
+   "images": {
+    "status": "frames/20261010T1734_status.png",
+    "statusline": "frames/20261010T1734_statusline.png",
+    "radar": "frames/20261010T1734_radar.png",
+    "class": "frames/20261010T1734_class.png"
+   },
+   "data": "frames/20261010T1734.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.0,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.6,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.4,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.3,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.5,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.9,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.0,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 35.8,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.0,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.2,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 37.5,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 28232,
+    "1": 3172,
+    "2": 8596
+   },
+   "class_counts": {
+    "clear": 37716,
+    "warm": 309,
+    "cu0": 40,
+    "cu10": 106,
+    "cu20": 68,
+    "core": 293,
+    "att": 1205,
+    "det": 4,
+    "elev": 259
+   },
+   "missing": [],
+   "skew_min": 2.0,
+   "volume": "frames/20261010T1734.vol",
+   "volume_valid": "2026-10-10T17:34:40Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.99,
+   "isotherms_km": {
+    "+5": 4.19,
+    "+0": 4.99,
+    "-5": 5.86,
+    "-10": 6.84,
+    "-15": 7.61,
+    "-20": 8.37
+   },
+   "iso_source": "HRRR 15Z run, profile valid 18Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 6,
+   "sat_source": "GOES-19 band 13 17:31Z, cloud-top height 17:31Z, parallax-corrected",
+   "sat_upgraded_cells": 34,
+   "anvil_wind": {
+    "u_kmh": 12.474068056433657,
+    "v_kmh": 36.28071988164351,
+    "unc_kmh": 18.52,
+    "kt": 20.7,
+    "from_deg": 199,
+    "n": 33,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:16Z, 33 anvil-level vectors: 21 kt from 199 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:28:38Z",
+   "stamp": "20261010T1728",
+   "images": {
+    "status": "frames/20261010T1728_status.png",
+    "statusline": "frames/20261010T1728_statusline.png",
+    "radar": "frames/20261010T1728_radar.png",
+    "class": "frames/20261010T1728_class.png"
+   },
+   "data": "frames/20261010T1728.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 34.2,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 34.8,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 33.6,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 33.6,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 33.9,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 34.3,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 34.5,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 34.4,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 34.6,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 38.4,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 36.0,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 31084,
+    "1": 2282,
+    "2": 6634
+   },
+   "class_counts": {
+    "clear": 37818,
+    "warm": 254,
+    "cu0": 25,
+    "cu10": 62,
+    "cu20": 56,
+    "core": 300,
+    "att": 1216,
+    "det": 3,
+    "elev": 266
+   },
+   "missing": [],
+   "skew_min": 0.6,
+   "volume": "frames/20261010T1728.vol",
+   "volume_valid": "2026-10-10T17:28:38Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 5.02,
+   "isotherms_km": {
+    "+5": 4.17,
+    "+0": 5.02,
+    "-5": 5.84,
+    "-10": 6.81,
+    "-15": 7.62,
+    "-20": 8.35
+   },
+   "iso_source": "HRRR 15Z run, profile valid 17Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 7,
+   "sat_source": "GOES-19 band 13 17:26Z, cloud-top height 17:26Z, parallax-corrected",
+   "sat_upgraded_cells": 22,
+   "anvil_wind": {
+    "u_kmh": 12.474068056433657,
+    "v_kmh": 36.28071988164351,
+    "unc_kmh": 18.52,
+    "kt": 20.7,
+    "from_deg": 199,
+    "n": 33,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:16Z, 33 anvil-level vectors: 21 kt from 199 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:24:41Z",
+   "stamp": "20261010T1724",
+   "images": {
+    "status": "frames/20261010T1724_status.png",
+    "statusline": "frames/20261010T1724_statusline.png",
+    "radar": "frames/20261010T1724_radar.png",
+    "class": "frames/20261010T1724_class.png"
+   },
+   "data": "frames/20261010T1724.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 1.3,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 2.9,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 0.5,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 1.6,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 3.4,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 5.3,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 6.6,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 7.3,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 8.6,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 5.6,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 16.5,
+     "nearest_echo_nm": 7.4,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 31005,
+    "1": 2366,
+    "2": 6629
+   },
+   "class_counts": {
+    "clear": 37861,
+    "warm": 266,
+    "cu0": 7,
+    "cu10": 37,
+    "cu20": 46,
+    "core": 287,
+    "att": 1245,
+    "det": 6,
+    "elev": 245
+   },
+   "missing": [],
+   "skew_min": 0.6,
+   "volume": "frames/20261010T1724.vol",
+   "volume_valid": "2026-10-10T17:24:41Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 5.02,
+   "isotherms_km": {
+    "+5": 4.17,
+    "+0": 5.02,
+    "-5": 5.84,
+    "-10": 6.81,
+    "-15": 7.62,
+    "-20": 8.35
+   },
+   "iso_source": "HRRR 15Z run, profile valid 17Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 7,
+   "sat_source": "GOES-19 band 13 17:21Z, cloud-top height 17:21Z, parallax-corrected",
+   "sat_upgraded_cells": 24,
+   "anvil_wind": {
+    "u_kmh": 12.474068056433657,
+    "v_kmh": 36.28071988164351,
+    "unc_kmh": 18.52,
+    "kt": 20.7,
+    "from_deg": 199,
+    "n": 33,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:16Z, 33 anvil-level vectors: 21 kt from 199 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:18:39Z",
+   "stamp": "20261010T1718",
+   "images": {
+    "status": "frames/20261010T1718_status.png",
+    "statusline": "frames/20261010T1718_statusline.png",
+    "radar": "frames/20261010T1718_radar.png",
+    "class": "frames/20261010T1718_class.png"
+   },
+   "data": "frames/20261010T1718.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 1.6,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 3.2,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "Shallow shower, below freezing",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 1.3,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 3.2,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 5.1,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 6.4,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 7.1,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 7.5,
+     "nearest_echo_nm": 8.4,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 4.2,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 7.3,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 31459,
+    "1": 2441,
+    "2": 6100
+   },
+   "class_counts": {
+    "clear": 38032,
+    "warm": 218,
+    "cu0": 19,
+    "cu10": 11,
+    "cu20": 30,
+    "core": 260,
+    "att": 1218,
+    "det": 17,
+    "elev": 195
+   },
+   "missing": [],
+   "skew_min": 0.4,
+   "volume": "frames/20261010T1718.vol",
+   "volume_valid": "2026-10-10T17:18:39Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 5.02,
+   "isotherms_km": {
+    "+5": 4.17,
+    "+0": 5.02,
+    "-5": 5.84,
+    "-10": 6.81,
+    "-15": 7.62,
+    "-20": 8.35
+   },
+   "iso_source": "HRRR 15Z run, profile valid 17Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 7,
+   "sat_source": "GOES-19 band 13 17:16Z, cloud-top height 17:16Z, parallax-corrected",
+   "sat_upgraded_cells": 5,
+   "anvil_wind": {
+    "u_kmh": 11.961597511002001,
+    "v_kmh": 34.07400218970402,
+    "unc_kmh": 18.52,
+    "kt": 19.5,
+    "from_deg": 199,
+    "n": 29,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:01Z, 29 anvil-level vectors: 19 kt from 199 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:14:42Z",
+   "stamp": "20261010T1714",
+   "images": {
+    "status": "frames/20261010T1714_status.png",
+    "statusline": "frames/20261010T1714_statusline.png",
+    "radar": "frames/20261010T1714_radar.png",
+    "class": "frames/20261010T1714_class.png"
+   },
+   "data": "frames/20261010T1714.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 1.3,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 2.9,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.5,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 1.6,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 3.4,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 5.3,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 6.6,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 7.3,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 8.6,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 5.6,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 7.4,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 32030,
+    "1": 2331,
+    "2": 5639
+   },
+   "class_counts": {
+    "clear": 38108,
+    "warm": 193,
+    "cu0": 24,
+    "cu10": 10,
+    "cu20": 49,
+    "core": 243,
+    "att": 1196,
+    "det": 31,
+    "elev": 146
+   },
+   "missing": [
+    "NLDN_CG_030min_AvgDensity"
+   ],
+   "skew_min": 0.0,
+   "volume": "frames/20261010T1714.vol",
+   "volume_valid": "2026-10-10T17:14:42Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 5.02,
+   "isotherms_km": {
+    "+5": 4.17,
+    "+0": 5.02,
+    "-5": 5.84,
+    "-10": 6.81,
+    "-15": 7.62,
+    "-20": 8.35
+   },
+   "iso_source": "HRRR 15Z run, profile valid 17Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM only (NLDN CG missing)",
+   "glm_flashes_30min": 6,
+   "sat_source": "GOES-19 band 13 17:11Z, cloud-top height 17:11Z, parallax-corrected",
+   "sat_upgraded_cells": 16,
+   "anvil_wind": {
+    "u_kmh": 11.961597511002001,
+    "v_kmh": 34.07400218970402,
+    "unc_kmh": 18.52,
+    "kt": 19.5,
+    "from_deg": 199,
+    "n": 29,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:01Z, 29 anvil-level vectors: 19 kt from 199 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:08:42Z",
+   "stamp": "20261010T1708",
+   "images": {
+    "status": "frames/20261010T1708_status.png",
+    "statusline": "frames/20261010T1708_statusline.png",
+    "radar": "frames/20261010T1708_radar.png",
+    "class": "frames/20261010T1708_class.png"
+   },
+   "data": "frames/20261010T1708.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 31.1,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 31.4,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.4,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.3,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.2,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.1,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 29.9,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 29.6,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 29.5,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 28.7,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 31.3,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 33191,
+    "1": 1905,
+    "2": 4904
+   },
+   "class_counts": {
+    "clear": 38055,
+    "warm": 101,
+    "cu0": 29,
+    "cu10": 41,
+    "cu20": 103,
+    "core": 223,
+    "att": 1181,
+    "det": 88,
+    "elev": 179
+   },
+   "missing": [],
+   "skew_min": 0.3,
+   "volume": "frames/20261010T1708.vol",
+   "volume_valid": "2026-10-10T17:08:42Z",
+   "volume_note": "32 levels, failed ['4']; Steiner at 3 km",
+   "freezing_km": 5.02,
+   "isotherms_km": {
+    "+5": 4.17,
+    "+0": 5.02,
+    "-5": 5.84,
+    "-10": 6.81,
+    "-15": 7.62,
+    "-20": 8.35
+   },
+   "iso_source": "HRRR 15Z run, profile valid 17Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 5,
+   "sat_source": "GOES-19 band 13 17:06Z, cloud-top height 17:06Z, parallax-corrected",
+   "sat_upgraded_cells": 7,
+   "anvil_wind": {
+    "u_kmh": 11.961597511002001,
+    "v_kmh": 34.07400218970402,
+    "unc_kmh": 18.52,
+    "kt": 19.5,
+    "from_deg": 199,
+    "n": 29,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 17:01Z, 29 anvil-level vectors: 19 kt from 199 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-10T17:04:42Z",
+   "stamp": "20261010T1704",
+   "images": {
+    "status": "frames/20261010T1704_status.png",
+    "statusline": "frames/20261010T1704_statusline.png",
+    "radar": "frames/20261010T1704_radar.png",
+    "class": "frames/20261010T1704_class.png"
+   },
+   "data": "frames/20261010T1704.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 31.3,
+     "lightning_10nm": false
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 29.8,
+     "lightning_10nm": false
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 31.2,
+     "lightning_10nm": false
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.9,
+     "lightning_10nm": false
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.8,
+     "lightning_10nm": false
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.6,
+     "lightning_10nm": false
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 30.3,
+     "lightning_10nm": false
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 29.9,
+     "lightning_10nm": false
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 29.7,
+     "lightning_10nm": false
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 27.0,
+     "lightning_10nm": false
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 31.6,
+     "lightning_10nm": false
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 33285,
+    "1": 1245,
+    "2": 5470
+   },
+   "class_counts": {
+    "clear": 38009,
+    "warm": 106,
+    "cu0": 33,
+    "cu10": 38,
+    "cu20": 24,
+    "core": 254,
+    "att": 1400,
+    "det": 3,
+    "elev": 133
+   },
+   "missing": [
+    "EchoTop_18"
+   ],
+   "skew_min": 2.0,
+   "volume": "frames/20261010T1704.vol",
+   "volume_valid": "2026-10-10T17:04:42Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 5.04,
+   "isotherms_km": {
+    "+5": 4.16,
+    "+0": 5.04,
+    "-5": 5.87,
+    "-10": 6.87,
+    "-15": 7.68,
+    "-20": 8.4
+   },
+   "iso_source": "HRRR 14Z run, profile valid 17Z (PSU BUFKIT, XMR)",
+   "lightning_source": "GLM total lightning + NLDN CG",
+   "glm_flashes_30min": 1,
+   "sat_source": "GOES-19 band 13 17:01Z, cloud-top height 17:01Z, parallax-corrected",
+   "sat_upgraded_cells": 27,
+   "anvil_wind": {
+    "u_kmh": 12.262824167780915,
+    "v_kmh": 34.30590310722889,
+    "unc_kmh": 18.52,
+    "kt": 19.7,
+    "from_deg": 200,
+    "n": 33,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 16:46Z, 33 anvil-level vectors: 20 kt from 200 deg, +/-10 kt"
+   }
+  }
+ ],
+ "rule_keys": [
+  "lightning",
+  "cumulus_through",
+  "cumulus_5nm",
+  "cumulus_10nm",
+  "attached_anvil",
+  "detached_anvil",
+  "disturbed",
+  "thick_layer"
+ ],
+ "rules": {
+  "lightning": "Lightning within 10 nmi (4.1.1) - GLM total lightning or NLDN CG",
+  "cumulus_through": "Flight through cumulus topping at or colder than +5 \u00b0C (4.1.3.1)",
+  "cumulus_5nm": "Cumulus topping colder than \u221210 \u00b0C within 5 nmi (4.1.3.2)",
+  "cumulus_10nm": "Cumulus topping colder than \u221220 \u00b0C within 10 nmi (4.1.3.3)",
+  "attached_anvil": "Attached anvil within 3 nmi (4.1.4)",
+  "detached_anvil": "Detached anvil within 3 nmi (4.1.5)",
+  "disturbed": "Disturbed weather (4.1.7)",
+  "thick_layer": "Thick cloud layer spanning 0 to \u221210 \u00b0C (4.1.8)"
+ },
+ "rule_how": {
+  "lightning": "Any lightning within 10 nmi in the last 30 minutes: a GOES-19 GLM flash (total lightning, intracloud included) or an NLDN cloud-to-ground strike. Either source counts, so a lone CG that GLM misses is still caught.",
+  "cumulus_through": "The point itself is in cumulus (not anvil) echo reaching an isotherm level, or whose strongest return sits above the +5 \u00b0C height.",
+  "cumulus_5nm": "Cumulus or cumulonimbus echo of 0 dBZ or more at the \u221210 \u00b0C level within 5 nmi. Anvil echo never counts, however cold it reaches.",
+  "cumulus_10nm": "Cumulus or cumulonimbus echo of 0 dBZ or more at the \u221220 \u00b0C level within 10 nmi. Anvil echo never counts.",
+  "attached_anvil": "An attached anvil cell within 3 nmi, unless the exception holds: no echo at the 0 \u00b0C level beneath any anvil within 5 nmi, and the largest reflectivity within 1 nmi below 7.5 dBZ. Also violated by an attached anvil within 10 nmi while lightning is within 10 nmi.",
+  "detached_anvil": "A detached anvil cell within 3 nmi, with the same exception.",
+  "disturbed": "The point is in echo whose top is colder than 0 \u00b0C, and there is 30 dBZ or more within 5 nmi.",
+  "thick_layer": "The point has echo at both ends of a 10-degree span inside the 0 to \u221220 \u00b0C band (0 and \u221210, \u22125 and \u221215, or \u221210 and \u221220 \u00b0C): a layer at least ~5,000 ft deep. Not applied to anvil or to cumulus - convective echo and cores are excluded; echo whose type is unknown is still tested. Exception: MRR below 7.5 dBZ within 1 nmi."
+ },
+ "watch_how": "Watch means no rule is broken, but one would be if its standoff were 2 nmi longer, or there is a cloud-to-ground flash within 20 nmi.",
+ "not_evaluated": [
+  "Disturbed weather (4.1.7) - applied to synoptic disturbances such as fronts, which radar alone cannot identify",
+  "Surface electric fields (4.1.2) and their field-mill exceptions",
+  "Debris clouds (4.1.6), which need an observed detachment time",
+  "Smoke plumes (4.1.9)",
+  "Triboelectrification (4.1.10)",
+  "The 3-hour lightning clocks on the anvil rules - only 30 minutes of lightning is published"
+ ],
+ "rules_off": [
+  "disturbed"
+ ],
+ "classes": [
+  {
+   "id": 0,
+   "key": "clear",
+   "name": "No echo",
+   "color": "#00000000",
+   "how": "Composite reflectivity below 0 dBZ. No rule applies here."
+  },
+  {
+   "id": 1,
+   "key": "warm",
+   "name": "Shallow shower, below freezing",
+   "color": "#94A3B8",
+   "how": "Echo of 0 dBZ or more that shows up at none of the isotherm levels: the column's strongest echo sits below the measured 0 \u00b0C height. Can still trip flight-through cumulus if it reaches the +5 \u00b0C level, taken from the XMR model sounding."
+  },
+  {
+   "id": 2,
+   "key": "cu0",
+   "name": "Cumulus topping 0 to \u221210 \u00b0C",
+   "color": "#22D3EE",
+   "how": "Echo of 0 dBZ or more at the 0 \u00b0C level, but none at \u221210 \u00b0C, so the top lies somewhere between 0 and \u221210 \u00b0C."
+  },
+  {
+   "id": 3,
+   "key": "cu10",
+   "name": "Cumulus topping \u221210 to \u221220 \u00b0C",
+   "color": "#3B82F6",
+   "how": "Echo at the \u221210 \u00b0C level, but none at \u221220 \u00b0C, so the top lies between \u221210 and \u221220 \u00b0C. Drives the 5 nmi cumulus standoff."
+  },
+  {
+   "id": 4,
+   "key": "cu20",
+   "name": "Cumulus topping below \u221220 \u00b0C",
+   "color": "#A78BFA",
+   "how": "Echo of 0 dBZ or more at the \u221220 \u00b0C level, so the top is colder than \u221220 \u00b0C. Drives the 10 nmi cumulus standoff."
+  },
+  {
+   "id": 5,
+   "key": "core",
+   "name": "Convective core",
+   "color": "#FF4FD8",
+   "how": "Composite reflectivity of 40 dBZ or more, or any vertically integrated ice. VII only registers in strong cells, so it confirms a core rather than finding anvil. Takes precedence over every other class."
+  },
+  {
+   "id": 6,
+   "key": "att",
+   "name": "Attached anvil",
+   "color": "#FB923C",
+   "how": "Echo weaker than 40 dBZ that reaches the \u221220 \u00b0C level, or sits only aloft (its strongest echo above the \u221220 \u00b0C height, or in the upper layer composite), and is joined to a convective core by unbroken echo."
+  },
+  {
+   "id": 7,
+   "key": "det",
+   "name": "Detached anvil",
+   "color": "#F5F5F4",
+   "how": "An anvil that came from a convective core and has separated from it, lying where an attached anvil was in the last hour (allowing ~32 kt of drift) with no unbroken path back to a core now. Either floating - no echo at 0 \u00b0C beneath it - or still raining out as stratiform echo: anvil until it rains out. Unconnected convective echo rooted through 0 \u00b0C is a new tower and stays cumulus."
+  },
+  {
+   "id": 8,
+   "key": "elev",
+   "name": "Layered cloud, not convective",
+   "color": "#C9A66B",
+   "how": "Echo the convective/stratiform separation (Steiner et al. 1995, run on the 3-D volume's ~3 km level) calls stratiform and that is not anvil, or floating echo with no convective origin in the last hour. Layered cloud, not cumulus: scored by the thick-cloud-layer rule when it spans about 4,500 ft of the 0 to \u221220 \u00b0C band, never by the cumulus or anvil standoffs."
+  }
+ ],
+ "class_note": "Classes come from how high the echo reaches through the isotherm levels, checked in this order: core, attached anvil, detached anvil, then cumulus by depth, then shallow shower. Once an anvil, always an anvil: anvil echo is scored only by the anvil rules and never trips a cumulus standoff. The convective core is the cumulonimbus tower and does count as cumulus, so a point near a core can still be within a cumulus standoff because of the core. Radar cannot reliably tell convective from layered cloud, so a broad rain shield reaching \u221220 \u00b0C is classed with cumulus topping below \u221220 \u00b0C.",
+ "top_levels": [
+  "No echo",
+  "Below the 0 \u00b0C level: no echo at any isotherm",
+  "Between 0 and \u22125 \u00b0C: echo at 0 \u00b0C, none at \u22125 \u00b0C",
+  "Between \u22125 and \u221210 \u00b0C: echo at \u22125 \u00b0C, none at \u221210 \u00b0C",
+  "Between \u221210 and \u221215 \u00b0C: echo at \u221210 \u00b0C, none at \u221215 \u00b0C",
+  "Between \u221215 and \u221220 \u00b0C: echo at \u221215 \u00b0C, none at \u221220 \u00b0C",
+  "Colder than \u221220 \u00b0C: echo at the \u221220 \u00b0C level",
+  "Only above the \u221220 \u00b0C level: elevated echo"
+ ],
+ "levels_km": [
+  0.5,
+  0.75,
+  1.0,
+  1.25,
+  1.5,
+  1.75,
+  2.0,
+  2.25,
+  2.5,
+  2.75,
+  3.0,
+  3.5,
+  4.0,
+  4.5,
+  5.0,
+  5.5,
+  6.0,
+  6.5,
+  7.0,
+  7.5,
+  8.0,
+  8.5,
+  9.0,
+  10.0,
+  11.0,
+  12.0,
+  13.0,
+  14.0,
+  15.0,
+  16.0,
+  17.0,
+  18.0,
+  19.0
+ ],
+ "status": {
+  "-1": {
+   "name": "No coverage",
+   "color": "#6B7785"
+  },
+  "0": {
+   "name": "Clear",
+   "color": "#3FB97A"
+  },
+  "1": {
+   "name": "Watch",
+   "color": "#F2C14E"
+  },
+  "2": {
+   "name": "Violating",
+   "color": "#E5484D"
+  }
+ },
+ "refl": {
+  "levels": [
+   0,
+   5,
+   10,
+   15,
+   20,
+   25,
+   30,
+   35,
+   40,
+   45,
+   50,
+   55,
+   60,
+   65,
+   70,
+   95
+  ],
+  "colors": [
+   "#04E9E7",
+   "#019FF4",
+   "#0300F4",
+   "#02FD02",
+   "#01C501",
+   "#008E00",
+   "#FDF802",
+   "#E5BC00",
+   "#FD9500",
+   "#FD0000",
+   "#D40000",
+   "#BC0000",
+   "#F800FD",
+   "#9854C6",
+   "#FDFDFD"
+  ]
+ },
+ "thresholds": {
+  "lightning_nm": 10.0,
+  "lightning_watch_nm": 20.0,
+  "cumulus_5nm": 5.0,
+  "cumulus_10nm": 10.0,
+  "plus5_c": 5.0,
+  "attached_3nm": 3.0,
+  "attached_lightning_nm": 10.0,
+  "detached_3nm": 3.0,
+  "excep_nm": 5.0,
+  "mrr_dbz": 7.5,
+  "mrr_search_nm": 4.0,
+  "mrr_eval_nm": 1.0,
+  "thick_mrr_dbz": 7.5,
+  "disturbed_nm": 5.0,
+  "disturbed_dbz": 30.0,
+  "core_dbz": 40.0,
+  "yellow_margin_nm": 2.0
+ },
+ "standard": "NASA-STD-4010 (2017-06-27)"
+}

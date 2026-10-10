@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CloudScope Radar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Range console. Colour means status and nothing else: red, yellow, green and grey are
+     reserved for the traffic light, and every piece of chrome is steel so nothing competes
+     with them. */
+  :root{
+    --bg:#141D29; --panel:#1B2635; --panel-2:#223042; --well:#111A25;
+    --line:#2C3A4D; --line-2:#3A4B61;
+    --steel:#9FB2C4; --dim:#6F8296; --ink:#E8EEF3;
+    --red:#E5484D; --yellow:#F2C14E; --green:#3FB97A; --grey:#6B7785;
+    --shell:1320px;
+  }
+  *{box-sizing:border-box}
+  /* The `hidden` attribute is only a user-agent display:none, and any author rule that sets
+     display - like `.map img{display:block}` below - silently beats it. That kept the overlay's
+     outline layer on screen in side-by-side mode, frozen on whatever frame overlay last showed,
+     which is what made the status contours look static while the fill underneath moved. */
+  [hidden]{display:none !important}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg); color:var(--ink);
+       font-family:"Barlow",system-ui,sans-serif; font-size:15px; line-height:1.45;
+       font-variant-numeric:tabular-nums; padding:clamp(12px,2.2vw,26px)}
+  .shell{max-width:var(--shell); margin:0 auto}
+  button,input,select{font:inherit}
+  :focus-visible{outline:2px solid var(--steel); outline-offset:2px}
+
+  /* ---- header -------------------------------------------------------------------- */
+  header{display:grid; grid-template-columns:1fr auto; gap:14px 24px; align-items:end;
+         padding-bottom:14px; border-bottom:1px solid var(--line)}
+  .brand{font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:clamp(28px,4.2vw,44px);
+         line-height:.9; letter-spacing:.01em}
+  .brand span{color:var(--steel); font-weight:500}
+  .tag{color:var(--steel); font-size:14px; margin-top:6px; max-width:62ch}
+  .clock{text-align:right}
+  .clock .t{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:clamp(26px,3.6vw,38px);
+            line-height:1}
+  .clock .d{color:var(--steel); font-size:14px; margin-top:4px}
+  .age{display:inline-block; margin-left:8px; padding:1px 8px; border-radius:999px;
+       font-size:13px; background:var(--panel-2); color:var(--steel)}
+  .age.warn{background:#4A3B14; color:var(--yellow)}
+  .age.bad{background:#4A1A1C; color:#FF8A8D}
+
+  .stale{display:none; margin:14px 0 0; padding:10px 14px; border-radius:6px;
+         background:#3A1517; border:1px solid var(--red); color:#FFC2C3; font-weight:500}
+  .stale.on{display:block}
+
+  /* ---- controls ------------------------------------------------------------------ */
+  .bar{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; margin:16px 0 12px}
+  .seg{display:inline-flex; background:var(--panel); border:1px solid var(--line);
+       border-radius:6px; padding:2px}
+  .seg button{background:none; border:0; color:var(--steel); padding:6px 12px; cursor:pointer;
+              border-radius:4px; font-weight:500}
+  .seg button[aria-pressed=true]{background:var(--panel-2); color:var(--ink)}
+  .seg button:hover{color:var(--ink)}
+  .lbl{color:var(--dim); font-size:13px}
+  .chk{display:inline-flex; gap:7px; align-items:center; color:var(--steel); cursor:pointer;
+       font-size:14px}
+  .chk input{accent-color:var(--steel)}
+  .export{margin-left:auto; color:var(--ink); text-decoration:none; font-weight:500;
+          border:1px solid var(--line-2); border-radius:6px; padding:6px 14px}
+  .export:hover{background:var(--panel-2)}
+
+  /* ---- maps ---------------------------------------------------------------------- */
+  .maps{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .maps.overlay{grid-template-columns:1fr}
+  @media (max-width:760px){ .maps{grid-template-columns:1fr} }
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:8px;
+         padding:10px 10px 8px}
+  .panel h3{margin:0 0 8px; font-family:"Barlow Condensed",sans-serif; font-weight:600;
+            font-size:18px; letter-spacing:.01em; display:flex; justify-content:space-between;
+            align-items:baseline}
+  .panel h3 small{font-family:"Barlow",sans-serif; font-weight:400; font-size:13px;
+                  color:var(--dim)}
+  /* Every layer shares one aspect ratio, so the map is sized by HEIGHT: as large as fits
+     under the header and above the timeline, never taller than the screen. --ar is replaced
+     with the real ratio once the first image loads. */
+  .map{position:relative; background:var(--well); border-radius:4px; overflow:hidden;
+       line-height:0; cursor:crosshair; touch-action:manipulation; --ar:.882;
+       aspect-ratio:var(--ar); margin:0 auto;
+       width:min(100%, max(calc(300px * var(--ar)), calc((100vh - 330px) * var(--ar))))}
+  .maps.overlay .map{width:min(100%, max(calc(320px * var(--ar)), calc((100vh - 300px) * var(--ar))))}
+  .map img{display:block; width:100%; height:100%; image-rendering:pixelated}
+  .map img.layer{position:absolute; inset:0}
+  .map svg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
+  .map .empty{position:absolute; inset:0; display:grid; place-items:center; color:var(--dim);
+              font-size:14px; line-height:1.4; padding:20px; text-align:center}
+  .ring{fill:none; stroke:#9FB2C4; stroke-opacity:.42; stroke-width:1; stroke-dasharray:4 5;
+        vector-effect:non-scaling-stroke}
+  .ringlbl{fill:#9FB2C4; fill-opacity:.75; font:500 11px "Barlow",sans-serif}
+  .xh{stroke:#FFFFFF; stroke-width:1.6; vector-effect:non-scaling-stroke}
+  .xhc{fill:none; stroke:#FFFFFF; stroke-width:1.4; vector-effect:non-scaling-stroke}
+
+  .scale{display:flex; flex-wrap:wrap; gap:4px 12px; margin-top:8px; font-size:12.5px;
+         color:var(--steel); line-height:1.3}
+  .scale i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px;
+           vertical-align:-1px}
+  .refl{display:flex; height:9px; margin-top:8px; border-radius:2px; overflow:hidden}
+  .refl span{flex:1}
+  .reflticks{position:relative; height:16px; font-size:11.5px; color:var(--dim); margin-top:3px}
+  .reflticks span{position:absolute; top:0; transform:translateX(-50%)}
+  .reflticks span:first-child{transform:none}
+  .reflticks .unit{right:0; left:auto; transform:none}
+
+  /* ---- timeline ------------------------------------------------------------------ */
+  .timeline{display:flex; align-items:center; gap:14px; margin:14px 0 6px; flex-wrap:wrap}
+  .play{background:var(--ink); color:var(--bg); border:0; border-radius:6px; padding:8px 16px;
+        font-weight:600; cursor:pointer; min-width:84px}
+  .scrubwrap{flex:1; min-width:220px}
+  input[type=range]{width:100%; accent-color:var(--steel)}
+  .ticks{display:flex; justify-content:space-between; font-size:12px; color:var(--dim);
+         margin-top:2px}
+  .now{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:20px; min-width:7ch}
+
+  /* ---- lower: pads + readout ----------------------------------------------------- */
+  .lower{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:14px;
+         margin-top:14px}
+  @media (max-width:900px){ .lower{grid-template-columns:1fr} }
+
+  .poll{background:var(--panel); border:1px solid var(--line); border-radius:8px}
+  .poll .head{display:flex; justify-content:space-between; align-items:baseline;
+              padding:10px 14px; border-bottom:1px solid var(--line)}
+  .poll .head h3{margin:0; font-family:"Barlow Condensed",sans-serif; font-weight:600;
+                 font-size:18px}
+  .tally{display:flex; gap:12px; font-size:14px; color:var(--steel)}
+  .tally b{color:var(--ink); font-weight:600}
+  .row{display:grid; grid-template-columns:18px 76px 1fr auto; gap:2px 12px; align-items:center;
+       padding:9px 14px; border-bottom:1px solid var(--line); cursor:pointer}
+  .row:last-child{border-bottom:0}
+  .row:hover{background:var(--panel-2)}
+  .lamp{width:14px; height:14px; border-radius:50%}
+  .lamp.s2{background:var(--red); box-shadow:0 0 10px rgba(229,72,77,.65)}
+  .lamp.s1{background:var(--yellow); box-shadow:0 0 9px rgba(242,193,78,.5)}
+  .lamp.s0{background:var(--green)}
+  .lamp.s-1{background:var(--grey)}
+  .pname{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:18px}
+  .pclass{color:var(--steel); font-size:14px}
+  .pnum{color:var(--dim); font-size:13px; text-align:right; white-space:nowrap}
+  .reason{grid-column:3/-1; font-size:13.5px; line-height:1.35}
+  .reason.s2{color:#FF9EA1} .reason.s1{color:#F7D586}
+
+  .readout{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px}
+  .readout h3{margin:0 0 4px; font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:18px}
+  .readout .hint{color:var(--steel); font-size:14px}
+  .ro-status{display:flex; align-items:center; gap:10px; margin:10px 0 6px;
+             font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:26px}
+  .ro-class{display:flex; align-items:center; gap:8px; font-size:16px; margin-bottom:10px}
+  .ro-class i{width:12px; height:12px; border-radius:2px; display:inline-block}
+  dl{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; margin:0; font-size:14.5px}
+  dt{color:var(--dim)} dd{margin:0}
+  .rules{margin:10px 0 0; padding:0; list-style:none; font-size:14px}
+  .rules li{padding:3px 0 3px 14px; position:relative}
+  .rules li::before{content:""; position:absolute; left:0; top:.7em; width:6px; height:6px;
+                    border-radius:50%}
+  .rules li.r::before{background:var(--red)} .rules li.y::before{background:var(--yellow)}
+  .rules li.g::before{background:var(--green)}
+  .exc{margin-top:12px; padding-top:10px; border-top:1px solid var(--line); font-size:14px}
+  .exc .rules{margin-top:4px}
+
+  .how{margin-top:22px; display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  @media (max-width:900px){ .how{grid-template-columns:1fr} }
+  .how > div{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px}
+  .how h3{margin:0 0 4px; font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:20px}
+  .how .lead{color:var(--steel); font-size:14px; margin:0 0 12px; max-width:70ch}
+  .def{display:grid; grid-template-columns:14px 1fr; gap:3px 10px; padding:9px 0;
+       border-top:1px solid var(--line)}
+  .def i{width:12px; height:12px; border-radius:2px; margin-top:4px}
+  .def b{font-weight:600}
+  .def p{grid-column:2; margin:0; color:var(--steel); font-size:14px; line-height:1.45}
+  .ro-how{color:var(--steel); font-size:13.5px; line-height:1.45; margin:-4px 0 12px}
+  .xs{margin-top:14px}
+  .xsh{display:flex; gap:16px; align-items:baseline}
+  .xsh .chk{font-size:13px}
+  .xswrap{position:relative; background:var(--well); border-radius:4px; line-height:0}
+  #xs-canvas{display:block; width:100%; height:320px}
+  .xsmsg{position:absolute; inset:0; display:grid; place-items:center; color:var(--steel);
+         font-size:14px; line-height:1.4; padding:20px; text-align:center; pointer-events:none}
+  .xsline{stroke:#FFFFFF; stroke-width:2; vector-effect:non-scaling-stroke; stroke-dasharray:6 4}
+  .xsend{fill:#FFFFFF; stroke:#141D29; stroke-width:1.5; vector-effect:non-scaling-stroke}
+  .xslbl{fill:#FFFFFF; font:600 13px "Barlow Condensed",sans-serif; paint-order:stroke;
+         stroke:#141D29; stroke-width:3px}
+  footer{margin-top:22px; padding-top:12px; border-top:1px solid var(--line); color:var(--dim);
+         font-size:13.5px; max-width:86ch}
+  footer p{margin:0 0 8px}
+  footer b{color:var(--steel); font-weight:600}
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important; animation:none !important} }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header>
+  <div>
+    <div class="brand">CloudScope <span>Radar</span></div>
+    <div class="tag">Live MRMS radar and lightning scored against the lightning launch commit
+      criteria, as if the flight path ran through every point on the map.</div>
+  </div>
+  <div class="clock">
+    <div class="t" id="clock">--:--Z</div>
+    <div class="d"><span id="clockd">waiting for data</span><span class="age" id="age"></span></div>
+  </div>
+</header>
+<div class="stale" id="stale"></div>
+
+<div class="bar">
+  <div class="seg" role="group" aria-label="Left map shows">
+    <button id="m-status" aria-pressed="true">Status</button>
+    <button id="m-class" aria-pressed="false">Cloud class</button>
+  </div>
+  <div class="seg" role="group" aria-label="Layout">
+    <button id="v-pair" aria-pressed="true">Side by side</button>
+    <button id="v-over" aria-pressed="false">Overlay on radar</button>
+  </div>
+  <div class="seg"><button id="xs-btn" aria-pressed="false" title="Tap two points on either map">Cross-section</button></div>
+  <label class="chk"><input type="checkbox" id="rings" checked> Range rings</label>
+  <a class="export" id="gif" download hidden>Export GIF</a>
+</div>
+
+<div class="maps" id="maps">
+  <section class="panel" id="p-left">
+    <h3><span id="left-title">Status</span><small id="left-sub">every cell as the flight path</small></h3>
+    <div class="map" id="map-left">
+      <img id="img-left" alt="Status map">
+      <img id="img-left-line" class="layer" alt="" hidden>
+      <svg id="svg-left" aria-hidden="true"></svg>
+      <div class="empty" id="empty-left">Loading the latest radar…</div>
+    </div>
+    <div class="scale" id="legend-left"></div>
+  </section>
+  <section class="panel" id="p-right">
+    <h3>Radar <small>composite reflectivity · GLM flashes × · NLDN CG +, last 30 min</small></h3>
+    <div class="map" id="map-right">
+      <img id="img-right" alt="Composite reflectivity">
+      <svg id="svg-right" aria-hidden="true"></svg>
+    </div>
+    <div class="refl" id="refl"></div>
+    <div class="reflticks" id="reflticks"></div>
+  </section>
+</div>
+
+<div class="timeline">
+  <button class="play" id="play">Play</button>
+  <div class="scrubwrap">
+    <input type="range" id="scrub" min="0" max="0" value="0" aria-label="Frame">
+    <div class="ticks" id="ticks"></div>
+  </div>
+  <div class="now" id="now">--:--Z</div>
+</div>
+
+<section class="panel xs" id="xs-panel" hidden>
+  <h3><span>Vertical cross-section <small style="font-weight:400">tap it for the readout at that point</small></span>
+    <span class="xsh"><label class="chk"><input type="checkbox" id="xs-smooth" checked> Smooth</label>
+    <small id="xs-sub">tap a start point on either map</small></span></h3>
+  <div class="xswrap"><canvas id="xs-canvas" height="320"></canvas>
+    <div class="xsmsg" id="xs-msg"></div></div>
+  <div class="scale" id="xs-legend"></div>
+</section>
+
+<div class="lower">
+  <section class="poll">
+    <div class="head"><h3>Pads</h3><div class="tally" id="tally"></div></div>
+    <div id="pads"></div>
+  </section>
+  <section class="readout" id="readout">
+    <h3>Point readout</h3>
+    <div class="hint">Tap any point on either map, or a pad on the left, to see what the radar
+      classifies it as and which rules it trips.</div>
+  </section>
+</div>
+
+<section class="how" id="how"></section>
+<footer id="method"></footer>
+</div>
+
+<script>
+// Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
+const VIEWER_VERSION = "mrms-v19";
+const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
+const RINGS_NM = [3, 5, 10, 20];
+
+const SHORT = {
+  lightning: "Lightning within 10 nmi", cumulus_through: "Flight through cumulus at +5 °C or colder",
+  cumulus_5nm: "Cumulus colder than −10 °C within 5 nmi", cumulus_10nm: "Cumulus colder than −20 °C within 10 nmi",
+  attached_anvil: "Attached anvil within 3 nmi", detached_anvil: "Detached anvil within 3 nmi",
+  disturbed: "Disturbed weather", thick_layer: "Thick cloud layer, 0 to −10 °C",
+};
+
+let M = null, idx = 0, timer = null, STAMP = "", mode = "status", view = "pair", pin = null;
+let firstLoad = true;
+let xsOn = false, xsA = null, xsB = null;
+let xsT = null, XSG = null;            // tapped position along the section (0..1), and its geometry
+const VOLS = {};
+const DATA = {};
+const $ = id => document.getElementById(id);
+const bust = u => u + (u.includes("?") ? "&" : "?") + "v=" + STAMP;
+const psi = d => Math.log(Math.tan(Math.PI / 4 + d * Math.PI / 360));
+const minsSince = iso => { const t = Date.parse(iso || ""); return isFinite(t) ? (Date.now() - t) / 6e4 : null; };
+// Lower-case only the first letter: a blanket toLowerCase() turns "°C" into "°c".
+const lcFirst = s => s ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+const hhmm = iso => iso ? iso.slice(11, 16) + "Z" : "--:--Z";
+const dayLabel = iso => iso ? new Date(iso).toLocaleDateString("en-GB",
+  {weekday: "short", day: "numeric", month: "short", timeZone: "UTC"}) : "";
+
+function load(){
+  fetch("manifest.json?" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject("HTTP " + r.status))
+    .then(m => {
+      const wasNewest = !M || idx === M.frames.length - 1;
+      const prevValid = (!wasNewest && M) ? M.frames[idx].valid : null;
+      M = m; STAMP = encodeURIComponent(m.generated || "");
+      boot(prevValid);
+      if (firstLoad){
+        firstLoad = false;
+        // Phones default to overlay: two stacked maps push the pads off the first screen.
+        if (matchMedia("(max-width:760px)").matches) $("v-over").onclick();
+      }
+    })
+    .catch(e => { $("empty-left").textContent = "No radar published yet (" + e + "). The first run creates it."; });
+}
+
+function boot(prevValid){
+  // oldest first in the scrubber, so left-to-right is the direction weather moves
+  M.frames.sort((a, b) => a.valid < b.valid ? -1 : 1);
+  $("scrub").max = Math.max(0, M.frames.length - 1);
+  // A background refresh must not yank someone back to the newest frame while they are
+  // studying an older one. Follow the newest only if that is where they already were.
+  const keep = prevValid ? M.frames.findIndex(f => f.valid === prevValid) : -1;
+  idx = keep >= 0 ? keep : M.frames.length - 1;
+  drawRefl(); drawTicks(); drawMethod(); drawHow(); legendLeft(); gifLink();
+  M.frames.forEach(f => Object.values(f.images).forEach(u => { const i = new Image(); i.src = bust(u); }));
+  show(idx);
+  checkStale();
+}
+
+function frameAt(i){ return M.frames[i]; }
+
+// The GIF is built on the server each run, one per view, so the button simply points at
+// the one matching what is on screen.
+function gifLink(){
+  const a = $("gif"), g = M && M.gifs || {};
+  const key = view === "over" ? "overlay" : mode;
+  if (!g[key]){ a.hidden = true; return; }
+  a.hidden = false;
+  a.href = bust(g[key]);
+  a.setAttribute("download", `cloudscope-radar-${key}-${(M.valid || "").slice(0, 16).replace(/[-:T]/g, "")}.gif`);
+  a.title = `Loop of the last ${M.frames.length} frames, oldest to newest`;
+}
+
+function show(i){
+  idx = i; const f = frameAt(i); if (!f) return;
+  const left = mode === "class" ? f.images.class : f.images.status;
+  if (view === "over"){
+    $("img-left").src = bust(f.images.radar);
+    $("img-left-line").src = bust(f.images.statusline);
+    $("img-left-line").hidden = false;
+  } else {
+    $("img-left").src = bust(left);
+    $("img-left-line").hidden = true;
+  }
+  $("img-right").src = bust(f.images.radar);
+  $("empty-left").style.display = "none";
+  $("scrub").value = i;
+  $("now").textContent = hhmm(f.valid);
+  pads(f);
+  if (pin) readout(pin.lat, pin.lon, pin.label);
+  if (xsOn) drawSection();
+}
+
+// ---- geometry: the PNGs are Mercator with the axes filling the figure ------------------
+function toFrac(lat, lon){
+  const d = M.domain, p0 = psi(d.lat_min), p1 = psi(d.lat_max);
+  return [(lon - d.lon_min) / (d.lon_max - d.lon_min), (p1 - psi(lat)) / (p1 - p0)];
+}
+function fromFrac(fx, fy){
+  const d = M.domain, p0 = psi(d.lat_min), p1 = psi(d.lat_max);
+  const lon = d.lon_min + fx * (d.lon_max - d.lon_min);
+  const lat = (2 * Math.atan(Math.exp(p1 - fy * (p1 - p0))) - Math.PI / 2) * 180 / Math.PI;
+  return [lat, lon];
+}
+function centroid(){
+  const s = Object.values(M.sites);
+  return [s.reduce((a, p) => a + p[0], 0) / s.length, s.reduce((a, p) => a + p[1], 0) / s.length];
+}
+
+function drawSvg(svgId, imgId){
+  const svg = $(svgId), img = $(imgId);
+  const W = img.naturalWidth, H = img.naturalHeight;
+  if (!W || !H){ return; }
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  let out = "";
+  if ($("rings").checked){
+    const [clat, clon] = centroid();
+    const [cx, cy] = toFrac(clat, clon);
+    const span = M.domain.lon_max - M.domain.lon_min;
+    RINGS_NM.forEach(nm => {
+      // Mercator is conformal, so at this scale the standoff is a true circle.
+      const r = (nm * 1.852 / (111.32 * Math.cos(clat * Math.PI / 180))) / span * W;
+      out += `<circle class="ring" cx="${cx * W}" cy="${cy * H}" r="${r}"/>`;
+      // Staggered so the 3 and 5 nmi labels stop colliding; matched in the GIF renderer.
+      const a = ({3: -20, 5: 22, 10: 40, 20: 48}[nm] ?? 45) * Math.PI / 180;
+      out += `<text class="ringlbl" x="${cx * W + r * Math.cos(a) + 4}" y="${cy * H - r * Math.sin(a) + 4}">${nm} nmi</text>`;
+    });
+  }
+  if (xsA){
+    const [ax, ay] = toFrac(xsA.lat, xsA.lon);
+    if (xsB){
+      const [bx, by] = toFrac(xsB.lat, xsB.lon);
+      out += `<line class="xsline" x1="${ax * W}" y1="${ay * H}" x2="${bx * W}" y2="${by * H}"/>
+              <circle class="xsend" cx="${bx * W}" cy="${by * H}" r="5"/>
+              <text class="xslbl" x="${bx * W + 8}" y="${by * H - 6}">B</text>`;
+    }
+    out += `<circle class="xsend" cx="${ax * W}" cy="${ay * H}" r="5"/>
+            <text class="xslbl" x="${ax * W + 8}" y="${ay * H - 6}">A</text>`;
+  }
+  if (pin){
+    const [px, py] = toFrac(pin.lat, pin.lon);
+    const x = px * W, y = py * H;
+    out += `<circle class="xhc" cx="${x}" cy="${y}" r="9"/>
+            <line class="xh" x1="${x - 16}" y1="${y}" x2="${x - 5}" y2="${y}"/>
+            <line class="xh" x1="${x + 5}" y1="${y}" x2="${x + 16}" y2="${y}"/>
+            <line class="xh" x1="${x}" y1="${y - 16}" x2="${x}" y2="${y - 5}"/>
+            <line class="xh" x1="${x}" y1="${y + 5}" x2="${x}" y2="${y + 16}"/>`;
+  }
+  svg.innerHTML = out;
+}
+function redraw(){
+  const im = $("img-right").naturalWidth ? $("img-right") : $("img-left");
+  if (im.naturalWidth){
+    const ar = (im.naturalWidth / im.naturalHeight).toFixed(4);
+    document.querySelectorAll(".map").forEach(m => m.style.setProperty("--ar", ar));
+  }
+  drawSvg("svg-left", "img-left"); drawSvg("svg-right", "img-right");
+}
+$("img-left").addEventListener("load", redraw);
+$("img-right").addEventListener("load", redraw);
+addEventListener("resize", redraw);
+
+// ---- tap / click readout --------------------------------------------------------------
+function onTap(ev){
+  if (!M) return;
+  const r = ev.currentTarget.getBoundingClientRect();
+  const fx = Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width));
+  const fy = Math.min(1, Math.max(0, (ev.clientY - r.top) / r.height));
+  const [lat, lon] = fromFrac(fx, fy);
+  if (xsOn){
+    // first tap is A, second is B, a third starts a new line
+    if (!xsA || xsB){ xsA = {lat, lon}; xsB = null; xsT = null; }
+    else { xsB = {lat, lon}; }
+    redraw(); drawSection();
+    return;
+  }
+  pin = {lat, lon, label: null};
+  readout(lat, lon, null); redraw();
+}
+$("map-left").addEventListener("click", onTap);
+$("map-right").addEventListener("click", onTap);
+
+function getData(f){
+  if (DATA[f.data] instanceof Uint8Array) return Promise.resolve(DATA[f.data]);
+  if (DATA[f.data]) return DATA[f.data];
+  DATA[f.data] = fetch(bust(f.data)).then(r => r.arrayBuffer())
+    .then(b => (DATA[f.data] = new Uint8Array(b)));
+  return DATA[f.data];
+}
+
+// Convective/stratiform and the anvil exception, from planes 8-9 of newer frames.
+function sepRow(d, n, c){
+  if (d.length < 10 * n) return "";
+  const fl = d[9 * n + c];
+  if (!(fl & 32)) return `<dt>Echo type</dt><dd style="color:var(--dim)">Not separated (no 3-D volume)</dd>`;
+  if (fl & 8)  return `<dt>Echo type</dt><dd>Convective (Steiner)</dd>`;
+  if (fl & 16) return `<dt>Echo type</dt><dd>Stratiform (Steiner)</dd>`;
+  return `<dt>Echo type</dt><dd style="color:var(--dim)">Unknown here (blind at the separation level, or no low-level echo)</dd>`;
+}
+// Satellite cloud top for this cell (planes 11-12), and whether the classifier used it.
+function satRow(d, n, c){
+  if (d.length < 13 * n) return "";
+  const b = d[11 * n + c], hh = d[12 * n + c], fl = d[9 * n + c], echo = d[2 * n + c] !== 255;
+  if (b === 255) return `<dt>Satellite top</dt><dd style="color:var(--dim)">No cloud-top match here</dd>`;
+  const t = b - 100, km = hh === 255 ? null : hh / 10;
+  const why = !echo ? "not used: no radar echo here, and satellite never adds cloud"
+            : (fl & 64) ? "consistent with this echo (it can only raise a cumulus class)"
+            : "ignored: more than 3 km above the radar echo top, likely a higher layer";
+  return `<dt>Satellite top</dt><dd>${t} °C${km != null ? `, ${km.toFixed(1)} km` : ""} · ${why}` +
+         `${(fl & 128) ? " · <b>raised this cumulus class</b>" : ""}</dd>`;
+}
+
+function ltgRow(d, n, c, f){
+  if (d.length < 11 * n) return "";
+  const v = d[10 * n + c];
+  const src = f.lightning_source ? ` <span style="color:var(--dim)">(${f.lightning_source})</span>` : "";
+  return v === 255 ? `<dt>Lightning</dt><dd>None within 50 nmi, last 30 min${src}</dd>`
+                   : `<dt>Lightning</dt><dd>Nearest ${(v / 5).toFixed(1)} nmi, last 30 min${src}</dd>`;
+}
+function exceptionBlock(d, n, c){
+  if (d.length < 10 * n) return "";
+  const fl = d[9 * n + c];
+  if (!(fl & 1)) return "";                       // no anvil within 3 nmi: the exception is moot
+  const m = d[8 * n + c], mrr = m === 255 ? null : m / 2;
+  const a = (fl & 2) ? `<li class="r">(a) fails: some of the anvil within 5 nmi has echo below the 0 °C level</li>`
+                     : `<li class="g">(a) passes: the anvil within 5 nmi lies entirely above 0 °C</li>`;
+  const b = (fl & 4) ? `<li class="r">(b) fails: MRR ${mrr == null ? "≥ 7.5" : mrr.toFixed(1)} dBZ within 1 nmi (must be below 7.5)</li>`
+                     : `<li class="g">(b) passes: MRR ${mrr == null ? "below 7.5" : mrr.toFixed(1)} dBZ within 1 nmi</li>`;
+  const ok = !(fl & 6);
+  return `<div class="exc"><b>Anvil exception (LLCCR 12, 22): ${ok ? "applies, anvil standoff lifted" : "does not apply"}</b>
+          <ul class="rules">${a}${b}</ul></div>`;
+}
+
+// Measured echo base and top from the 3-D volume, when this frame has one.
+const KFT = km => Math.round(km * 3.28084 * 10) / 10;
+function volRows(d, n, c){
+  if (d.length < 8 * n) return "";
+  const b = d[6 * n + c], t = d[7 * n + c], L = M.levels_km || [];
+  if (b === 253) return `<dt>3-D</dt><dd style="color:var(--dim)">No volume for this frame</dd>`;
+  if (b === 255) return `<dt>3-D</dt><dd>No echo in the column</dd>`;
+  const bk = L[b & 63], tk = L[t];
+  const blind = (b & 64) ? " (radar cannot see lower here)" : "";
+  return `<dt>Echo base</dt><dd>${bk} km, ${KFT(bk)} kft${blind}</dd>
+          <dt>Echo top</dt><dd>${tk} km, ${KFT(tk)} kft</dd>`;
+}
+
+function readout(lat, lon, label){
+  const f = frameAt(idx), g = M.grid;
+  const j = Math.round((g.lat_n - lat) / g.dlat), i = Math.round((lon - g.lon_w) / g.dlon);
+  const box = $("readout");
+  if (j < 0 || i < 0 || j >= g.ny || i >= g.nx){
+    box.innerHTML = `<h3>Point readout</h3><div class="hint">That point is outside the scored area.</div>`;
+    return;
+  }
+  getData(f).then(d => {
+    const n = g.ny * g.nx, c = j * g.nx + i;
+    const st = d[c] - 1, cls = d[n + c], dbz = d[2 * n + c], top = d[3 * n + c];
+    const rb = d[4 * n + c], yb = d[5 * n + c];
+    const S = M.status[String(st)], C = M.classes[cls];
+    const red = M.rule_keys.filter((k, b) => rb & (1 << b));
+    const yel = M.rule_keys.filter((k, b) => yb & (1 << b));
+    const where = label || `${Math.abs(lat).toFixed(3)}° N, ${Math.abs(lon).toFixed(3)}° W`;
+    box.innerHTML = `
+      <h3>${where}</h3>
+      <div class="hint">frame ${hhmm(f.valid)}</div>
+      <div class="ro-status"><span class="lamp s${st}"></span>${S.name}</div>
+      <div class="ro-class"><i style="background:${cls ? C.color : "transparent"};
+           ${cls ? "" : "box-shadow:inset 0 0 0 1px var(--line-2)"}"></i>${C.name}</div>
+      <div class="ro-how">${C.how || ""}</div>
+      <dl>
+        <dt>Composite</dt><dd>${dbz === 255 ? "no echo" : (dbz / 2).toFixed(1) + " dBZ"}</dd>
+        <dt>Echo top</dt><dd>${M.top_levels[top]}</dd>
+        ${volRows(d, n, c)}
+        ${sepRow(d, n, c)}
+        ${ltgRow(d, n, c, f)}
+        ${satRow(d, n, c)}
+      </dl>
+      ${cls === 7 ? `<div class="ro-how">Detached-anvil drift: ${f.anvil_wind ? f.anvil_wind.label
+        : "32 kt in every direction (too few anvil-level satellite winds)"}</div>` : ""}
+      ${cls >= 1 && cls <= 4 && ((red.includes("cumulus_5nm") && top < 4) ||
+                                 (red.includes("cumulus_10nm") && top < 6)) ?
+        `<div class="ro-how">This point's own echo does not reach that level. The cumulus
+         standoff comes from colder cumulus nearby.</div>` : ""}
+      ${(cls === 6 || cls === 7) && red.some(k => k.startsWith("cumulus")) ?
+        `<div class="ro-how">This point is anvil, which is never scored as cumulus. The cumulus
+         rules here come from convective echo classed as cumulus within their standoff, not from
+         this anvil. Tap nearby to find it.</div>` : ""}
+      ${exceptionBlock(d, n, c)}
+      ${red.length || yel.length ? `<ul class="rules">
+        ${red.map(k => `<li class="r">${SHORT[k] || k}</li>`).join("")}
+        ${yel.map(k => `<li class="y">Within 2 nmi: ${lcFirst(SHORT[k] || k)}</li>`).join("")}
+      </ul>` : (st === 1 ? `<ul class="rules"><li class="y">CG lightning within 20 nmi</li></ul>` : "")}`;
+  });
+}
+
+// ---- vertical cross-section ----------------------------------------------------------
+function getVol(f){
+  if (!f.volume) return Promise.resolve(null);
+  if (VOLS[f.volume] instanceof Uint8Array) return Promise.resolve(VOLS[f.volume]);
+  if (VOLS[f.volume]) return VOLS[f.volume];
+  VOLS[f.volume] = fetch(bust(f.volume)).then(r => r.arrayBuffer()).then(async buf => {
+    let b = new Uint8Array(buf);
+    // gzip magic: decompress here. If a server already did it, use the bytes as they are.
+    if (b[0] === 0x1f && b[1] === 0x8b){
+      if (typeof DecompressionStream === "undefined") throw new Error("browser cannot gunzip");
+      const ds = new Blob([b]).stream().pipeThrough(new DecompressionStream("gzip"));
+      b = new Uint8Array(await new Response(ds).arrayBuffer());
+    }
+    return (VOLS[f.volume] = b);
+  });
+  return VOLS[f.volume];
+}
+
+let LUT = null, LUT_FOR = null;
+function reflLut(){
+  if (LUT && LUT_FOR === M) return LUT;
+  const out = [];
+  for (let k = 0; k <= 200; k++){
+    const c = reflColor(k / 2);
+    out.push(c ? [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)] : null);
+  }
+  LUT_FOR = M; return (LUT = out);
+}
+
+function reflColor(dbz){
+  const R = M.refl;
+  for (let k = R.levels.length - 2; k >= 0; k--) if (dbz >= R.levels[k]) return R.colors[k];
+  return null;
+}
+
+function kmBetween(a, b){
+  const k = Math.cos((a.lat + b.lat) / 2 * Math.PI / 180);
+  return Math.hypot((b.lat - a.lat) * 111.32, (b.lon - a.lon) * 111.32 * k);
+}
+
+async function drawSection(){
+  const panel = $("xs-panel"), cv = $("xs-canvas"), msg = $("xs-msg");
+  panel.hidden = !xsOn;
+  if (!xsOn) return;
+  const f = frameAt(idx);
+  if (!xsA || !xsB){
+    $("xs-sub").textContent = xsA ? "now tap the end point" : "tap a start point on either map";
+    msg.textContent = xsA ? "Tap a second point to draw the section." :
+      "Tap two points on either map to draw a vertical cross-section between them.";
+    cv.getContext("2d").clearRect(0, 0, cv.width, cv.height);
+    return;
+  }
+  const km = kmBetween(xsA, xsB);
+  $("xs-sub").textContent = `A to B, ${(km / 1.852).toFixed(1)} nmi, frame ${hhmm(f.valid)}`;
+  let vol, dat;
+  try { [vol, dat] = await Promise.all([getVol(f), getData(f)]); }
+  catch (e){ msg.textContent = "Could not load this frame's volume (" + e.message + ")."; return; }
+  if (frameAt(idx) !== f) return;            // the user moved on while it loaded
+  if (!vol){
+    msg.textContent = "No 3-D volume for this frame. Only the newest frame of each run gets " +
+      "one, so the loop fills in as runs go by; archive-filled frames are 2-D.";
+    cv.getContext("2d").clearRect(0, 0, cv.width, cv.height);
+    return;
+  }
+  msg.textContent = "";
+
+  const g = M.grid, n = g.ny * g.nx, H = M.levels_km, L = H.length;
+  const dpr = window.devicePixelRatio || 1;
+  const Wc = cv.clientWidth, Hc = 320;
+  cv.width = Wc * dpr; cv.height = Hc * dpr;
+  const x = cv.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  x.clearRect(0, 0, Wc, Hc);
+  const pl = 46, pr = 50, pt = 26, pb = 34, PW = Wc - pl - pr, PH = Hc - pt - pb;
+  const ZMAX = 16;
+  const yOf = z => pt + PH * (1 - Math.min(z, ZMAX) / ZMAX);
+
+  // ---- rendered per device pixel, like GR2 ----------------------------------------------
+  // Smooth: bilinear between grid cells along the line AND linear between levels in height.
+  // No-echo is interpolated as a low value and then thresholded at 0 dBZ, so echo edges come
+  // out smooth without being smeared outward past where 0 dBZ actually is. Blind cells (the
+  // beam cannot see that low) are never interpolated into - they stay shaded.
+  // Raw: nearest cell, each level owning the band halfway to its neighbours.
+  const smooth = $("xs-smooth").checked;
+  const NOE = -15;                              // no echo, as a value to interpolate toward
+  const lo = k => k === 0 ? Math.max(0, H[0] - (H[1] - H[0]) / 2) : (H[k - 1] + H[k]) / 2;
+  const hi = k => k === L - 1 ? H[k] + (H[k] - H[k - 1]) / 2 : (H[k] + H[k + 1]) / 2;
+  const X0 = Math.round(pl * dpr), Y0 = Math.round(pt * dpr);
+  const PWd = Math.max(1, Math.round(PW * dpr)), PHd = Math.max(1, Math.round(PH * dpr));
+  const img = x.createImageData(PWd, PHd), px = img.data;
+  const lut = reflLut();
+
+  // Row -> level mapping is the same for every column, so it is worked out once.
+  const rowK = new Int16Array(PHd), rowW = new Float32Array(PHd), rowN = new Int16Array(PHd);
+  for (let ry = 0; ry < PHd; ry++){
+    const z = ZMAX * (1 - (ry + 0.5) / PHd);
+    let n_ = -1;
+    for (let k = 0; k < L; k++) if (z >= lo(k) && z < hi(k)){ n_ = k; break; }
+    rowN[ry] = n_;
+    if (z < lo(0) || z >= hi(L - 1)){ rowK[ry] = -1; continue; }
+    if (z <= H[0]){ rowK[ry] = 0; rowW[ry] = 0; continue; }
+    if (z >= H[L - 1]){ rowK[ry] = L - 2; rowW[ry] = 1; continue; }
+    let k = 0; while (k < L - 2 && H[k + 1] <= z) k++;
+    rowK[ry] = k; rowW[ry] = (z - H[k]) / (H[k + 1] - H[k]);
+  }
+
+  const cell = (k, j, i) => {                   // dBZ, NOE for no echo, NaN for blind
+    if (j < 0 || i < 0 || j >= g.ny || i >= g.nx) return NaN;
+    const v = vol[k * n + j * g.nx + i];
+    return v === 254 ? NaN : v === 255 ? NOE : v / 2;
+  };
+  const prof = new Float32Array(L);
+  for (let cx = 0; cx < PWd; cx++){
+    const t = (cx + 0.5) / PWd;
+    const lat = xsA.lat + (xsB.lat - xsA.lat) * t, lon = xsA.lon + (xsB.lon - xsA.lon) * t;
+    const fj = (g.lat_n - lat) / g.dlat, fi = (lon - g.lon_w) / g.dlon;
+    if (smooth){
+      const j0 = Math.floor(fj), i0 = Math.floor(fi), wj = fj - j0, wi = fi - i0;
+      const W = [(1 - wj) * (1 - wi), (1 - wj) * wi, wj * (1 - wi), wj * wi];
+      for (let k = 0; k < L; k++){
+        const c = [cell(k, j0, i0), cell(k, j0, i0 + 1), cell(k, j0 + 1, i0), cell(k, j0 + 1, i0 + 1)];
+        let s = 0, w = 0;
+        for (let q = 0; q < 4; q++) if (!Number.isNaN(c[q])){ s += c[q] * W[q]; w += W[q]; }
+        prof[k] = w >= 0.5 ? s / w : NaN;       // mostly blind -> blind
+      }
+    } else {
+      const j = Math.round(fj), i = Math.round(fi);
+      for (let k = 0; k < L; k++) prof[k] = cell(k, j, i);
+    }
+    for (let ry = 0; ry < PHd; ry++){
+      let v;
+      if (smooth){
+        const k = rowK[ry]; if (k < 0) continue;
+        const a = prof[k], b = prof[Math.min(k + 1, L - 1)], w = rowW[ry];
+        if (Number.isNaN(a) && Number.isNaN(b)) v = NaN;
+        else if (Number.isNaN(a)) v = w > 0.5 ? b : NaN;
+        else if (Number.isNaN(b)) v = w < 0.5 ? a : NaN;
+        else v = a + (b - a) * w;
+      } else {
+        const k = rowN[ry]; if (k < 0) continue;
+        v = prof[k];
+      }
+      const o = (ry * PWd + cx) * 4;
+      if (Number.isNaN(v)){ px[o] = 0x26; px[o + 1] = 0x31; px[o + 2] = 0x3F; px[o + 3] = 255; continue; }
+      if (v < 0) continue;                      // below 0 dBZ: no echo, left transparent
+      const rgb = lut[Math.min(lut.length - 1, Math.round(v * 2))];
+      if (!rgb) continue;
+      px[o] = rgb[0]; px[o + 1] = rgb[1]; px[o + 2] = rgb[2]; px[o + 3] = 255;
+    }
+  }
+  x.putImageData(img, X0, Y0);
+
+  // traffic light and class along the line, as strips above the section (nearest cell)
+  const N = Math.max(2, Math.min(600, Math.round(PW)));
+  for (let s = 0; s < N; s++){
+    const t = (s + 0.5) / N;
+    const lat = xsA.lat + (xsB.lat - xsA.lat) * t, lon = xsA.lon + (xsB.lon - xsA.lon) * t;
+    const j = Math.round((g.lat_n - lat) / g.dlat), i = Math.round((lon - g.lon_w) / g.dlon);
+    if (j < 0 || i < 0 || j >= g.ny || i >= g.nx) continue;
+    const c = j * g.nx + i, x0 = pl + s * PW / N, w = Math.ceil(PW / N) + 0.5;
+    x.fillStyle = M.status[String(dat[c] - 1)].color; x.fillRect(x0, 4, w, 7);
+    if (dat[n + c] > 0){ x.fillStyle = M.classes[dat[n + c]].color; x.fillRect(x0, 13, w, 7); }
+  }
+
+  // axes
+  x.strokeStyle = "#3A4B61"; x.lineWidth = 1; x.fillStyle = "#9FB2C4";
+  x.font = '500 11.5px "Barlow", sans-serif';
+  x.textAlign = "right";
+  for (let z = 0; z <= ZMAX; z += 2){
+    const y = yOf(z);
+    x.beginPath(); x.moveTo(pl, y + 0.5); x.lineTo(pl + PW, y + 0.5);
+    x.globalAlpha = 0.25; x.stroke(); x.globalAlpha = 1;
+    x.fillText(z + " km", pl - 6, y + 4);
+  }
+  x.textAlign = "left";
+  for (let kft = 0; kft <= ZMAX * 3.28084; kft += 10){
+    x.fillText(kft + " kft", pl + PW + 6, yOf(kft / 3.28084) + 4);
+  }
+  // isotherms: all five from the XMR model sounding when this frame has one; otherwise the two
+  // the old estimate could give, marked as estimates so nobody mistakes them for measured.
+  const I = f.isotherms_km, z0e = f.freezing_km || 4.8;
+  const iso = I
+    ? [["+5", "+5 °C"], ["+0", "0 °C"], ["-5", "−5 °C"], ["-10", "−10 °C"], ["-20", "−20 °C"]]
+        .filter(([k]) => I[k] != null).map(([k, l]) => [I[k], l, k === "+0" || k === "-20"])
+    : [[z0e, "0 °C (est.)", true], [z0e + 20 / 6.5, "−20 °C (est.)", true]];
+  iso.forEach(([z, lbl, key]) => {
+    const y = yOf(z);
+    // 0 and -20 C define the rules, so they read stronger than the intermediate levels
+    x.setLineDash(key ? [6, 4] : [2, 4]); x.strokeStyle = "#E8EEF3"; x.globalAlpha = key ? 0.9 : 0.55;
+    x.lineWidth = key ? 1.4 : 1;
+    x.beginPath(); x.moveTo(pl, y + 0.5); x.lineTo(pl + PW, y + 0.5); x.stroke();
+    x.setLineDash([]); x.globalAlpha = 1; x.lineWidth = 1;
+    x.fillStyle = "#E8EEF3"; x.textAlign = "left";
+    x.font = (key ? "600 " : "500 ") + '11.5px "Barlow", sans-serif';
+    x.fillText(lbl, pl + 6, y - 3);
+  });
+  x.font = '500 11.5px "Barlow", sans-serif';
+  XSG = {pl, PW, pt, PH, nmi: km / 1.852};
+  if (xsT != null){
+    const xx = pl + PW * xsT;
+    x.strokeStyle = "#FFFFFF"; x.lineWidth = 1.5; x.setLineDash([]);
+    x.beginPath(); x.moveTo(xx + 0.5, pt - 4); x.lineTo(xx + 0.5, pt + PH); x.stroke();
+    x.lineWidth = 1;
+  }
+  // distance axis
+  x.fillStyle = "#9FB2C4"; x.textAlign = "center";
+  const nmi = km / 1.852, step = nmi > 40 ? 10 : nmi > 15 ? 5 : 2;
+  for (let d = 0; d <= nmi + 1e-6; d += step){
+    const xx = pl + PW * (d / nmi);
+    x.fillRect(xx, pt + PH, 1, 5); x.fillText(d + " nmi", xx, pt + PH + 17);
+  }
+  x.textAlign = "left";  x.fillStyle = "#E8EEF3"; x.font = '600 13px "Barlow Condensed", sans-serif';
+  x.fillText("A", pl - 2, Hc - 4); x.textAlign = "right"; x.fillText("B", pl + PW + 2, Hc - 4);
+  // pads within 2.5 km of the line
+  x.textAlign = "center"; x.font = '600 11px "Barlow Condensed", sans-serif';
+  Object.entries(M.sites).forEach(([name, [la, lo2]]) => {
+    const k = Math.cos(la * Math.PI / 180);
+    const ax = (xsB.lon - xsA.lon) * 111.32 * k, ay = (xsB.lat - xsA.lat) * 111.32;
+    const px = (lo2 - xsA.lon) * 111.32 * k, py = (la - xsA.lat) * 111.32;
+    const t = (px * ax + py * ay) / (ax * ax + ay * ay);
+    if (t < 0 || t > 1) return;
+    if (Math.hypot(px - t * ax, py - t * ay) > 2.5) return;
+    const xx = pl + PW * t, yy = pt + PH;
+    x.fillStyle = "#E8EEF3";
+    x.beginPath(); x.moveTo(xx, yy - 9); x.lineTo(xx - 5, yy); x.lineTo(xx + 5, yy); x.fill();
+    x.fillText(name, xx, yy - 12);
+  });
+  $("xs-legend").innerHTML =
+    `<span><i style="background:var(--red)"></i>Top strip: status along the line</span>` +
+    `<span><i style="background:#B892F2"></i>Second strip: cloud class</span>` +
+    `<span><i style="background:#26313F"></i>Radar cannot see this low</span>` +
+    `<span>Isotherms: ${f.iso_source || "estimated"}</span>`;
+}
+addEventListener("resize", () => { if (xsOn) drawSection(); });
+// Tap the section: the readout jumps to that exact point along the line - which rules fire there,
+// and how far the nearest lightning is - with a cursor on the section and a crosshair on the maps.
+// Built to answer "why is this clear-air gap red?" without having to guess.
+$("xs-canvas").addEventListener("click", e => {
+  if (!XSG || !xsA || !xsB) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  const t = Math.min(1, Math.max(0, (e.clientX - r.left - XSG.pl) / XSG.PW));
+  xsT = t;
+  const lat = xsA.lat + (xsB.lat - xsA.lat) * t, lon = xsA.lon + (xsB.lon - xsA.lon) * t;
+  pin = {lat, lon, label: `Section, ${(t * XSG.nmi).toFixed(1)} nmi from A`};
+  readout(lat, lon, pin.label); redraw(); drawSection();
+  $("readout").scrollIntoView({behavior: "smooth", block: "nearest"});
+});
+$("xs-smooth").onchange = () => drawSection();
+
+// ---- pads -----------------------------------------------------------------------------
+// Most significant first, each with its share of the 10 nmi disc, specks under 1% dropped.
+// Falls back to the single label for frames built before the breakdown existed.
+const SHORTCLASS = {core: "core", att: "attached anvil", det: "detached anvil",
+  cu20: "cumulus below −20 °C", cu10: "cumulus −10 to −20 °C", cu0: "cumulus 0 to −10 °C",
+  warm: "shallow shower", elev: "elevated layer"};
+function padClasses(p){
+  if (p.classes_10nm){
+    if (!p.classes_10nm.length) return "No echo within 10 nmi";
+    return "Within 10 nmi: " + p.classes_10nm.slice(0, 3)
+      .map(c => `${SHORTCLASS[c.key] || lcFirst(c.name)} ${c.pct}%`).join(", ");
+  }
+  return p.class_10nm ? "Within 10 nmi: " + lcFirst(p.class_10nm) : "No echo within 10 nmi";
+}
+function pads(f){
+  const P = f.pads || {};
+  const t = {"2": 0, "1": 0, "0": 0};
+  Object.values(P).forEach(p => { if (t[String(p.status)] != null) t[String(p.status)]++; });
+  $("tally").innerHTML = `<span><b>${t["2"]}</b> violating</span><span><b>${t["1"]}</b> watch</span>` +
+                         `<span><b>${t["0"]}</b> clear</span>`;
+  const rows = Object.entries(P).sort((a, b) => b[1].status - a[1].status);
+  $("pads").innerHTML = rows.map(([name, p]) => {
+    const num = [];
+    if (p.max_dbz_10nm != null) num.push(`${p.max_dbz_10nm} dBZ`);
+    if (p.nearest_echo_nm != null && p.nearest_echo_nm < 60) num.push(`echo ${p.nearest_echo_nm} nmi`);
+    const reason = p.status === 2 ? p.red.map(k => SHORT[k] || k).join(", ")
+                 : p.status === 1 ? (p.yellow.length ? "Within 2 nmi of: " +
+                     p.yellow.map(k => lcFirst(SHORT[k] || k)).join(", ")
+                   : "CG lightning within 20 nmi") : "";
+    return `<div class="row" data-pad="${name}" tabindex="0">
+      <span class="lamp s${p.status}"></span>
+      <span class="pname">${name}</span>
+      <span class="pclass">${padClasses(p)}</span>
+      <span class="pnum">${num.join("&ensp;")}</span>
+      ${reason ? `<span class="reason s${p.status}">${reason}</span>` : ""}
+    </div>`;
+  }).join("");
+  document.querySelectorAll(".row").forEach(el => {
+    const go = () => { const s = M.sites[el.dataset.pad];
+      pin = {lat: s[0], lon: s[1], label: el.dataset.pad}; readout(s[0], s[1], el.dataset.pad); redraw(); };
+    el.addEventListener("click", go);
+    el.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  });
+}
+
+// ---- chrome ---------------------------------------------------------------------------
+function legendLeft(){
+  if (mode === "class"){
+    $("left-title").textContent = "Cloud class"; $("left-sub").textContent = "what the echo is";
+    $("legend-left").innerHTML = M.classes.filter(c => c.id > 0)
+      .map(c => `<span><i style="background:${c.color}"></i>${c.name}</span>`).join("");
+  } else if (view === "over"){
+    $("left-title").textContent = "Status on radar";
+    $("left-sub").textContent = "outlines over reflectivity";
+    $("legend-left").innerHTML =
+      `<span><i style="background:var(--red)"></i>Violating, inside the line</span>` +
+      `<span><i style="background:var(--yellow)"></i>Watch, inside the line</span>`;
+  } else {
+    $("left-title").textContent = "Status"; $("left-sub").textContent = "every cell as the flight path";
+    $("legend-left").innerHTML = ["2", "1", "0", "-1"].map(k =>
+      `<span><i style="background:${M.status[k].color}"></i>${M.status[k].name}</span>`).join("");
+  }
+}
+function drawRefl(){
+  // Ticks sit under the bin edge they label - evenly spaced labels drifted off their colours.
+  const R = M.refl, nb = R.colors.length;
+  $("refl").innerHTML = R.colors.map(c => `<span style="background:${c}"></span>`).join("");
+  $("reflticks").innerHTML = R.levels.slice(0, nb).map((v, k) => v % 10 === 0 ?
+    `<span style="left:${(100 * k / nb).toFixed(2)}%">${v}</span>` : "").join("") +
+    `<span class="unit">dBZ</span>`;
+}
+function drawTicks(){
+  const n = M.frames.length, step = Math.max(1, Math.ceil(n / 6));
+  $("ticks").innerHTML = M.frames.filter((_, k) => k % step === 0 || k === n - 1)
+    .map(f => `<span>${hhmm(f.valid)}</span>`).join("");
+}
+function drawHow(){
+  const cls = M.classes.filter(c => c.id > 0).map(c => `
+    <div class="def"><i style="background:${c.color}"></i><b>${c.name}</b><p>${c.how || ""}</p></div>`).join("");
+  const off = new Set(M.rules_off || []);
+  const rules = M.rule_keys.filter(k => !off.has(k)).map(k => `
+    <div class="def"><i style="background:var(--red)"></i><b>${SHORT[k] || k}</b>
+      <p>${(M.rule_how || {})[k] || ""} <span style="color:var(--dim)">${(M.rules[k].match(/\(([^)]+)\)$/) || ["", ""])[1]}</span></p></div>`).join("");
+  $("how").innerHTML = `
+    <div><h3>How each echo is classed</h3><p class="lead">${M.class_note || ""}</p>${cls}</div>
+    <div><h3>How the colours are decided</h3>
+      <p class="lead">A point is red if any test below is true there, with every distance measured
+      from that point and every test gated on echo of 0 dBZ or more. ${M.watch_how || ""}</p>${rules}</div>`;
+}
+
+function drawMethod(){
+  $("method").innerHTML =
+    `<p>Every point is scored against ${M.standard} as if the flight path passed through it, ` +
+    `gated on echo of 0 dBZ or more, which is how the standard itself defines a non-transparent ` +
+    `cloud. <b>Watch</b> means a rule would be broken if its standoff were 2 nmi longer, or ` +
+    `cloud-to-ground lightning is within 20 nmi. <b>Clear</b> means no violation the radar can ` +
+    `see. It is not a GO.</p>` +
+    `<p><b>Evaluated:</b> ${M.rule_keys.filter(k => !(M.rules_off || []).includes(k))
+        .map(k => M.rules[k]).join("; ")}.</p>` +
+    `<p><b>Not evaluated:</b> ${M.not_evaluated.join("; ")}.</p>` +
+    `<p><b>Anvil base is conservative.</b> Radar cannot separate an anvil from the precipitation ` +
+    `it drops, so any echo at the 0 °C level beneath an anvil counts as the anvil reaching 0 °C, ` +
+    `and the exception for an anvil entirely colder than 0 °C is rarely granted.</p>` +
+    `<p>Page ${VIEWER_VERSION}. Built ${hhmm(M.generated)}.</p>`;
+}
+function checkStale(){
+  const f = M.frames[M.frames.length - 1];
+  $("clock").textContent = hhmm(f.valid);
+  $("clockd").textContent = dayLabel(f.valid);
+  const a = minsSince(f.valid), age = $("age"), box = $("stale");
+  if (a == null){ age.textContent = ""; return; }
+  age.textContent = Math.round(a) + " min old";
+  age.className = "age" + (a >= STALE_BAD_MIN ? " bad" : a >= STALE_WARN_MIN ? " warn" : "");
+  if (a >= STALE_BAD_MIN){
+    box.className = "stale on";
+    box.textContent = `The newest radar is ${Math.round(a)} minutes old. Updates have stopped, ` +
+      `so this does not show current conditions.`;
+  } else box.className = "stale";
+}
+
+// ---- controls -------------------------------------------------------------------------
+function press(a, b){ $(a).setAttribute("aria-pressed", "true"); $(b).setAttribute("aria-pressed", "false"); }
+$("m-status").onclick = () => { mode = "status"; press("m-status", "m-class"); legendLeft(); gifLink(); show(idx); };
+$("m-class").onclick  = () => { mode = "class";  press("m-class", "m-status"); legendLeft(); gifLink(); show(idx); };
+$("v-pair").onclick = () => { view = "pair"; press("v-pair", "v-over");
+  $("maps").classList.remove("overlay"); $("p-right").hidden = false; legendLeft(); gifLink(); show(idx); };
+$("v-over").onclick = () => { view = "over"; press("v-over", "v-pair");
+  // Overlay is status outlines on radar; class mode has no outline form, so it steps back.
+  mode = "status"; press("m-status", "m-class");
+  $("maps").classList.add("overlay"); $("p-right").hidden = true; legendLeft(); gifLink(); show(idx); };
+$("rings").onchange = redraw;
+$("xs-btn").onclick = () => {
+  xsOn = !xsOn;
+  $("xs-btn").setAttribute("aria-pressed", String(xsOn));
+  if (!xsOn){ xsA = xsB = null; xsT = null; }
+  redraw(); drawSection();
+  if (xsOn) $("xs-panel").scrollIntoView({behavior: "smooth", block: "nearest"});
+};
+
+function start(){ $("play").textContent = "Pause";
+  timer = setInterval(() => show((idx + 1) % M.frames.length), 700); }
+function stop(){ if (timer) clearInterval(timer); timer = null; $("play").textContent = "Play"; }
+$("play").onclick = () => timer ? stop() : start();
+$("scrub").addEventListener("input", e => { stop(); show(+e.target.value); });
+addEventListener("keydown", e => {
+  if (!M || e.target.tagName === "INPUT") return;
+  if (e.key === "ArrowRight"){ stop(); show(Math.min(idx + 1, M.frames.length - 1)); }
+  if (e.key === "ArrowLeft"){ stop(); show(Math.max(idx - 1, 0)); }
+  if (e.key === " "){ e.preventDefault(); timer ? stop() : start(); }
+});
+
+setInterval(() => { if (!timer) load(); }, REFRESH_S * 1000);
+setInterval(() => { if (M) checkStale(); }, 30000);
+load();
+</script>
+</body>
+</html>
