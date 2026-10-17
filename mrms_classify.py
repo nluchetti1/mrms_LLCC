@@ -89,7 +89,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v21"
+VIEWER_VERSION_EXPECTED = "mrms-v22"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -1361,7 +1361,8 @@ def local_for_frame(local, valid_iso, la, lo):
             d["last_t"], d["last"] = tt, v
     rep = {m: d for m, d in per.items() if d["nonzero"]}
     out["mills"] = [[m, round(d["lat"], 5), round(d["lon"], 5), int(round(d["max"])),
-                     int(round(d["last"])), d["n"], bool(m in rep)] for m, d in sorted(per.items())]
+                     int(round(d["last"])), d["n"], bool(m in rep), d["last_t"].strftime("%H:%MZ")]
+                    for m, d in sorted(per.items())]
     if not rep:
         return out
     thr = LLCC["field_mill_vm"]
@@ -1897,8 +1898,24 @@ CLASS_RANK = {"core": 8, "att": 7, "det": 6, "cu20": 5, "cu10": 4, "elev": 3, "c
 SPECK_PCT = 1.0      # classes covering less of the 10 nmi disc than this are not listed
 
 
+def _pad_mills(plat, plon, mills):
+    """Reporting mills within the 4.1.2 standoff of a pad: the 15-minute max and the latest
+    minute, each with the mill that set it, plus the median latest reading. None if no mill."""
+    k = np.cos(np.radians(plat))
+    near = [r for r in (mills or []) if r[6]
+            and np.hypot((r[1] - plat) * 60.0, (r[2] - plon) * 60.0 * k) <= LLCC["field_mill_nm"]]
+    if not near:
+        return None
+    hi15 = max(near, key=lambda r: r[3])
+    hinow = max(near, key=lambda r: abs(r[4]))
+    now = sorted(r[4] for r in near)
+    return {"max15": int(hi15[3]), "max15_mill": int(hi15[0]), "now": int(hinow[4]),
+            "now_mill": int(hinow[0]), "median_now": int(now[len(now) // 2]), "n": len(near)}
+
+
 def pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo):
     out = {}
+    mills = (diag.get("local") or {}).get("mills")
     dlat_km, dlon_km = _spacing(la, lo)
     win = _disc(10.0, dlat_km, dlon_km)
     hw = win.shape[0] // 2, win.shape[1] // 2
@@ -1937,6 +1954,7 @@ def pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo):
             # strongest 15-minute |E| among reporting mills within 5 nmi; None = not evaluated
             "field_mill_vm": (None if not np.isfinite(diag["fm_max"][j, i])
                               else int(round(float(diag["fm_max"][j, i])))),
+            "field_mill": _pad_mills(plat, plon, mills),
         }
     return out
 
@@ -1998,7 +2016,8 @@ def _local_marks(ax, pc, diag, lightning=True):
             ax.scatter(a[:, 1], a[:, 0], marker="+", s=34, linewidths=1.5, color="#FB923C",
                        transform=pc, zorder=11,
                        path_effects=[pe.withStroke(linewidth=2.8, foreground=HALO)])
-    for m, lat, lon, mx, last, n, ok in loc.get("mills") or []:
+    for row in loc.get("mills") or []:
+        lat, lon, mx, ok = row[1], row[2], row[3], row[6]
         if ok:
             col = next(c for lim, c in FM_COLORS if mx < lim)
             ax.scatter([lon], [lat], marker="o", s=30, color=col, edgecolors="#E8EEF3",
@@ -2292,7 +2311,7 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
              "glm_flashes_30min": int(len(diag["glm_pts"][0])),
              "merlin_cg_30min": len(loc["cg_pts"]), "merlin_cc_30min": len(loc["cc_pts"]),
              "sources": sources,
-             # [mill, lat, lon, max |E| 15 min, latest value, minutes, reporting]
+             # [mill, lat, lon, max |E| 15 min, latest value, minutes, reporting, latest time]
              "field_mills": loc["mills"],
              "sat_source": sat_src if sat is not None else f"none: {sat_src}",
              "sat_upgraded_cells": int(diag["sat_up"].sum()),
