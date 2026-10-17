@@ -9,7 +9,7 @@ scores every grid cell as if the flight path ran through it:
 
     RED     a rule is violated
     YELLOW  no rule violated, but one would be if its standoff were 2 nmi longer, or
-            there is cloud-to-ground lightning within 20 nmi
+            there is lightning within 20 nmi
     GREEN   neither
     GREY    outside radar coverage - unknown, not clear
 
@@ -40,11 +40,20 @@ CONSERVATIVE ANVIL BASE
 FAIL CLOSED
     If composite reflectivity, the 0/-10/-20 C slices or lightning cannot be read, no frame is
     published. Treating a missing slice as "no echo" turned a 55 dBZ core green in testing.
+    Lightning means ANY of NLDN CG, GOES-19 GLM or the local MERLIN network.
+
+LOCAL SENSORS (v20)
+    MERLIN cloud-to-ground and cloud-to-cloud lightning and the LPLWS 1-minute field mills, from
+    the range's public codiapi services. They feed 4.1.1 (lightning) and, for the first time on
+    the live page, 4.1.2 (surface electric field). Best effort: they are fetched in a background
+    thread with short timeouts, cached between runs, and a run that cannot reach them still
+    publishes from GLM/NLDN with 4.1.2 marked not evaluated. See the LOCAL SENSORS section.
 
 NOT EVALUATED
-    Surface electric fields (4.1.2); debris clouds (4.1.6); smoke plumes (4.1.9);
-    triboelectrification (4.1.10); the 3-hour lightning clocks on the anvil rules, since only
-    30 minutes of lightning is published. Green means no radar-visible violation, never GO.
+    The exceptions to 4.1.2, and 4.1.2 itself more than 5 nmi from every reporting mill; debris
+    clouds (4.1.6); smoke plumes (4.1.9); triboelectrification (4.1.10); the 3-hour lightning
+    clocks on the anvil rules, since only ~95 minutes of lightning is kept. Green means no
+    violation the radar and sensors can see, never GO.
 """
 
 import datetime
@@ -54,7 +63,9 @@ import logging
 import os
 import re
 import tempfile
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 import requests
@@ -78,7 +89,7 @@ ROOT3 = "https://mrms.ncep.noaa.gov/3DRefl"
 UA = {"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)"}
 OUT_DIR = os.environ.get("OUT_DIR", "site")
 
-VIEWER_VERSION_EXPECTED = "mrms-v19"
+VIEWER_VERSION_EXPECTED = "mrms-v20"
 
 DOMAIN = {"lat_min": 27.6, "lat_max": 29.6, "lon_min": -81.6, "lon_max": -79.6}
 
@@ -150,8 +161,8 @@ FREEZING = "Model_0degC_Height"
 # Products whose absence would make a frame read greener than reality. Without any of these
 # the frame is withheld.
 ESSENTIAL = ("comp", "r0", "r10", "r20")
-# Lightning is essential too, but from EITHER source: the frame is withheld only when neither
-# GLM nor the NLDN CG product could be read (see build_frame).
+# Lightning is essential too, but from ANY source: the frame is withheld only when none of the
+# NLDN CG product, GLM or MERLIN (full 30-minute coverage) could be read (see build_frame).
 
 # --------------------------------------------------------------------------------------
 # LLCC thresholds - NASA-STD-4010 (2017-06-27)
@@ -174,27 +185,33 @@ LLCC = {
     "disturbed_dbz": 30.0,
     "core_dbz": 40.0,
     "yellow_margin_nm": 2.0,
+    "field_mill_nm": 5.0,          # 4.1.2: |E| >= 1000 V/m within 5 nmi, prior 15 minutes
+    "field_mill_vm": 1000.0,
+    "field_mill_window_min": 15.0,
 }
 LAPSE_C_PER_KM = 6.5
 
 # Rule order is also the bit order in the per-cell data file - change both together.
+# Bit 6 was "disturbed", which has been off (always 0) since v12; v20 gives the slot to the
+# field-mill rule, so frames already in the loop read it as "not violated" and the file format
+# does not change.
 RULE_KEYS = ["lightning", "cumulus_through", "cumulus_5nm", "cumulus_10nm",
-             "attached_anvil", "detached_anvil", "disturbed", "thick_layer"]
+             "attached_anvil", "detached_anvil", "field_mill", "thick_layer"]
 RULE_NAMES = {
-    "lightning":       "Lightning within 10 nmi (4.1.1) - GLM total lightning or NLDN CG",
+    "lightning":       "Lightning within 10 nmi (4.1.1) - MERLIN, GLM or NLDN CG",
     "cumulus_through": "Flight through cumulus topping at or colder than +5 °C (4.1.3.1)",
     "cumulus_5nm":     "Cumulus topping colder than −10 °C within 5 nmi (4.1.3.2)",
     "cumulus_10nm":    "Cumulus topping colder than −20 °C within 10 nmi (4.1.3.3)",
     "attached_anvil":  "Attached anvil within 3 nmi (4.1.4)",
     "detached_anvil":  "Detached anvil within 3 nmi (4.1.5)",
-    "disturbed":       "Disturbed weather (4.1.7)",
+    "field_mill":      "Surface electric field of 1,000 V/m or more within 5 nmi (4.1.2)",
     "thick_layer":     "Thick cloud layer spanning 0 to −10 °C (4.1.8)",
 }
 # How each rule is tested on the radar grid, in the viewer's own words.
 RULE_HOW = {
-    "lightning":       "Any lightning within 10 nmi in the last 30 minutes: a GOES-19 GLM flash "
-                       "(total lightning, intracloud included) or an NLDN cloud-to-ground strike. "
-                       "Either source counts, so a lone CG that GLM misses is still caught.",
+    "lightning":       "Any lightning within 10 nmi in the last 30 minutes: a MERLIN cloud-to-ground "
+                       "or cloud-to-cloud event, a GOES-19 GLM flash (total lightning) or an NLDN "
+                       "cloud-to-ground strike. Any one source counts.",
     "cumulus_through": "The point itself is in cumulus (not anvil) echo reaching an isotherm "
                        "level, or whose strongest return sits above the +5 °C height.",
     "cumulus_5nm":     "Cumulus or cumulonimbus echo of 0 dBZ or more at the −10 °C level "
@@ -206,8 +223,11 @@ RULE_HOW = {
                        "reflectivity within 1 nmi below 7.5 dBZ. Also violated by an attached "
                        "anvil within 10 nmi while lightning is within 10 nmi.",
     "detached_anvil":  "A detached anvil cell within 3 nmi, with the same exception.",
-    "disturbed":       "The point is in echo whose top is colder than 0 °C, and there is 30 dBZ or "
-                       "more within 5 nmi.",
+    "field_mill":      "A field mill within 5 nmi of the point measured |E| of 1,000 V/m or more in "
+                       "any one-minute reading over the 15 minutes before the frame. Points more "
+                       "than 5 nmi from every reporting mill are not evaluated, not clear. A mill "
+                       "reading exactly 0 for the whole window counts as not reporting. The "
+                       "rule's exceptions are not applied, the conservative side.",
     "thick_layer":     "The point has echo at both ends of a 10-degree span inside the 0 to "
                        "−20 °C band (0 and −10, −5 and −15, or −10 and −20 °C): a layer at least "
                        "~5,000 ft deep. Not applied to anvil or to cumulus - convective echo and "
@@ -215,23 +235,25 @@ RULE_HOW = {
                        "MRR below 7.5 dBZ within 1 nmi.",
 }
 WATCH_HOW = ("Watch means no rule is broken, but one would be if its standoff were 2 nmi longer, "
-             "or there is a cloud-to-ground flash within 20 nmi.")
+             "or there is lightning within 20 nmi.")
 
 # Rules deliberately not scored. Disturbed weather is applied to synoptic disturbances such as
 # fronts, which radar alone cannot identify; on radar the test reduced to "30 dBZ within
 # 5 nmi" and mislabelled convective scenes with a rule meant for something else. Measured
 # over a convective loop it never once made a cell red on its own, so dropping it changes no
-# colours - only removes a misleading reason.
-RULES_OFF = ["disturbed"]
+# colours - only removes a misleading reason. Since v20 it has no rule key at all (its bit went
+# to the field-mill rule); it stays listed under NOT_EVALUATED.
+RULES_OFF = []
 
 NOT_EVALUATED = [
     "Disturbed weather (4.1.7) - applied to synoptic disturbances such as fronts, which radar "
     "alone cannot identify",
-    "Surface electric fields (4.1.2) and their field-mill exceptions",
+    "The exceptions to the surface electric field rule (4.1.2), and the rule itself more than "
+    "5 nmi from every reporting field mill",
     "Debris clouds (4.1.6), which need an observed detachment time",
     "Smoke plumes (4.1.9)",
     "Triboelectrification (4.1.10)",
-    "The 3-hour lightning clocks on the anvil rules - only 30 minutes of lightning is published",
+    "The 3-hour lightning clocks on the anvil rules - only ~95 minutes of lightning is kept",
 ]
 
 # Cloud class, read off how far up the isotherm stack an echo reaches. These are what the
@@ -929,6 +951,434 @@ def glm_distance(flashes, valid_iso, la, lo):
     return (d.reshape(la.size, lo.size) / 1.852).astype(np.float32), arr[:, 0], arr[:, 1]
 
 
+# --------------------------------------------------------------------------------------
+# Local sensors: MERLIN lightning and LPLWS field mills (v20)
+# --------------------------------------------------------------------------------------
+# Public codiapi services, one per feed. What is known comes from records a GitHub Actions
+# runner fetched on 17 Oct 2026 (B. Cizek's ER_Weather_COP snapshot), not from our own probe:
+#   - CG and cloud-to-cloud are SEPARATE hosts (lightningc2g / lightningc2c). Records carry id,
+#     event_datetime (UTC, no zone, microseconds), lat_decimal, lon_decimal, signal_strength,
+#     sensor_ids, an error ellipse (cloud-to-cloud semi-major axes reach ~10 km) and raw_line.
+#   - /range takes 'date>' / 'date<' / 'lat>' ... keys, which requests sends as date%3E= - the
+#     server decodes them. A window holding over 100,000 events is refused, so windows are
+#     bisected.
+#   - LPLWS /latest returns one row per mill for the newest minute: field_mill (int), value
+#     (int V/m; fair weather read +80 to +226, so positive is fair weather), flag ('X' or null,
+#     meaning unconfirmed - ignored), lat, lon, reading_date + reading_time (UTC), loaded_at
+#     (local time with offset; ~2 minutes after the reading).
+#   - Two mills (13, 33) carry API coordinates outside the Cape; their surveyed positions are
+#     below. Five mills (1, 13, 27, 33, 34) read exactly 0 - dead or offline, not calm - so a mill
+#     with no nonzero reading in the window is treated as NOT reporting. FM13 was retired in 2020
+#     and FM35 replaced it at the same site; FM13 still appears, at 0.
+#   - Reachability from Actions is intermittent: Cizek's snapshots show read timeouts on all four
+#     hosts at once, and Colab (Google Cloud) never completed a TLS handshake. Hence a background
+#     thread, short timeouts, no retries, and caches that let a later run backfill a gap.
+# Not yet validated live: LPLWS /range. If it fails, /latest (validated) is used and the field-mill
+# window is marked "sampled" - one minute per run, which can miss a short spike.
+MERLIN = {"cg": "https://codiapi-lightningc2g.rad.spaceforce.mil/lightning_c2g",
+          "cc": "https://codiapi-lightningc2c.rad.spaceforce.mil/lightning_c2c"}
+LPLWS = "https://codiapi-lplws1.rad.spaceforce.mil/lplws_1min"
+LOCAL_TIMEOUT = (6, 20)        # connect (includes the TLS handshake), read - seconds
+LOCAL_JOIN_S = 75              # the main thread waits at most this long for the local fetch
+MERLIN_KEEP_MIN = 95           # same reach as the GLM cache
+MERLIN_CHUNK_MIN = 10
+MERLIN_MAX_CALLS = 40          # per feed per run, bisection included
+MERLIN_LAG_OK_MIN = 3          # coverage may end this far before a frame and still count as current
+FM_KEEP_MIN = 80               # oldest backfilled frame (~55 min) + the 15-minute window + slack
+FM_LAG_OK_MIN = 4              # LPLWS loads ~2 minutes after the reading
+FM_CAPE_BOX = (28.0, 29.3, -81.5, -80.0)   # API coordinates outside this are not trusted
+FM_SITES = {1: (28.70363, -80.66857), 2: (28.68755, -80.71951), 4: (28.66433, -80.63913),
+            5: (28.65818, -80.69936), 6: (28.64397, -80.66639), 7: (28.64238, -80.74762),
+            8: (28.63888, -80.62254), 9: (28.62142, -80.60797), 10: (28.62412, -80.70151),
+            11: (28.60576, -80.67387), 12: (28.60226, -80.64094), 13: (28.60205, -80.58942),
+            14: (28.57852, -80.60859), 15: (28.57676, -80.64310), 16: (28.57530, -80.57311),
+            17: (28.56205, -80.67003), 18: (28.55518, -80.70212), 19: (28.54948, -80.62039),
+            20: (28.54170, -80.64443), 21: (28.52575, -80.62210), 22: (28.50693, -80.69359),
+            24: (28.47859, -80.67487), 25: (28.42474, -80.66380), 26: (28.54938, -80.56699),
+            27: (28.50308, -80.55812), 28: (28.46024, -80.52722), 29: (28.46256, -80.58356),
+            30: (28.47511, -80.55842), 31: (28.42033, -80.59116), 32: (28.43688, -80.58010),
+            33: (28.41532, -80.60582), 34: (28.44982, -80.56350), 35: (28.60205, -80.58942)}
+_ISO = "%Y-%m-%dT%H:%M:%S"
+
+
+def _merlin_box():
+    mlat, mlon = GLM_MARGIN_NM * 1.852 / 111.32, GLM_MARGIN_NM * 1.852 / (111.32 * 0.87)
+    return {"lat>": round(DOMAIN["lat_min"] - mlat, 3), "lat<": round(DOMAIN["lat_max"] + mlat, 3),
+            "lon>": round(DOMAIN["lon_min"] - mlon, 3), "lon<": round(DOMAIN["lon_max"] + mlon, 3)}
+
+
+def _local_session():
+    """No adapter retries: an unreachable host should cost one connect timeout, not four."""
+    s = requests.Session()
+    s.headers.update({"User-Agent": "CloudScope-MRMS/2.0 (launch weather nowcast)",
+                      "Accept": "application/json"})
+    return s
+
+
+class _TooMany(Exception):
+    pass
+
+
+def _local_rows(sess, url, params=None):
+    r = sess.get(url, params=params, timeout=LOCAL_TIMEOUT)
+    if r.status_code >= 400:
+        body = (r.text or "")[:2000].lower().replace(",", "")
+        if "100000" in body or "too many" in body:
+            raise _TooMany(body[:200])
+        raise requests.HTTPError(f"HTTP {r.status_code}: {body[:160]}")
+    data = r.json()
+    if not isinstance(data, list):
+        raise ValueError(f"expected a list, got {type(data).__name__}")
+    return data
+
+
+def _parse_utc(s):
+    """'2026-10-17T12:55:24.677000' (or with 7 decimals, a space, or a Z) -> naive UTC."""
+    if not s:
+        return None
+    s = str(s).strip().replace(" ", "T").rstrip("Z")
+    if "+" in s[10:] or s[10:].count("-"):
+        s = s[:19]                       # an offset would mean local time: not expected here
+    head, _, frac = s.partition(".")
+    try:
+        t = datetime.datetime.strptime(head[:19], _ISO)
+    except ValueError:
+        return None
+    if frac.isdigit():
+        t += datetime.timedelta(microseconds=int(frac[:6].ljust(6, "0")))
+    return t
+
+
+def _load_json(path, default):
+    try:
+        with open(path) as fp:
+            return json.load(fp)
+    except Exception:
+        return default
+
+
+def _save_json(path, obj):
+    """Atomic, so a run cancelled mid-write never leaves a torn cache for the next run."""
+    tmp = f"{path}.{os.getpid()}.{threading.get_ident()}.tmp"
+    with open(tmp, "w") as fp:
+        json.dump(obj, fp, separators=(",", ":"))
+    os.replace(tmp, path)
+
+
+def _coverage(cache, now, keep_min):
+    """Where this run's fetch must start, and the coverage it extends (or a fresh one)."""
+    keep0 = now - datetime.timedelta(minutes=keep_min)
+    cto = _parse_utc(cache.get("covered_to"))
+    cfrom = _parse_utc(cache.get("covered_from"))
+    if cto is None or cfrom is None or cto < keep0:
+        return keep0, keep0, True                      # nothing reusable: start over
+    return max(keep0, cto - datetime.timedelta(minutes=2)), max(cfrom, keep0), False
+
+
+def merlin_update(sess, state_dir, kind, now):
+    """Bring one MERLIN feed's rolling cache up to `now`. Never raises. Returns
+    {pts:[(lat, lon, t)], from, to, ok, calls, note}.
+
+    Windows are fetched NEWEST FIRST, so if the call budget or the host gives out part-way, what
+    is missing is the oldest data, not the 30 minutes the newest frame needs. Coverage is one
+    interval: if the backward walk reaches the old coverage the two join; if not, coverage
+    restarts at the oldest window reached (older cached events are still kept - they can only
+    add lightning)."""
+    path = os.path.join(state_dir, f"merlin_{kind}.json")
+    cache = _load_json(path, {})
+    start, cfrom, fresh = _coverage(cache, now, MERLIN_KEEP_MIN)
+    old_to = None if fresh else _parse_utc(cache.get("covered_to"))
+    rows = {} if fresh else {int(r[0]): r for r in cache.get("rows", [])}
+    box, calls = _merlin_box(), [0]
+    err, reached = None, now          # reached: oldest edge fetched so far, walking backwards
+
+    def chunk(a, b):
+        calls[0] += 1
+        if calls[0] > MERLIN_MAX_CALLS:
+            raise RuntimeError("too many requests for this window")
+        p = {"date>": a.strftime(_ISO), "date<": b.strftime(_ISO), **box, "sort": "asc"}
+        try:
+            return _local_rows(sess, MERLIN[kind] + "/range", p)
+        except _TooMany:
+            if (b - a).total_seconds() <= 2:
+                raise
+            mid = a + datetime.timedelta(seconds=int((b - a).total_seconds()) // 2)
+            return chunk(mid, b) + chunk(a, mid)
+
+    try:
+        b = now
+        while b > start:
+            a = max(b - datetime.timedelta(minutes=MERLIN_CHUNK_MIN), start)
+            for r in chunk(a, b):
+                t = _parse_utc(r.get("event_datetime"))
+                la_, lo_ = r.get("lat_decimal"), r.get("lon_decimal")
+                if r.get("id") is None or t is None or not isinstance(la_, (int, float)) \
+                        or not isinstance(lo_, (int, float)):
+                    continue
+                rows[int(r["id"])] = [int(r["id"]), float(la_), float(lo_), t.strftime(_ISO + ".%f")]
+            reached = a
+            b = a
+    except Exception as e:
+        err = f"{type(e).__name__}: {str(e)[:140]}"
+    if reached >= now:                                   # nothing fetched this run
+        cto = old_to
+        cfrom = cfrom if old_to is not None else None
+    else:
+        cto = now
+        if not (old_to is not None and reached <= old_to):
+            cfrom = reached                              # did not join the old coverage
+    keep0 = now - datetime.timedelta(minutes=MERLIN_KEEP_MIN)
+    if cfrom is not None:
+        cfrom = max(cfrom, keep0)
+    kept = [r for r in rows.values() if _parse_utc(r[3]) and _parse_utc(r[3]) >= keep0]
+    out = {"rows": kept, "covered_from": cfrom.strftime(_ISO) if cfrom else None,
+           "covered_to": cto.strftime(_ISO) if cto else None}
+    try:
+        _save_json(path, out)
+    except Exception as e:
+        logging.warning(f"MERLIN {kind}: cache not saved ({e})")
+    note = (f"MERLIN {kind.upper()}: " + (f"FAILED after {calls[0]} call(s) - {err}; " if err else
+                                          f"{calls[0]} call(s); ")
+            + f"{len(kept)} events cached, covered {out['covered_from'] or '-'} to "
+              f"{out['covered_to'] or '-'}")
+    logging.info(note)
+    return {"pts": [(r[1], r[2], _parse_utc(r[3])) for r in kept], "from": cfrom, "to": cto,
+            "ok": err is None, "calls": calls[0], "note": note}
+
+
+def _mill_position(mill, lat, lon):
+    """(lat, lon) from the API if it lies on the Cape, else the surveyed site; (None, None) if
+    neither - one return shape on every path."""
+    b = FM_CAPE_BOX
+    if isinstance(lat, (int, float)) and isinstance(lon, (int, float)) \
+            and b[0] <= lat <= b[1] and b[2] <= lon <= b[3]:
+        pos = (float(lat), float(lon))
+    else:
+        pos = FM_SITES.get(mill, (None, None))
+    return pos
+
+
+def lplws_update(sess, state_dir, now):
+    """Bring the field-mill cache up to `now`. Never raises. Returns
+    {rows:[(mill, lat, lon, t, value)], from, to, mode, ok, note}. mode is "range" (every minute)
+    or "latest" (one minute per run - "sampled")."""
+    path = os.path.join(state_dir, "lplws.json")
+    cache = _load_json(path, {})
+    start, cfrom, fresh = _coverage(cache, now, FM_KEEP_MIN)
+    rows = {} if fresh else {(int(r[0]), r[3]): r for r in cache.get("rows", [])}
+    mode, err, got, cto = "range", None, None, None
+
+    def take(recs):
+        n = 0
+        for r in recs:
+            m, v = r.get("field_mill"), r.get("value")
+            t = _parse_utc(f"{r.get('reading_date')}T{r.get('reading_time')}")
+            if not isinstance(m, int) or not isinstance(v, (int, float)) or t is None:
+                continue
+            pos = _mill_position(m, r.get("lat"), r.get("lon"))
+            if pos[0] is None:
+                continue
+            rows[(m, t.strftime(_ISO))] = [m, pos[0], pos[1], t.strftime(_ISO), float(v)]
+            n += 1
+        return n
+
+    try:
+        got = take(_local_rows(sess, LPLWS + "/range",
+                               {"date>": start.strftime(_ISO), "date<": now.strftime(_ISO)}))
+        cto = now
+    except requests.HTTPError as e:
+        # The server answered but refused /range: fall back to the validated /latest.
+        mode = "latest"
+        try:
+            got = take(_local_rows(sess, LPLWS + "/latest"))
+            cto = now
+            err = f"/range refused ({str(e)[:80]}); one minute from /latest"
+        except Exception as e2:
+            err = f"{type(e2).__name__}: {str(e2)[:140]}"
+    except Exception as e:
+        err = f"{type(e).__name__}: {str(e)[:140]}"
+    ok = cto is not None
+    if mode == "latest" and ok:
+        # A sample, not a record: coverage is just the span of readings held, and frames judge a
+        # sampled window by whether any reading falls inside it (local_for_frame).
+        ts = [_parse_utc(r[3]) for r in rows.values()]
+        cfrom, cto = (min(ts), max(ts)) if ts else (None, None)
+    if not ok:
+        cto = None if fresh else _parse_utc(cache.get("covered_to"))
+        cfrom = None if fresh else cfrom
+    keep0 = now - datetime.timedelta(minutes=FM_KEEP_MIN)
+    kept = [r for r in rows.values() if _parse_utc(r[3]) >= keep0]
+    out = {"rows": kept, "covered_from": cfrom.strftime(_ISO) if cfrom else None,
+           "covered_to": cto.strftime(_ISO) if cto else None,
+           "mode": mode if ok else cache.get("mode", "range")}
+    try:
+        _save_json(path, out)
+    except Exception as e:
+        logging.warning(f"LPLWS: cache not saved ({e})")
+    mills = sorted({r[0] for r in kept})
+    note = (f"LPLWS ({out['mode']}): " + (f"{got} reading(s) fetched" if got is not None else "FAILED")
+            + (f" - {err}" if err else "") + f"; {len(kept)} cached from {len(mills)} mills, "
+              f"covered {out['covered_from'] or '-'} to {out['covered_to'] or '-'}")
+    logging.info(note)
+    return {"rows": [(r[0], r[1], r[2], _parse_utc(r[3]), r[4]) for r in kept], "from": cfrom,
+            "to": cto, "mode": out["mode"], "ok": ok, "note": note}
+
+
+def local_update(state_dir):
+    """All three local feeds, in parallel, each on its own session. Never raises."""
+    now = _utcnow().replace(microsecond=0)
+    os.makedirs(state_dir, exist_ok=True)
+    jobs = {"cg": lambda s: merlin_update(s, state_dir, "cg", now),
+            "cc": lambda s: merlin_update(s, state_dir, "cc", now),
+            "fm": lambda s: lplws_update(s, state_dir, now)}
+    out = {"now": now}
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        fut = {k: pool.submit(fn, _local_session()) for k, fn in jobs.items()}
+        for k, f in fut.items():
+            try:
+                out[k] = f.result()
+            except Exception as e:                   # the updaters never raise; belt and braces
+                out[k] = None
+                logging.warning(f"local feed {k}: {type(e).__name__}: {e}")
+    return out
+
+
+def local_from_cache(state_dir):
+    """What the caches hold, without touching the network - used if the fetch thread overruns."""
+    out = {"now": _utcnow().replace(microsecond=0)}
+    for kind in ("cg", "cc"):
+        c = _load_json(os.path.join(state_dir, f"merlin_{kind}.json"), {})
+        out[kind] = {"pts": [(r[1], r[2], _parse_utc(r[3])) for r in c.get("rows", [])],
+                     "from": _parse_utc(c.get("covered_from")), "to": _parse_utc(c.get("covered_to")),
+                     "ok": False, "note": f"MERLIN {kind.upper()}: cache only (fetch overran)"}
+    c = _load_json(os.path.join(state_dir, "lplws.json"), {})
+    out["fm"] = {"rows": [(r[0], r[1], r[2], _parse_utc(r[3]), r[4]) for r in c.get("rows", [])],
+                 "from": _parse_utc(c.get("covered_from")), "to": _parse_utc(c.get("covered_to")),
+                 "mode": c.get("mode", "range"), "ok": False, "note": "LPLWS: cache only"}
+    return out
+
+
+class LocalFetch:
+    """Runs local_update in a daemon thread so it overlaps the MRMS downloads. result() waits at
+    most `timeout` seconds; past that the caches are read instead and the run carries on."""
+
+    def __init__(self, state_dir):
+        self.state_dir, self.value = state_dir, None
+        self.thread = threading.Thread(target=self._run, daemon=True)
+        self.thread.start()
+
+    def _run(self):
+        try:
+            self.value = local_update(self.state_dir)
+        except Exception as e:
+            logging.warning(f"local sensors: {type(e).__name__}: {e}")
+
+    def result(self, timeout=None):
+        # Read LOCAL_JOIN_S at call time: a default argument would freeze it at import.
+        self.thread.join(LOCAL_JOIN_S if timeout is None else timeout)
+        if self.value is not None:
+            return self.value
+        logging.warning("local sensors: fetch still running or failed; using cached data")
+        return local_from_cache(self.state_dir)
+
+
+def _points_nm(pts, la, lo):
+    """Distance in nmi from every cell to the nearest of [(lat, lon)]; inf with no points."""
+    from scipy.spatial import cKDTree
+    if not len(pts):
+        return np.full((la.size, lo.size), np.inf, np.float32)
+    kx = 111.32 * np.cos(np.radians(float(np.mean(la))))
+    P = np.array([((b - lo[0]) * kx, (a - la[0]) * 111.32) for a, b in pts])
+    LO, LA = np.meshgrid(lo, la)
+    G = np.column_stack([((LO - lo[0]) * kx).ravel(), ((LA - la[0]) * 111.32).ravel()])
+    d, _ = cKDTree(P).query(G)
+    return (d.reshape(la.size, lo.size) / 1.852).astype(np.float32)
+
+
+def _cover_state(feed, t0, t1, lag_min):
+    """'full' if the feed's coverage spans [t0, t1] (allowing lag at the end), 'partial' if it
+    overlaps, 'none' otherwise."""
+    if not feed or feed.get("from") is None or feed.get("to") is None:
+        return "none"
+    if feed["to"] < t0 or feed["from"] > t1:
+        return "none"
+    if feed["from"] <= t0 and feed["to"] >= t1 - datetime.timedelta(minutes=lag_min):
+        return "full"
+    return "partial"
+
+
+def local_for_frame(local, valid_iso, la, lo):
+    """Per-frame lightning and field-mill grids from the local caches.
+
+    Returns {ltg_nm, cg_pts, cc_pts, cover_cg, cover_cc, merlin_ok, fm_hot_nm, fm_eval_nm,
+    fm_max, mills, fm_cover, fm_mode}. MERLIN events only ever ADD lightning; merlin_ok (full
+    30-minute coverage on either feed) is what lets MERLIN stand in for GLM and NLDN in the
+    fail-closed check."""
+    t = datetime.datetime.strptime(valid_iso[:19], _ISO)
+    shape = (la.size, lo.size)
+    out = {"ltg_nm": None, "cg_pts": [], "cc_pts": [], "cover_cg": "none", "cover_cc": "none",
+           "merlin_ok": False, "fm_hot_nm": np.full(shape, np.inf, np.float32),
+           "fm_eval_nm": np.full(shape, np.inf, np.float32),
+           "fm_max": np.full(shape, np.nan, np.float32), "mills": [], "fm_cover": "none",
+           "fm_mode": None}
+    if not local:
+        return out
+    t0 = t - datetime.timedelta(minutes=GLM_WINDOW_MIN)
+    allp = []
+    for kind in ("cg", "cc"):
+        feed = local.get(kind)
+        cov = _cover_state(feed, t0, t, MERLIN_LAG_OK_MIN)
+        out[f"cover_{kind}"] = cov
+        if cov == "none":
+            continue
+        pts = [(a, b) for a, b, tt in feed["pts"] if tt is not None and t0 < tt <= t]
+        out[f"{kind}_pts"] = pts
+        allp += pts
+        out["merlin_ok"] |= cov == "full"
+    if allp or out["merlin_ok"]:
+        out["ltg_nm"] = _points_nm(allp, la, lo)
+
+    fm = local.get("fm")
+    w0 = t - datetime.timedelta(minutes=LLCC["field_mill_window_min"])
+    if fm and fm.get("mode") == "latest":
+        cov = "sampled" if any(tt is not None and w0 < tt <= t for _, _, _, tt, _ in fm["rows"]) \
+            else "none"
+    else:
+        cov = _cover_state(fm, w0, t, FM_LAG_OK_MIN)
+    out["fm_cover"], out["fm_mode"] = cov, (fm or {}).get("mode")
+    if cov == "none":
+        return out
+    per = {}
+    for m, a, b, tt, v in fm["rows"]:
+        if tt is None or not (w0 < tt <= t):
+            continue
+        d = per.setdefault(m, {"lat": a, "lon": b, "max": 0.0, "nonzero": False, "n": 0,
+                               "last_t": None, "last": None})
+        d["max"] = max(d["max"], abs(v))
+        d["nonzero"] |= v != 0
+        d["n"] += 1
+        if d["last_t"] is None or tt > d["last_t"]:
+            d["last_t"], d["last"] = tt, v
+    rep = {m: d for m, d in per.items() if d["nonzero"]}
+    out["mills"] = [[m, round(d["lat"], 5), round(d["lon"], 5), int(round(d["max"])),
+                     int(round(d["last"])), d["n"], bool(m in rep)] for m, d in sorted(per.items())]
+    if not rep:
+        return out
+    thr = LLCC["field_mill_vm"]
+    hot = [(d["lat"], d["lon"]) for d in rep.values() if d["max"] >= thr]
+    out["fm_hot_nm"] = _points_nm(hot, la, lo)
+    out["fm_eval_nm"] = _points_nm([(d["lat"], d["lon"]) for d in rep.values()], la, lo)
+    # Strongest reporting mill within the 5 nmi standoff of each cell, for the readout.
+    LO, LA = np.meshgrid(lo, la)
+    kx = 111.32 * np.cos(np.radians(float(np.mean(la))))
+    best = np.full(shape, -1.0, np.float32)
+    for d in rep.values():
+        dist = np.hypot((LO - d["lon"]) * kx, (LA - d["lat"]) * 111.32) / 1.852
+        best = np.where(dist <= LLCC["field_mill_nm"], np.maximum(best, d["max"]), best)
+    out["fm_max"] = np.where(best >= 0, best, np.nan).astype(np.float32)
+    return out
+
+
 def freezing_level(sess, prev, state_dir):
     """The 0 C height, refetched only when the cached copy is over an hour old."""
     path = os.path.join(state_dir, "z0.npy")
@@ -1183,8 +1633,12 @@ def attached_history(frames, valid_iso, la, lo, wind=None):
     return union if seen else None
 
 
-def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=None):
-    """Traffic light, per-rule grids, cloud class and echo-top level for every cell."""
+def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=None, fm=None):
+    """Traffic light, per-rule grids, cloud class and echo-top level for every cell.
+
+    ltg_nm: distance (nmi) to the nearest GLM flash or MERLIN event in the 30-minute window,
+    combined by the caller. fm: local_for_frame's field-mill grids, or None (4.1.2 not evaluated).
+    """
     L = LLCC
     dlat_km, dlon_km = _spacing(la, lo)
 
@@ -1295,7 +1749,7 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=N
     lightning = F["cg"] > 0.0              # NLDN CG cells, 30-minute product
 
     def lit_within(r):
-        """Lightning within r nmi: GLM total lightning OR NLDN CG - either source counts."""
+        """Lightning within r nmi: NLDN CG, or GLM / MERLIN via ltg_nm - any source counts."""
         m = near(lightning, r)
         if ltg_nm is not None:
             m |= ltg_nm <= r
@@ -1350,6 +1804,11 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=N
     thick = (((e["r0"] & e["r10"]) | (e["r5"] & e["r15"]) | (e["r10"] & e["r20"]))
              & ~anvil_any & ~known_cu)
 
+    # Surface electric field (4.1.2): a reporting mill within 5 nmi read |E| >= 1000 V/m in the
+    # prior 15 minutes. Distances are measured from the mills themselves, so a mill just off a cell
+    # still reaches it. Not evaluated (never violated) where no reporting mill is within 5 nmi.
+    fm_hot = fm["fm_hot_nm"] if fm is not None else np.full(comp.shape, np.inf, np.float32)
+
     def rules(m):
         lit = lit_within(L["lightning_nm"] + m)
         return {
@@ -1360,9 +1819,7 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=N
             "attached_anvil":  (near(attached, L["attached_3nm"] + m) & ~exception)
                                | (near(attached, L["attached_lightning_nm"] + m) & lit),
             "detached_anvil":  near(detached, L["detached_3nm"] + m) & ~exception,
-            # Off: see RULES_OFF. Kept as an all-false grid so the bit layout of the per-cell
-            # data file does not shift under the frames already in the loop.
-            "disturbed":       np.zeros(comp.shape, bool),
+            "field_mill":      fm_hot <= L["field_mill_nm"] + m,
             "thick_layer":     near(thick, m) & ~thick_exc,
         }
 
@@ -1427,7 +1884,8 @@ def evaluate(F, z0, la, lo, history=None, iso=None, sep=None, ltg_nm=None, sat=N
             "exc_near": exc_near, "exc_a_fail": anvil_warm, "exc_b_fail": ~mrr_ok,
             "mrr": mrr_here,
             "core": core, "echo": echo,
-            "dist_echo_nm": dist_km / 1.852, "lightning": lightning, "ltg_near_nm": ltg_near}
+            "dist_echo_nm": dist_km / 1.852, "lightning": lightning, "ltg_near_nm": ltg_near,
+            "fm_max": fm["fm_max"] if fm is not None else np.full(comp.shape, np.nan, np.float32)}
     return status, red_rules, yel_rules, cls, top, diag
 
 
@@ -1476,6 +1934,9 @@ def pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo):
             "max_dbz_10nm": None if dbz10 is None or dbz10 < 0 else round(dbz10, 1),
             "nearest_echo_nm": round(float(diag["dist_echo_nm"][j, i]), 1),
             "lightning_10nm": bool(red_rules["lightning"][j, i]),
+            # strongest 15-minute |E| among reporting mills within 5 nmi; None = not evaluated
+            "field_mill_vm": (None if not np.isfinite(diag["fm_max"][j, i])
+                              else int(round(float(diag["fm_max"][j, i])))),
         }
     return out
 
@@ -1519,6 +1980,34 @@ def _save(fig, path):
     plt.close(fig)
 
 
+FM_COLORS = ((500.0, "#3FB97A"), (1000.0, "#F2C14E"), (np.inf, "#E5484D"))   # < 500, < 1000, >=
+
+
+def _local_marks(ax, pc, diag, lightning=True):
+    """Field mills (filled by 15-minute max |E|; hollow = not reporting) and MERLIN events."""
+    loc = diag.get("local") or {}
+    if lightning:
+        cc = loc.get("cc_pts") or []
+        if cc:
+            a = np.array(cc)
+            ax.scatter(a[:, 1], a[:, 0], marker="o", s=5, linewidths=0.4, color="#FFFFFF",
+                       edgecolors=HALO, transform=pc, zorder=10)
+        cg = loc.get("cg_pts") or []
+        if cg:
+            a = np.array(cg)
+            ax.scatter(a[:, 1], a[:, 0], marker="+", s=34, linewidths=1.5, color="#FB923C",
+                       transform=pc, zorder=11,
+                       path_effects=[pe.withStroke(linewidth=2.8, foreground=HALO)])
+    for m, lat, lon, mx, last, n, ok in loc.get("mills") or []:
+        if ok:
+            col = next(c for lim, c in FM_COLORS if mx < lim)
+            ax.scatter([lon], [lat], marker="o", s=30, color=col, edgecolors="#E8EEF3",
+                       linewidths=1.0, transform=pc, zorder=7)      # under the pad crosses (8)
+        else:
+            ax.scatter([lon], [lat], marker="o", s=22, facecolors="none", edgecolors="#8FA3B6",
+                       linewidths=0.9, transform=pc, zorder=7)
+
+
 def render_layers(status, cls, F, diag, la, lo, stem):
     """Four transparent layers, identical in extent so the viewer can stack or pair them.
 
@@ -1537,6 +2026,7 @@ def render_layers(status, cls, F, diag, la, lo, stem):
     norm = mcolors.BoundaryNorm([-1.5, -0.5, 0.5, 1.5, 2.5], len(keys))
     ax.pcolormesh(LO, LA, status, cmap=cmap, norm=norm, shading="nearest",
                   transform=pc, zorder=2, alpha=0.78)
+    _local_marks(ax, pc, diag, lightning=False)
     _chrome(ax, pc)
     paths["status"] = f"{stem}_status.png"
     _save(fig, os.path.join(OUT_DIR, paths["status"]))
@@ -1565,6 +2055,7 @@ def render_layers(status, cls, F, diag, la, lo, stem):
     if gl is not None and len(gl[0]):          # GLM flashes, last 30 minutes
         ax.scatter(gl[1], gl[0], marker="x", s=9, linewidths=0.9, color="#FFFFFF",
                    transform=pc, zorder=10)
+    _local_marks(ax, pc, diag)
     _chrome(ax, pc)
     paths["radar"] = f"{stem}_radar.png"
     _save(fig, os.path.join(OUT_DIR, paths["radar"]))
@@ -1587,6 +2078,16 @@ def _sat_plane(diag, key, offset, scale):
     return np.where(np.isfinite(v), np.clip(np.round((v + offset) * scale), 0, 254), 255).astype(np.uint8)
 
 
+def _fm_plane(diag, shape):
+    """Plane 13 encoding (see write_data). Floors, so a reading below 1,000 never encodes as 100."""
+    if diag is None:
+        return np.full(shape, 255, np.uint8)
+    v = np.nan_to_num(diag["fm_max"])
+    code = np.where(v < 1000.0, np.floor(v / 10.0), 100.0 + np.floor((v - 1000.0) / 100.0))
+    code = np.clip(code, 0, 254)
+    return np.where(np.isfinite(diag["fm_max"]), code, 255).astype(np.uint8)
+
+
 def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop=None, diag=None):
     """Per-cell readout for the viewer: eight uint8 planes, north-up, row-major.
 
@@ -1606,8 +2107,13 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
        11 satellite cloud-top temperature, C + 100 (parallax-corrected); 255 = none
        12 satellite cloud-top height, units of 100 m; 255 = none
           (plane 9 bit6: satellite top accepted for this echo; bit7: it raised the class)
+       13 field mill: strongest 15-minute max |E| among reporting mills within 5 nmi.
+          0-99: |E| / 10 (10 V/m steps below 1,000); 100-253: 1,000 + (code - 100) * 100 V/m, so
+          code 100 is exactly the 1,000 V/m threshold and >= 100 violates; 254 = over 16,300 V/m;
+          255 = not evaluated (no reporting mill within 5 nmi, or no mill data for this frame)
+       (plane 10 now includes MERLIN cloud-to-ground and cloud-to-cloud events)
 
-    Older frames have six or eight planes; the viewer checks the length.
+    Older frames have fewer planes; the viewer checks the length.
     """
     dbz = np.where(F["comp"] >= 0, np.clip(np.round(F["comp"] * 2), 0, 254), 255)
     rbits = np.zeros(status.shape, np.uint8)
@@ -1634,7 +2140,8 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
               mrr, fl.astype(np.uint8),
               (np.where(diag["ltg_near_nm"] <= 50.8, np.round(diag["ltg_near_nm"] * 5), 255)
                .astype(np.uint8) if diag is not None else np.full(status.shape, 255, np.uint8)),
-              _sat_plane(diag, "bt_c", 100.0, 1.0), _sat_plane(diag, "top_m", 0.0, 0.01)]
+              _sat_plane(diag, "bt_c", 100.0, 1.0), _sat_plane(diag, "top_m", 0.0, 0.01),
+              _fm_plane(diag, status.shape)]
     rel = f"{stem}.bin"
     with open(os.path.join(OUT_DIR, rel), "wb") as fp:
         fp.write(b"".join(p.tobytes() for p in planes))
@@ -1645,7 +2152,7 @@ def write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase=None, vtop
 # Frames
 # --------------------------------------------------------------------------------------
 def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_src=None, glm=None,
-                goes=None):
+                goes=None, local=None):
     """One complete frame from a {key: url} mapping.
 
     Always returns (frame, la, lo). On failure all three are None - one shape on every path,
@@ -1675,8 +2182,11 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
         logging.error("no product could be read for this frame")
         return None, None, None
     gone = [PRODUCTS[k][0] for k in ESSENTIAL if F.get(k) is None]
-    if F.get("cg") is None and not (glm and glm.get("ok")):
-        gone.append("lightning (neither NLDN CG nor GLM)")
+    valid_pre = valid_times.get("comp") or max((v for v in valid_times.values() if v), default=None)
+    loc = (local_for_frame(local, valid_pre, la, lo) if (local and valid_pre)
+           else local_for_frame(None, "2000-01-01T00:00:00", la, lo))
+    if F.get("cg") is None and not (glm and glm.get("ok")) and not loc["merlin_ok"]:
+        gone.append("lightning (none of NLDN CG, GLM or MERLIN)")
     if gone:
         logging.error(f"essential product(s) missing: {gone}; frame withheld rather than "
                       f"published greener than reality")
@@ -1732,6 +2242,10 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
 
     ltg_nm, glat, glon = (glm_distance(glm["flashes"], valid0, la, lo) if glm and glm.get("ok")
                           else (None, np.array([]), np.array([])))
+    # MERLIN events only ever add lightning: the nearer of GLM and MERLIN.
+    if loc["ltg_nm"] is not None:
+        ltg_nm = loc["ltg_nm"] if ltg_nm is None else np.minimum(ltg_nm, loc["ltg_nm"])
+    fm = loc if loc["fm_cover"] != "none" else None
     sat, sat_src = None, "not used"
     if goes is not None:
         try:
@@ -1739,14 +2253,23 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
         except Exception as e:
             sat, sat_src = None, f"failed: {type(e).__name__}: {e}"
     status, red_rules, yel_rules, cls, top, diag = evaluate(F, z0, la, lo, history, iso, sep, ltg_nm,
-                                                            sat)
+                                                            sat, fm)
+    diag["local"] = loc
     inside = ((glat >= DOMAIN["lat_min"]) & (glat <= DOMAIN["lat_max"])
               & (glon >= DOMAIN["lon_min"]) & (glon <= DOMAIN["lon_max"])) if glat.size else glat
     diag["glm_pts"] = (glat[inside], glon[inside]) if glat.size else (glat, glon)
-    ltg_src = ("GLM total lightning + NLDN CG" if (glm and glm.get("ok") and F.get("cg") is not None
-                                                  and "NLDN_CG_030min_AvgDensity" not in missing)
-               else "GLM only (NLDN CG missing)" if glm and glm.get("ok")
-               else "NLDN CG only (GLM unavailable)")
+    nldn_ok = F.get("cg") is not None and "NLDN_CG_030min_AvgDensity" not in missing
+    glm_ok = bool(glm and glm.get("ok"))
+    have = ([f"MERLIN {k.upper()}" + ("" if loc[f"cover_{k}"] == "full" else " (partial)")
+             for k in ("cg", "cc") if loc[f"cover_{k}"] != "none"]
+            + (["GLM"] if glm_ok else []) + (["NLDN CG"] if nldn_ok else []))
+    lack = ([f"MERLIN {k.upper()}" for k in ("cg", "cc") if loc[f"cover_{k}"] == "none"]
+            + ([] if glm_ok else ["GLM"]) + ([] if nldn_ok else ["NLDN CG"]))
+    ltg_src = " + ".join(have) + (f"; unavailable: {', '.join(lack)}" if lack else "")
+    n_rep = sum(1 for m in loc["mills"] if m[6])
+    sources = {"merlin_cg": loc["cover_cg"], "merlin_cc": loc["cover_cc"], "glm": glm_ok,
+               "nldn": nldn_ok, "field_mills": {"coverage": loc["fm_cover"], "mode": loc["fm_mode"],
+                                                "reporting": n_rep, "listed": len(loc["mills"])}}
     pads = pad_report(status, red_rules, yel_rules, cls, top, diag, F, la, lo)
     images = render_layers(status, cls, F, diag, la, lo, stem)
     data = write_data(stem, status, cls, top, F, red_rules, yel_rules, vbase, vtop, diag)
@@ -1767,6 +2290,10 @@ def build_frame(sess, sources, z0, levels=None, prior=None, snd=None, steiner_sr
              "iso_source": iso_src,
              "lightning_source": ltg_src,
              "glm_flashes_30min": int(len(diag["glm_pts"][0])),
+             "merlin_cg_30min": len(loc["cg_pts"]), "merlin_cc_30min": len(loc["cc_pts"]),
+             "sources": sources,
+             # [mill, lat, lon, max |E| 15 min, latest value, minutes, reporting]
+             "field_mills": loc["mills"],
              "sat_source": sat_src if sat is not None else f"none: {sat_src}",
              "sat_upgraded_cells": int(diag["sat_up"].sum()),
              "anvil_wind": wind}
@@ -1945,6 +2472,12 @@ def main():
     os.makedirs(state_dir, exist_ok=True)
     sess = _session()
     prev = load_manifest()
+    for fn in os.listdir(state_dir):            # leftovers of a run cancelled mid-write
+        if fn.endswith(".tmp"):
+            os.remove(os.path.join(state_dir, fn))
+    # Local sensors in the background: they overlap the MRMS downloads below, and an unreachable
+    # host costs the run nothing more than its connect timeout.
+    local_job = LocalFetch(state_dir)
 
     try:
         z0, fmeta, refreshed = freezing_level(sess, prev, state_dir)
@@ -1981,9 +2514,10 @@ def main():
         z0_km = float(np.nanmean(z0)) / 1000.0 if z0 is not None else 4.8
         name, h_km = levels[steiner_level([h for _, h in levels], z0_km)]
         steiner_latest = (f"{ROOT3}/{name}/MRMS_{name}.latest.grib2.gz", h_km)
+    local = local_job.result()
     newest, la, lo = build_frame(sess, {k: latest_url(p) for k, (p, _, _) in PRODUCTS.items()},
                                  z0, levels, prior=prev.get("frames", []), snd=snd,
-                                 steiner_src=steiner_latest, glm=glm, goes=goes)
+                                 steiner_src=steiner_latest, glm=glm, goes=goes, local=local)
     if newest is None:
         logging.error("latest frame withheld; previous frames left in place")
         return
@@ -2008,7 +2542,7 @@ def main():
                 logging.info("backfill budget spent; the rest fill on later runs")
                 break
             frame, _, _ = build_frame(sess, src, z0, prior=frames, snd=snd, steiner_src=st, glm=glm,
-                                      goes=goes)
+                                      goes=goes, local=local)
             if frame is not None:
                 frames.append(frame)
                 done += 1
@@ -2053,6 +2587,8 @@ def main():
         "status": {str(k): {"name": v[0], "color": v[1]} for k, v in STATUS.items()},
         "refl": {"levels": REFL_LEVELS, "colors": REFL_COLORS},
         "thresholds": LLCC, "standard": "NASA-STD-4010 (2017-06-27)",
+        "local_notes": [local[k]["note"] for k in ("cg", "cc", "fm") if local.get(k)],
+        "field_mill_colors": [[None if not np.isfinite(lim) else lim, c] for lim, c in FM_COLORS],
     }
     with open(os.path.join(OUT_DIR, "manifest.json"), "w") as fp:
         json.dump(manifest, fp, indent=1)
