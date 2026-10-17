@@ -1,0 +1,9343 @@
+{
+ "generated": "2026-10-17T22:21:38Z",
+ "gifs": {
+  "status": "loop_status.gif",
+  "class": "loop_class.gif",
+  "overlay": "loop_overlay.gif"
+ },
+ "viewer_expected": "mrms-v22",
+ "valid": "2026-10-17T22:18:37Z",
+ "freezing": {
+  "fetched": "2026-10-17T21:20:52.093240+00:00",
+  "valid": "2026-10-17T19:00:00Z"
+ },
+ "domain": {
+  "lat_min": 27.6,
+  "lat_max": 29.6,
+  "lon_min": -81.6,
+  "lon_max": -79.6
+ },
+ "grid": {
+  "ny": 200,
+  "nx": 200,
+  "lat_n": 29.594999999999995,
+  "lon_w": -81.595,
+  "dlat": 0.00999999999999801,
+  "dlon": 0.009999999999990905
+ },
+ "sites": {
+  "LC-39A": [
+   28.6084,
+   -80.6043
+  ],
+  "LC-39B": [
+   28.6272,
+   -80.6208
+  ],
+  "SLC-41": [
+   28.5833,
+   -80.5834
+  ],
+  "SLC-40": [
+   28.5619,
+   -80.5772
+  ],
+  "SLC-37B": [
+   28.5317,
+   -80.5657
+  ],
+  "SLC-20": [
+   28.5085,
+   -80.5546
+  ],
+  "LZ-1": [
+   28.4857,
+   -80.5444
+  ],
+  "SLC-36": [
+   28.4707,
+   -80.5379
+  ],
+  "SLC-46": [
+   28.4584,
+   -80.5271
+  ],
+  "KTTS": [
+   28.615,
+   -80.6944
+  ],
+  "KXMR": [
+   28.4675,
+   -80.5664
+  ]
+ },
+ "frames": [
+  {
+   "valid": "2026-10-17T22:18:37Z",
+   "stamp": "20261017T2218",
+   "images": {
+    "status": "frames/20261017T2218_status.png",
+    "statusline": "frames/20261017T2218_statusline.png",
+    "radar": "frames/20261017T2218_radar.png",
+    "class": "frames/20261017T2218_class.png"
+   },
+   "data": "frames/20261017T2218.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 65
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 175,
+      "now_mill": 4,
+      "median_now": 145,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "detached_anvil"
+     ],
+     "yellow": [
+      "cumulus_through"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 58
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 175,
+      "now_mill": 4,
+      "median_now": 142,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 70
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 232,
+     "field_mill": {
+      "max15": 232,
+      "max15_mill": 26,
+      "now": 168,
+      "now_mill": 8,
+      "median_now": 134,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "cumulus_10nm",
+      "detached_anvil"
+     ],
+     "yellow": [
+      "cumulus_5nm"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 73
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 232,
+     "field_mill": {
+      "max15": 232,
+      "max15_mill": 26,
+      "now": 168,
+      "now_mill": 14,
+      "median_now": 134,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 2,
+     "red": [
+      "cumulus_10nm",
+      "detached_anvil"
+     ],
+     "yellow": [
+      "cumulus_5nm"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 73
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 170,
+      "now_mill": 28,
+      "median_now": 134,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 2,
+     "red": [
+      "cumulus_10nm",
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 67
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 3
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 170,
+      "now_mill": 28,
+      "median_now": 136,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 2,
+     "red": [
+      "cumulus_10nm",
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 61
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 170,
+      "now_mill": 28,
+      "median_now": 122,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "cumulus_10nm"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 56
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 170,
+      "now_mill": 28,
+      "median_now": 136,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "cumulus_10nm"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 48
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 170,
+      "now_mill": 28,
+      "median_now": 122,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "detached_anvil"
+     ],
+     "yellow": [
+      "cumulus_through"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 56
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 175,
+      "now_mill": 4,
+      "median_now": 137,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "cumulus_10nm"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 60
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 170,
+      "now_mill": 28,
+      "median_now": 122,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 21916,
+    "1": 2340,
+    "2": 15744
+   },
+   "class_counts": {
+    "clear": 29520,
+    "warm": 2366,
+    "cu0": 186,
+    "cu10": 214,
+    "cu20": 44,
+    "core": 3,
+    "att": 32,
+    "det": 5351,
+    "elev": 2284
+   },
+   "missing": [],
+   "skew_min": 0.5,
+   "volume": "frames/20261017T2218.vol",
+   "volume_valid": "2026-10-17T22:20:40Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.63,
+   "isotherms_km": {
+    "+5": 3.72,
+    "+0": 4.63,
+    "-5": 5.61,
+    "-10": 6.49,
+    "-15": 7.2,
+    "-20": 7.98
+   },
+   "iso_source": "HRRR 20Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 1,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "22:18Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     144,
+     144,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     267,
+     175,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     110,
+     94,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     145,
+     145,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     157,
+     120,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     168,
+     168,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     205,
+     160,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     160,
+     137,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     140,
+     108,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     142,
+     142,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "22:18Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     168,
+     168,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     122,
+     94,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     227,
+     148,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     144,
+     127,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     110,
+     102,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     155,
+     127,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     125,
+     103,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     120,
+     99,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     100,
+     74,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     164,
+     124,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     191,
+     140,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     232,
+     154,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     15,
+     false,
+     "22:18Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     236,
+     170,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     150,
+     118,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     183,
+     136,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     178,
+     116,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     156,
+     122,
+     15,
+     true,
+     "22:18Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "22:18Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "22:18Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     151,
+     134,
+     15,
+     true,
+     "22:18Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 22:16Z, cloud-top height 22:16Z, parallax-corrected",
+   "sat_upgraded_cells": 76,
+   "anvil_wind": {
+    "u_kmh": 59.2215084051822,
+    "v_kmh": 27.526444303874804,
+    "unc_kmh": 18.52,
+    "kt": 35.3,
+    "from_deg": 245,
+    "n": 39,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 22:01Z, 39 anvil-level vectors: 35 kt from 245 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T22:14:32Z",
+   "stamp": "20261017T2214",
+   "images": {
+    "status": "frames/20261017T2214_status.png",
+    "statusline": "frames/20261017T2214_statusline.png",
+    "radar": "frames/20261017T2214_radar.png",
+    "class": "frames/20261017T2214_class.png"
+   },
+   "data": "frames/20261017T2214.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 69
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 232,
+      "now_mill": 26,
+      "median_now": 136,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 60
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 191,
+      "now_mill": 4,
+      "median_now": 129,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 72
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 232,
+     "field_mill": {
+      "max15": 232,
+      "max15_mill": 26,
+      "now": 232,
+      "now_mill": 26,
+      "median_now": 129,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 73
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 232,
+     "field_mill": {
+      "max15": 232,
+      "max15_mill": 26,
+      "now": 232,
+      "now_mill": 26,
+      "median_now": 127,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 70
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 136,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 62
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 150,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 55
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 150,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 50
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 164,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 42
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 150,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 57
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 191,
+      "now_mill": 4,
+      "median_now": 116,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 54
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 150,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 22409,
+    "1": 2469,
+    "2": 15122
+   },
+   "class_counts": {
+    "clear": 29317,
+    "warm": 2398,
+    "cu0": 248,
+    "cu10": 159,
+    "cu20": 44,
+    "core": 6,
+    "att": 3662,
+    "det": 2085,
+    "elev": 2081
+   },
+   "missing": [],
+   "skew_min": 1.9,
+   "volume": "frames/20261017T2214.vol",
+   "volume_valid": "2026-10-17T22:14:32Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.63,
+   "isotherms_km": {
+    "+5": 3.72,
+    "+0": 4.63,
+    "-5": 5.61,
+    "-10": 6.49,
+    "-15": 7.2,
+    "-20": 7.98
+   },
+   "iso_source": "HRRR 20Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 1,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "22:13Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     138,
+     127,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     267,
+     191,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     110,
+     110,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     142,
+     93,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     157,
+     115,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     196,
+     167,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     199,
+     182,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     160,
+     108,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     140,
+     129,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     138,
+     138,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "22:13Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     163,
+     150,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     122,
+     95,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     227,
+     136,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     158,
+     116,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     115,
+     102,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     154,
+     127,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     125,
+     118,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     120,
+     108,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     101,
+     78,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     164,
+     151,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     192,
+     159,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     232,
+     232,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     14,
+     false,
+     "22:13Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     236,
+     236,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     150,
+     150,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     181,
+     164,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     187,
+     130,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     160,
+     142,
+     14,
+     true,
+     "22:13Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "22:13Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "22:13Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     146,
+     113,
+     14,
+     true,
+     "22:13Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 22:11Z, cloud-top height 22:11Z, parallax-corrected",
+   "sat_upgraded_cells": 63,
+   "anvil_wind": {
+    "u_kmh": 59.2215084051822,
+    "v_kmh": 27.526444303874804,
+    "unc_kmh": 18.52,
+    "kt": 35.3,
+    "from_deg": 245,
+    "n": 39,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 22:01Z, 39 anvil-level vectors: 35 kt from 245 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T22:10:35Z",
+   "stamp": "20261017T2210",
+   "images": {
+    "status": "frames/20261017T2210_status.png",
+    "statusline": "frames/20261017T2210_statusline.png",
+    "radar": "frames/20261017T2210_radar.png",
+    "class": "frames/20261017T2210_class.png"
+   },
+   "data": "frames/20261017T2210.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 66
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 252,
+     "field_mill": {
+      "max15": 252,
+      "max15_mill": 4,
+      "now": 206,
+      "now_mill": 4,
+      "median_now": 133,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 62
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 252,
+     "field_mill": {
+      "max15": 252,
+      "max15_mill": 4,
+      "now": 206,
+      "now_mill": 4,
+      "median_now": 132,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 66
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 227,
+     "field_mill": {
+      "max15": 227,
+      "max15_mill": 16,
+      "now": 184,
+      "now_mill": 26,
+      "median_now": 125,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 66
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 227,
+     "field_mill": {
+      "max15": 227,
+      "max15_mill": 16,
+      "now": 184,
+      "now_mill": 26,
+      "median_now": 125,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 62
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 227,
+     "field_mill": {
+      "max15": 227,
+      "max15_mill": 16,
+      "now": 207,
+      "now_mill": 28,
+      "median_now": 139,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 52
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 227,
+     "field_mill": {
+      "max15": 227,
+      "max15_mill": 16,
+      "now": 207,
+      "now_mill": 28,
+      "median_now": 161,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 45
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 211,
+     "field_mill": {
+      "max15": 211,
+      "max15_mill": 28,
+      "now": 207,
+      "now_mill": 28,
+      "median_now": 156,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 40
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 211,
+     "field_mill": {
+      "max15": 211,
+      "max15_mill": 28,
+      "now": 207,
+      "now_mill": 28,
+      "median_now": 165,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 33
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 211,
+     "field_mill": {
+      "max15": 211,
+      "max15_mill": 28,
+      "now": 207,
+      "now_mill": 28,
+      "median_now": 156,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 56
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 252,
+     "field_mill": {
+      "max15": 252,
+      "max15_mill": 4,
+      "now": 206,
+      "now_mill": 4,
+      "median_now": 121,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 45
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 211,
+     "field_mill": {
+      "max15": 211,
+      "max15_mill": 28,
+      "now": 207,
+      "now_mill": 28,
+      "median_now": 156,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 23073,
+    "1": 2452,
+    "2": 14475
+   },
+   "class_counts": {
+    "clear": 29044,
+    "warm": 2187,
+    "cu0": 313,
+    "cu10": 145,
+    "cu20": 102,
+    "core": 1,
+    "att": 32,
+    "det": 5624,
+    "elev": 2552
+   },
+   "missing": [],
+   "skew_min": 0.5,
+   "volume": "frames/20261017T2210.vol",
+   "volume_valid": "2026-10-17T22:10:35Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.63,
+   "isotherms_km": {
+    "+5": 3.72,
+    "+0": 4.63,
+    "-5": 5.61,
+    "-10": 6.49,
+    "-15": 7.2,
+    "-20": 7.98
+   },
+   "iso_source": "HRRR 20Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 1,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "22:10Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     166,
+     118,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     252,
+     206,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     109,
+     70,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     142,
+     140,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     157,
+     104,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     212,
+     146,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     199,
+     133,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     160,
+     121,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     125,
+     125,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     138,
+     94,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "22:10Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     179,
+     132,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     122,
+     101,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     227,
+     161,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     160,
+     125,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     139,
+     83,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     168,
+     154,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     132,
+     109,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     116,
+     116,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     110,
+     87,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     164,
+     152,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     192,
+     180,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     185,
+     184,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     15,
+     false,
+     "22:10Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     211,
+     207,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     159,
+     139,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     184,
+     165,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     187,
+     147,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     173,
+     156,
+     15,
+     true,
+     "22:10Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "22:10Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "22:10Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     150,
+     119,
+     15,
+     true,
+     "22:10Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 22:06Z, cloud-top height 22:06Z, parallax-corrected",
+   "sat_upgraded_cells": 61,
+   "anvil_wind": {
+    "u_kmh": 59.2215084051822,
+    "v_kmh": 27.526444303874804,
+    "unc_kmh": 18.52,
+    "kt": 35.3,
+    "from_deg": 245,
+    "n": 39,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 22:01Z, 39 anvil-level vectors: 35 kt from 245 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T22:04:33Z",
+   "stamp": "20261017T2204",
+   "images": {
+    "status": "frames/20261017T2204_status.png",
+    "statusline": "frames/20261017T2204_statusline.png",
+    "radar": "frames/20261017T2204_radar.png",
+    "class": "frames/20261017T2204_class.png"
+   },
+   "data": "frames/20261017T2204.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 65
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 4,
+      "now": 197,
+      "now_mill": 16,
+      "median_now": 141,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 65
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 3
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 4,
+      "now": 197,
+      "now_mill": 16,
+      "median_now": 141,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 62
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 218,
+     "field_mill": {
+      "max15": 218,
+      "max15_mill": 8,
+      "now": 197,
+      "now_mill": 16,
+      "median_now": 139,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 59
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 208,
+     "field_mill": {
+      "max15": 208,
+      "max15_mill": 19,
+      "now": 197,
+      "now_mill": 16,
+      "median_now": 139,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 52
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 197,
+      "now_mill": 16,
+      "median_now": 139,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 43
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 197,
+      "now_mill": 16,
+      "median_now": 147,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 36
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 187,
+      "now_mill": 31,
+      "median_now": 147,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Layered cloud, not convective",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 32
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 10.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 187,
+      "now_mill": 31,
+      "median_now": 148,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 26
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 10.5,
+     "nearest_echo_nm": 0.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 187,
+      "now_mill": 31,
+      "median_now": 147,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 64
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 236,
+     "field_mill": {
+      "max15": 236,
+      "max15_mill": 4,
+      "now": 177,
+      "now_mill": 4,
+      "median_now": 125,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Layered cloud, not convective",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 36
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 187,
+      "now_mill": 31,
+      "median_now": 147,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 21554,
+    "1": 1899,
+    "2": 16547
+   },
+   "class_counts": {
+    "clear": 28445,
+    "warm": 1963,
+    "cu0": 111,
+    "cu10": 131,
+    "cu20": 179,
+    "core": 0,
+    "att": 0,
+    "det": 6091,
+    "elev": 3080
+   },
+   "missing": [],
+   "skew_min": 1.5,
+   "volume": "frames/20261017T2204.vol",
+   "volume_valid": "2026-10-17T22:04:33Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.66,
+   "isotherms_km": {
+    "+5": 3.78,
+    "+0": 4.66,
+    "-5": 5.58,
+    "-10": 6.51,
+    "-15": 7.19,
+    "-20": 7.95
+   },
+   "iso_source": "HRRR 19Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "22:03Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     181,
+     125,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     236,
+     177,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     109,
+     76,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     185,
+     107,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     165,
+     112,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     218,
+     170,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     200,
+     135,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     186,
+     160,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     136,
+     94,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     152,
+     138,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "22:03Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     179,
+     152,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     128,
+     99,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     197,
+     197,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     173,
+     149,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     161,
+     102,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     208,
+     141,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     149,
+     119,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     138,
+     93,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     118,
+     95,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     183,
+     155,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     196,
+     192,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     193,
+     148,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     14,
+     false,
+     "22:03Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     274,
+     164,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     159,
+     135,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     202,
+     136,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     197,
+     187,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     173,
+     147,
+     14,
+     true,
+     "22:03Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "22:03Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "22:03Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     165,
+     139,
+     14,
+     true,
+     "22:03Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 22:01Z, cloud-top height 22:01Z, parallax-corrected",
+   "sat_upgraded_cells": 63,
+   "anvil_wind": {
+    "u_kmh": 59.791998049646295,
+    "v_kmh": 29.054404161052044,
+    "unc_kmh": 18.52,
+    "kt": 35.9,
+    "from_deg": 244,
+    "n": 37,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:46Z, 37 anvil-level vectors: 36 kt from 244 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T21:58:33Z",
+   "stamp": "20261017T2158",
+   "images": {
+    "status": "frames/20261017T2158_status.png",
+    "statusline": "frames/20261017T2158_statusline.png",
+    "radar": "frames/20261017T2158_radar.png",
+    "class": "frames/20261017T2158_class.png"
+   },
+   "data": "frames/20261017T2158.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 47
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 188,
+      "now_mill": 4,
+      "median_now": 141,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 48
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 188,
+      "now_mill": 4,
+      "median_now": 141,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 43
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 1.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 241,
+     "field_mill": {
+      "max15": 241,
+      "max15_mill": 26,
+      "now": 168,
+      "now_mill": 19,
+      "median_now": 134,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 37
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 1.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 241,
+     "field_mill": {
+      "max15": 241,
+      "max15_mill": 26,
+      "now": 168,
+      "now_mill": 19,
+      "median_now": 134,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 29
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 28,
+      "median_now": 141,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 22
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.5,
+     "nearest_echo_nm": 2.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 28,
+      "median_now": 168,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 16
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 9.0,
+     "nearest_echo_nm": 2.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 12
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 9.0,
+     "nearest_echo_nm": 3.4,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 28,
+      "median_now": 177,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 8
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 7.0,
+     "nearest_echo_nm": 4.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 28,
+      "median_now": 177,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 53
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 188,
+      "now_mill": 4,
+      "median_now": 121,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 17
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 2.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 22204,
+    "1": 1924,
+    "2": 15872
+   },
+   "class_counts": {
+    "clear": 27855,
+    "warm": 1815,
+    "cu0": 105,
+    "cu10": 169,
+    "cu20": 74,
+    "core": 3,
+    "att": 219,
+    "det": 6742,
+    "elev": 3018
+   },
+   "missing": [],
+   "skew_min": 0.7,
+   "volume": "frames/20261017T2158.vol",
+   "volume_valid": "2026-10-17T22:00:37Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.66,
+   "isotherms_km": {
+    "+5": 3.78,
+    "+0": 4.66,
+    "-5": 5.58,
+    "-10": 6.51,
+    "-15": 7.19,
+    "-20": 7.95
+   },
+   "iso_source": "HRRR 19Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "21:58Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     181,
+     137,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     251,
+     188,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     109,
+     103,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     202,
+     121,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     193,
+     131,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     218,
+     144,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     200,
+     158,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     229,
+     119,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     186,
+     104,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     181,
+     104,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "21:58Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     186,
+     134,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     136,
+     109,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     217,
+     157,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     202,
+     160,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     165,
+     119,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     217,
+     168,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     171,
+     116,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     144,
+     106,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     118,
+     104,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     183,
+     161,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     196,
+     184,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     241,
+     133,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     15,
+     false,
+     "21:58Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     274,
+     198,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     171,
+     155,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     213,
+     184,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     197,
+     177,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     173,
+     173,
+     15,
+     true,
+     "21:58Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "21:58Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "21:58Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     165,
+     141,
+     15,
+     true,
+     "21:58Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 21:56Z, cloud-top height 21:56Z, parallax-corrected",
+   "sat_upgraded_cells": 60,
+   "anvil_wind": {
+    "u_kmh": 59.791998049646295,
+    "v_kmh": 29.054404161052044,
+    "unc_kmh": 18.52,
+    "kt": 35.9,
+    "from_deg": 244,
+    "n": 37,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:46Z, 37 anvil-level vectors: 36 kt from 244 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T21:54:41Z",
+   "stamp": "20261017T2154",
+   "images": {
+    "status": "frames/20261017T2154_status.png",
+    "statusline": "frames/20261017T2154_statusline.png",
+    "radar": "frames/20261017T2154_radar.png",
+    "class": "frames/20261017T2154_class.png"
+   },
+   "data": "frames/20261017T2154.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "attached_anvil",
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 47
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 11.5,
+     "nearest_echo_nm": 0.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 187,
+      "now_mill": 8,
+      "median_now": 156,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "attached_anvil"
+     ],
+     "yellow": [
+      "detached_anvil"
+     ],
+     "class_here": "Attached anvil",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 48
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 11.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 187,
+      "now_mill": 8,
+      "median_now": 156,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "attached_anvil",
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 41
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 11.5,
+     "nearest_echo_nm": 1.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 250,
+     "field_mill": {
+      "max15": 250,
+      "max15_mill": 16,
+      "now": 187,
+      "now_mill": 8,
+      "median_now": 144,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "attached_anvil",
+      "detached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 35
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 11.5,
+     "nearest_echo_nm": 3.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 250,
+     "field_mill": {
+      "max15": 250,
+      "max15_mill": 16,
+      "now": 182,
+      "now_mill": 26,
+      "median_now": 144,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "attached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 27
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 11.5,
+     "nearest_echo_nm": 3.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 229,
+      "now_mill": 28,
+      "median_now": 144,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "attached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 19
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 3
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 10.0,
+     "nearest_echo_nm": 4.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 229,
+      "now_mill": 28,
+      "median_now": 166,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 13
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 5
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 4.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 229,
+      "now_mill": 28,
+      "median_now": 182,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 10
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 5
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 4.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 229,
+      "now_mill": 28,
+      "median_now": 188,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "detached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 6
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 6
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 3.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 229,
+      "now_mill": 28,
+      "median_now": 188,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 2,
+     "red": [
+      "attached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Attached anvil",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 53
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 11.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 187,
+      "now_mill": 8,
+      "median_now": 153,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "attached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 14
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 5
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 1
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 3.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 274,
+     "field_mill": {
+      "max15": 274,
+      "max15_mill": 28,
+      "now": 229,
+      "now_mill": 28,
+      "median_now": 182,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 20551,
+    "1": 2136,
+    "2": 17313
+   },
+   "class_counts": {
+    "clear": 27434,
+    "warm": 1624,
+    "cu0": 102,
+    "cu10": 158,
+    "cu20": 38,
+    "core": 7,
+    "att": 7338,
+    "det": 393,
+    "elev": 2906
+   },
+   "missing": [],
+   "skew_min": 2.0,
+   "volume": "frames/20261017T2154.vol",
+   "volume_valid": "2026-10-17T21:54:41Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.66,
+   "isotherms_km": {
+    "+5": 3.78,
+    "+0": 4.66,
+    "-5": 5.58,
+    "-10": 6.51,
+    "-15": 7.19,
+    "-20": 7.95
+   },
+   "iso_source": "HRRR 19Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "21:53Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     195,
+     130,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     251,
+     184,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     109,
+     71,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     202,
+     156,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     193,
+     120,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     220,
+     187,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     200,
+     160,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     247,
+     168,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     186,
+     118,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     182,
+     150,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "21:53Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     215,
+     162,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     139,
+     112,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     250,
+     125,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     214,
+     173,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     165,
+     153,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     221,
+     144,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     173,
+     144,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     144,
+     138,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     118,
+     112,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     183,
+     164,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     196,
+     173,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     241,
+     182,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     14,
+     false,
+     "21:53Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     274,
+     229,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     171,
+     157,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     239,
+     188,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     192,
+     192,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     166,
+     166,
+     14,
+     true,
+     "21:53Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "21:53Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "21:53Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     172,
+     135,
+     14,
+     true,
+     "21:53Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 21:51Z, cloud-top height 21:51Z, parallax-corrected",
+   "sat_upgraded_cells": 88,
+   "anvil_wind": {
+    "u_kmh": 59.791998049646295,
+    "v_kmh": 29.054404161052044,
+    "unc_kmh": 18.52,
+    "kt": 35.9,
+    "from_deg": 244,
+    "n": 37,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:46Z, 37 anvil-level vectors: 36 kt from 244 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T21:50:40Z",
+   "stamp": "20261017T2150",
+   "images": {
+    "status": "frames/20261017T2150_status.png",
+    "statusline": "frames/20261017T2150_statusline.png",
+    "radar": "frames/20261017T2150_radar.png",
+    "class": "frames/20261017T2150_class.png"
+   },
+   "data": "frames/20261017T2150.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "attached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 21
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 9
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 7
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 1.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 205,
+      "now_mill": 19,
+      "median_now": 159,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "attached_anvil"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Attached anvil",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 22
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 9
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 205,
+      "now_mill": 19,
+      "median_now": 159,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [
+      "attached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 19
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 7
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 8
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 2.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 250,
+     "field_mill": {
+      "max15": 250,
+      "max15_mill": 16,
+      "now": 205,
+      "now_mill": 19,
+      "median_now": 158,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [
+      "attached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 16
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 6
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 8
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 3.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 250,
+     "field_mill": {
+      "max15": 250,
+      "max15_mill": 16,
+      "now": 205,
+      "now_mill": 19,
+      "median_now": 159,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 11
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 5
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 8
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.0,
+     "nearest_echo_nm": 3.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 217,
+      "now_mill": 28,
+      "median_now": 167,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 7
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 2
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 3
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 7
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 4.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 217,
+      "now_mill": 28,
+      "median_now": 196,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 3
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 4
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 3
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 7
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 4.4,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 217,
+      "now_mill": 28,
+      "median_now": 189,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 1
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 5
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 3
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 4.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 217,
+      "now_mill": 28,
+      "median_now": 191,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [
+      "detached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 5
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 2
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 5
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 3.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 217,
+      "now_mill": 28,
+      "median_now": 189,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "attached_anvil"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Attached anvil",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 30
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 7
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 189,
+      "now_mill": 10,
+      "median_now": 159,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 3
+      },
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 4
+      },
+      {
+       "key": "cu20",
+       "name": "Cumulus topping below \u221220 \u00b0C",
+       "pct": 3
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      },
+      {
+       "key": "warm",
+       "name": "Shallow shower, below freezing",
+       "pct": 7
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 3.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 217,
+      "now_mill": 28,
+      "median_now": 189,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 16057,
+    "1": 1766,
+    "2": 22177
+   },
+   "class_counts": {
+    "clear": 27206,
+    "warm": 1834,
+    "cu0": 67,
+    "cu10": 146,
+    "cu20": 192,
+    "core": 14,
+    "att": 6496,
+    "det": 715,
+    "elev": 3330
+   },
+   "missing": [],
+   "skew_min": 2.0,
+   "volume": "frames/20261017T2150.vol",
+   "volume_valid": "2026-10-17T21:50:40Z",
+   "volume_note": "32 levels, failed ['12'], 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.66,
+   "isotherms_km": {
+    "+5": 3.78,
+    "+0": 4.66,
+    "-5": 5.58,
+    "-10": 6.51,
+    "-15": 7.19,
+    "-20": 7.95
+   },
+   "iso_source": "HRRR 19Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "21:49Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     195,
+     166,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     251,
+     166,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     128,
+     84,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     202,
+     120,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     193,
+     165,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     220,
+     155,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     221,
+     159,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     247,
+     189,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     188,
+     133,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     191,
+     138,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "21:49Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     215,
+     167,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     153,
+     133,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     250,
+     196,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     214,
+     185,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     165,
+     160,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     221,
+     205,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     173,
+     158,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     144,
+     140,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     118,
+     115,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     177,
+     177,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     191,
+     186,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     241,
+     191,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     14,
+     false,
+     "21:49Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     269,
+     217,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     171,
+     146,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     239,
+     202,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     197,
+     189,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     165,
+     162,
+     14,
+     true,
+     "21:49Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "21:49Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "21:49Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     172,
+     123,
+     14,
+     true,
+     "21:49Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 21:46Z, cloud-top height 21:46Z, parallax-corrected",
+   "sat_upgraded_cells": 269,
+   "anvil_wind": {
+    "u_kmh": 60.557409551386534,
+    "v_kmh": 28.911271392241787,
+    "unc_kmh": 18.52,
+    "kt": 36.2,
+    "from_deg": 244,
+    "n": 48,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:31Z, 48 anvil-level vectors: 36 kt from 244 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T21:44:38Z",
+   "stamp": "20261017T2144",
+   "images": {
+    "status": "frames/20261017T2144_status.png",
+    "statusline": "frames/20261017T2144_statusline.png",
+    "radar": "frames/20261017T2144_radar.png",
+    "class": "frames/20261017T2144_class.png"
+   },
+   "data": "frames/20261017T2144.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "attached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 26
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 1.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 226,
+      "now_mill": 4,
+      "median_now": 194,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "attached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Cumulus topping below \u221220 \u00b0C",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 28
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 2
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 231,
+      "now_mill": 10,
+      "median_now": 194,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [
+      "attached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 21
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 3
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 3.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 250,
+     "field_mill": {
+      "max15": 250,
+      "max15_mill": 16,
+      "now": 221,
+      "now_mill": 19,
+      "median_now": 183,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 16
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 3.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 250,
+     "field_mill": {
+      "max15": 250,
+      "max15_mill": 16,
+      "now": 221,
+      "now_mill": 19,
+      "median_now": 173,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 8
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.0,
+     "nearest_echo_nm": 3.4,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 239,
+      "now_mill": 28,
+      "median_now": 194,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 3
+      },
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 8
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 10.0,
+     "nearest_echo_nm": 2.4,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 239,
+      "now_mill": 28,
+      "median_now": 211,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 10
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 1.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 239,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 10
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 239,
+      "now_mill": 28,
+      "median_now": 211,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm"
+     ],
+     "yellow": [
+      "cumulus_10nm",
+      "thick_layer"
+     ],
+     "class_here": "Layered cloud, not convective",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 11
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 239,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm",
+      "attached_anvil",
+      "thick_layer"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "att",
+       "name": "Attached anvil",
+       "pct": 36
+      }
+     ],
+     "class_10nm": "Attached anvil",
+     "max_dbz_10nm": 13.5,
+     "nearest_echo_nm": 0.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 251,
+     "field_mill": {
+      "max15": 251,
+      "max15_mill": 4,
+      "now": 231,
+      "now_mill": 10,
+      "median_now": 150,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "cumulus_5nm",
+      "cumulus_10nm"
+     ],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Layered cloud, not convective",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 10
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 28,
+      "now": 239,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 19104,
+    "1": 1799,
+    "2": 19097
+   },
+   "class_counts": {
+    "clear": 26684,
+    "warm": 1418,
+    "cu0": 79,
+    "cu10": 154,
+    "cu20": 158,
+    "core": 5,
+    "att": 3819,
+    "det": 3506,
+    "elev": 4177
+   },
+   "missing": [],
+   "skew_min": 2.0,
+   "volume": "frames/20261017T2144.vol",
+   "volume_valid": "2026-10-17T21:44:38Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.66,
+   "isotherms_km": {
+    "+5": 3.78,
+    "+0": 4.66,
+    "-5": 5.58,
+    "-10": 6.51,
+    "-15": 7.19,
+    "-20": 7.95
+   },
+   "iso_source": "HRRR 19Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "21:43Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     195,
+     150,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     251,
+     226,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     154,
+     103,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     174,
+     128,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     190,
+     182,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     229,
+     220,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     221,
+     143,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     247,
+     231,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     200,
+     183,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     197,
+     150,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "21:43Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     215,
+     194,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     154,
+     132,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     250,
+     195,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     214,
+     195,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     148,
+     142,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     221,
+     221,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     173,
+     173,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     138,
+     128,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     113,
+     112,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     167,
+     167,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     163,
+     163,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     211,
+     211,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     14,
+     false,
+     "21:43Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     269,
+     239,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     170,
+     170,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     239,
+     225,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     199,
+     173,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     152,
+     152,
+     14,
+     true,
+     "21:43Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "21:43Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "21:43Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     211,
+     172,
+     14,
+     true,
+     "21:43Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 21:41Z, cloud-top height 21:41Z, parallax-corrected",
+   "sat_upgraded_cells": 235,
+   "anvil_wind": {
+    "u_kmh": 60.557409551386534,
+    "v_kmh": 28.911271392241787,
+    "unc_kmh": 18.52,
+    "kt": 36.2,
+    "from_deg": 244,
+    "n": 48,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:31Z, 48 anvil-level vectors: 36 kt from 244 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T21:38:40Z",
+   "stamp": "20261017T2138",
+   "images": {
+    "status": "frames/20261017T2138_status.png",
+    "statusline": "frames/20261017T2138_statusline.png",
+    "radar": "frames/20261017T2138_radar.png",
+    "class": "frames/20261017T2138_class.png"
+   },
+   "data": "frames/20261017T2138.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 11
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 3.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 242,
+     "field_mill": {
+      "max15": 242,
+      "max15_mill": 26,
+      "now": 233,
+      "now_mill": 16,
+      "median_now": 188,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 13
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 2.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 241,
+     "field_mill": {
+      "max15": 241,
+      "max15_mill": 4,
+      "now": 233,
+      "now_mill": 16,
+      "median_now": 188,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 9
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 4.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 242,
+     "field_mill": {
+      "max15": 242,
+      "max15_mill": 26,
+      "now": 233,
+      "now_mill": 16,
+      "median_now": 186,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 7
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 3.4,
+     "lightning_10nm": false,
+     "field_mill_vm": 242,
+     "field_mill": {
+      "max15": 242,
+      "max15_mill": 26,
+      "now": 233,
+      "now_mill": 16,
+      "median_now": 188,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 7
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 11.5,
+     "nearest_echo_nm": 1.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 254,
+     "field_mill": {
+      "max15": 254,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 188,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 13
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 10.5,
+     "nearest_echo_nm": 0.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 254,
+     "field_mill": {
+      "max15": 254,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 192,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 17
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 254,
+     "field_mill": {
+      "max15": 254,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 192,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 19
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 254,
+     "field_mill": {
+      "max15": 254,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 197,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Layered cloud, not convective",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 21
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 254,
+     "field_mill": {
+      "max15": 254,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 197,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 19
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 241,
+     "field_mill": {
+      "max15": 241,
+      "max15_mill": 4,
+      "now": 229,
+      "now_mill": 10,
+      "median_now": 181,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "thick_layer"
+     ],
+     "class_here": "Layered cloud, not convective",
+     "classes_10nm": [
+      {
+       "key": "elev",
+       "name": "Layered cloud, not convective",
+       "pct": 19
+      }
+     ],
+     "class_10nm": "Layered cloud, not convective",
+     "max_dbz_10nm": 12.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 254,
+     "field_mill": {
+      "max15": 254,
+      "max15_mill": 28,
+      "now": 236,
+      "now_mill": 28,
+      "median_now": 192,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 23667,
+    "1": 2840,
+    "2": 13493
+   },
+   "class_counts": {
+    "clear": 26325,
+    "warm": 1502,
+    "cu0": 107,
+    "cu10": 107,
+    "cu20": 50,
+    "core": 0,
+    "att": 0,
+    "det": 4339,
+    "elev": 7570
+   },
+   "missing": [],
+   "skew_min": 0.7,
+   "volume": "frames/20261017T2138.vol",
+   "volume_valid": "2026-10-17T21:38:40Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.66,
+   "isotherms_km": {
+    "+5": 3.78,
+    "+0": 4.66,
+    "-5": 5.58,
+    "-10": 6.51,
+    "-15": 7.19,
+    "-20": 7.95
+   },
+   "iso_source": "HRRR 19Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "21:38Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     177,
+     162,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     241,
+     188,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     154,
+     103,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     174,
+     133,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     186,
+     186,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     229,
+     186,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     221,
+     213,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     229,
+     229,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     200,
+     178,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     204,
+     181,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "21:38Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     219,
+     208,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     154,
+     137,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     233,
+     233,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     208,
+     193,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     133,
+     130,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     189,
+     188,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     159,
+     159,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     138,
+     115,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     95,
+     92,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     155,
+     153,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     152,
+     152,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     242,
+     192,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     15,
+     false,
+     "21:38Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     254,
+     236,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     168,
+     136,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     221,
+     202,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     199,
+     197,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     158,
+     130,
+     15,
+     true,
+     "21:38Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "21:38Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "21:38Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     211,
+     150,
+     15,
+     true,
+     "21:38Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 21:36Z, cloud-top height 21:36Z, parallax-corrected",
+   "sat_upgraded_cells": 46,
+   "anvil_wind": {
+    "u_kmh": 60.557409551386534,
+    "v_kmh": 28.911271392241787,
+    "unc_kmh": 18.52,
+    "kt": 36.2,
+    "from_deg": 244,
+    "n": 48,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:31Z, 48 anvil-level vectors: 36 kt from 244 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T21:34:40Z",
+   "stamp": "20261017T2134",
+   "images": {
+    "status": "frames/20261017T2134_status.png",
+    "statusline": "frames/20261017T2134_statusline.png",
+    "radar": "frames/20261017T2134_radar.png",
+    "class": "frames/20261017T2134_class.png"
+   },
+   "data": "frames/20261017T2134.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "detached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 14
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 3.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 26,
+      "now": 224,
+      "now_mill": 16,
+      "median_now": 195,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 16
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 4.4,
+     "lightning_10nm": false,
+     "field_mill_vm": 253,
+     "field_mill": {
+      "max15": 253,
+      "max15_mill": 4,
+      "now": 224,
+      "now_mill": 16,
+      "median_now": 200,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 12
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 2.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 26,
+      "now": 224,
+      "now_mill": 16,
+      "median_now": 194,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 12
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 1.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 26,
+      "now": 224,
+      "now_mill": 16,
+      "median_now": 193,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 16
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 1.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 26,
+      "now": 224,
+      "now_mill": 16,
+      "median_now": 193,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 21
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 0.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 26,
+      "now": 224,
+      "now_mill": 16,
+      "median_now": 193,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 25
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 0.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 26,
+      "now": 214,
+      "now_mill": 28,
+      "median_now": 193,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 26
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 1.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 26,
+      "now": 214,
+      "now_mill": 28,
+      "median_now": 197,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 28
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 2.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 254,
+     "field_mill": {
+      "max15": 254,
+      "max15_mill": 28,
+      "now": 214,
+      "now_mill": 28,
+      "median_now": 197,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "detached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 17
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 3.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 253,
+     "field_mill": {
+      "max15": 253,
+      "max15_mill": 4,
+      "now": 208,
+      "now_mill": 17,
+      "median_now": 187,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 27
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 11.0,
+     "nearest_echo_nm": 1.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 254,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 26,
+      "now": 214,
+      "now_mill": 28,
+      "median_now": 193,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 21596,
+    "1": 1751,
+    "2": 16653
+   },
+   "class_counts": {
+    "clear": 26450,
+    "warm": 1545,
+    "cu0": 112,
+    "cu10": 97,
+    "cu20": 23,
+    "core": 9,
+    "att": 4506,
+    "det": 2068,
+    "elev": 5190
+   },
+   "missing": [
+    "LayerCompositeReflectivity_High"
+   ],
+   "skew_min": 1.7,
+   "volume": "frames/20261017T2134.vol",
+   "volume_valid": "2026-10-17T21:34:40Z",
+   "volume_note": "32 levels, failed ['15']; Steiner at 3 km",
+   "freezing_km": 4.66,
+   "isotherms_km": {
+    "+5": 3.78,
+    "+0": 4.66,
+    "-5": 5.58,
+    "-10": 6.51,
+    "-15": 7.19,
+    "-20": 7.95
+   },
+   "iso_source": "HRRR 19Z run, profile valid 22Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "21:33Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     170,
+     157,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     253,
+     202,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     154,
+     154,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     185,
+     174,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     167,
+     161,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     229,
+     195,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     214,
+     200,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     203,
+     203,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     196,
+     194,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     204,
+     187,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "21:33Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     219,
+     208,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     148,
+     148,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     231,
+     224,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     208,
+     208,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     133,
+     120,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     180,
+     172,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     153,
+     139,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     138,
+     137,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     101,
+     95,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     149,
+     149,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     156,
+     141,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     267,
+     193,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     14,
+     false,
+     "21:33Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     254,
+     214,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     168,
+     147,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     221,
+     204,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     197,
+     197,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     158,
+     149,
+     14,
+     true,
+     "21:33Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "21:33Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "21:33Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     211,
+     211,
+     14,
+     true,
+     "21:33Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 21:31Z, cloud-top height 21:31Z, parallax-corrected",
+   "sat_upgraded_cells": 61,
+   "anvil_wind": {
+    "u_kmh": 59.881724585090055,
+    "v_kmh": 27.828027100159183,
+    "unc_kmh": 18.52,
+    "kt": 35.7,
+    "from_deg": 245,
+    "n": 35,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:16Z, 35 anvil-level vectors: 36 kt from 245 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T21:28:33Z",
+   "stamp": "20261017T2128",
+   "images": {
+    "status": "frames/20261017T2128_status.png",
+    "statusline": "frames/20261017T2128_statusline.png",
+    "radar": "frames/20261017T2128_radar.png",
+    "class": "frames/20261017T2128_class.png"
+   },
+   "data": "frames/20261017T2128.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 3
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 268,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 26,
+      "now": 241,
+      "now_mill": 26,
+      "median_now": 180,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 3
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 1.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 253,
+     "field_mill": {
+      "max15": 253,
+      "max15_mill": 4,
+      "now": 219,
+      "now_mill": 4,
+      "median_now": 180,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "Detached anvil",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 0.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 268,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 26,
+      "now": 241,
+      "now_mill": 26,
+      "median_now": 177,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 1.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 268,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 26,
+      "now": 241,
+      "now_mill": 26,
+      "median_now": 162,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "detached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 12
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 3.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 268,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 26,
+      "now": 241,
+      "now_mill": 26,
+      "median_now": 162,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "detached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 19
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 3.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 268,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 26,
+      "now": 241,
+      "now_mill": 26,
+      "median_now": 162,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 22
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 3.7,
+     "lightning_10nm": false,
+     "field_mill_vm": 268,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 26,
+      "now": 241,
+      "now_mill": 26,
+      "median_now": 153,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 1,
+     "red": [],
+     "yellow": [
+      "detached_anvil"
+     ],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 22
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 3.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 268,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 26,
+      "now": 241,
+      "now_mill": 26,
+      "median_now": 172,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 23
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 2.4,
+     "lightning_10nm": false,
+     "field_mill_vm": 220,
+     "field_mill": {
+      "max15": 220,
+      "max15_mill": 28,
+      "now": 220,
+      "now_mill": 28,
+      "median_now": 153,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 7
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 4.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 253,
+     "field_mill": {
+      "max15": 253,
+      "max15_mill": 4,
+      "now": 219,
+      "now_mill": 4,
+      "median_now": 165,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 25
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 15.5,
+     "nearest_echo_nm": 2.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 220,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 26,
+      "now": 241,
+      "now_mill": 26,
+      "median_now": 153,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 21630,
+    "1": 2291,
+    "2": 16079
+   },
+   "class_counts": {
+    "clear": 26422,
+    "warm": 1407,
+    "cu0": 125,
+    "cu10": 113,
+    "cu20": 56,
+    "core": 0,
+    "att": 0,
+    "det": 6753,
+    "elev": 5124
+   },
+   "missing": [],
+   "skew_min": 0.5,
+   "volume": "frames/20261017T2128.vol",
+   "volume_valid": "2026-10-17T21:30:40Z",
+   "volume_note": "33 levels, 3 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.71,
+   "isotherms_km": {
+    "+5": 3.8,
+    "+0": 4.71,
+    "-5": 5.64,
+    "-10": 6.5,
+    "-15": 7.28,
+    "-20": 8.02
+   },
+   "iso_source": "HRRR 19Z run, profile valid 21Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "21:28Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     171,
+     165,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     253,
+     219,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     136,
+     119,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     185,
+     142,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     157,
+     157,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     209,
+     186,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     241,
+     181,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     185,
+     185,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     180,
+     180,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     204,
+     204,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "21:28Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     210,
+     194,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     148,
+     118,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     197,
+     162,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     164,
+     151,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     139,
+     104,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     188,
+     160,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     156,
+     122,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     131,
+     105,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     105,
+     77,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     166,
+     132,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     156,
+     126,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     268,
+     241,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     15,
+     false,
+     "21:28Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     220,
+     220,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     153,
+     153,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     179,
+     172,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     175,
+     146,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     150,
+     150,
+     15,
+     true,
+     "21:28Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "21:28Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "21:28Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     177,
+     177,
+     15,
+     true,
+     "21:28Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 21:26Z, cloud-top height 21:26Z, parallax-corrected",
+   "sat_upgraded_cells": 71,
+   "anvil_wind": {
+    "u_kmh": 59.881724585090055,
+    "v_kmh": 27.828027100159183,
+    "unc_kmh": 18.52,
+    "kt": 35.7,
+    "from_deg": 245,
+    "n": 35,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:16Z, 35 anvil-level vectors: 36 kt from 245 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-10-17T21:24:39Z",
+   "stamp": "20261017T2124",
+   "images": {
+    "status": "frames/20261017T2124_status.png",
+    "statusline": "frames/20261017T2124_statusline.png",
+    "radar": "frames/20261017T2124_radar.png",
+    "class": "frames/20261017T2124_class.png"
+   },
+   "data": "frames/20261017T2124.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 6.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 26,
+      "now": 207,
+      "now_mill": 26,
+      "median_now": 172,
+      "n": 14
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 3
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 7.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 253,
+     "field_mill": {
+      "max15": 253,
+      "max15_mill": 4,
+      "now": 194,
+      "now_mill": 4,
+      "median_now": 165,
+      "n": 14
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 8.5,
+     "nearest_echo_nm": 4.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 26,
+      "now": 207,
+      "now_mill": 26,
+      "median_now": 152,
+      "n": 13
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 4
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 9.0,
+     "nearest_echo_nm": 3.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 26,
+      "now": 207,
+      "now_mill": 26,
+      "median_now": 152,
+      "n": 11
+     }
+    },
+    "SLC-37B": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 6
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 17.5,
+     "nearest_echo_nm": 2.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 26,
+      "now": 207,
+      "now_mill": 26,
+      "median_now": 152,
+      "n": 11
+     }
+    },
+    "SLC-20": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 10
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.5,
+     "nearest_echo_nm": 1.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 26,
+      "now": 207,
+      "now_mill": 26,
+      "median_now": 152,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 12
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 10.0,
+     "nearest_echo_nm": 1.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 26,
+      "now": 207,
+      "now_mill": 26,
+      "median_now": 147,
+      "n": 7
+     }
+    },
+    "SLC-36": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 12
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 14.5,
+     "nearest_echo_nm": 1.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 26,
+      "now": 207,
+      "now_mill": 26,
+      "median_now": 167,
+      "n": 6
+     }
+    },
+    "SLC-46": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 12
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 12.0,
+     "nearest_echo_nm": 2.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 258,
+     "field_mill": {
+      "max15": 258,
+      "max15_mill": 28,
+      "now": 189,
+      "now_mill": 28,
+      "median_now": 147,
+      "n": 5
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": 8.0,
+     "nearest_echo_nm": 7.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 253,
+     "field_mill": {
+      "max15": 253,
+      "max15_mill": 4,
+      "now": 194,
+      "now_mill": 4,
+      "median_now": 165,
+      "n": 13
+     }
+    },
+    "KXMR": {
+     "status": 2,
+     "red": [
+      "detached_anvil"
+     ],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [
+      {
+       "key": "det",
+       "name": "Detached anvil",
+       "pct": 15
+      }
+     ],
+     "class_10nm": "Detached anvil",
+     "max_dbz_10nm": 10.5,
+     "nearest_echo_nm": 2.8,
+     "lightning_10nm": false,
+     "field_mill_vm": 258,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 26,
+      "now": 207,
+      "now_mill": 26,
+      "median_now": 147,
+      "n": 7
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 20985,
+    "1": 2464,
+    "2": 16551
+   },
+   "class_counts": {
+    "clear": 26477,
+    "warm": 1439,
+    "cu0": 170,
+    "cu10": 119,
+    "cu20": 22,
+    "core": 1,
+    "att": 5269,
+    "det": 1694,
+    "elev": 4809
+   },
+   "missing": [],
+   "skew_min": 0.6,
+   "volume": "frames/20261017T2124.vol",
+   "volume_valid": "2026-10-17T21:24:39Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.71,
+   "isotherms_km": {
+    "+5": 3.8,
+    "+0": 4.71,
+    "-5": 5.64,
+    "-10": 6.5,
+    "-15": 7.28,
+    "-20": 8.02
+   },
+   "iso_source": "HRRR 19Z run, profile valid 21Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 28,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "21:23Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     171,
+     167,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     253,
+     194,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     122,
+     122,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     185,
+     175,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     147,
+     147,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     205,
+     175,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     241,
+     191,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     165,
+     165,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     160,
+     145,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     181,
+     172,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "21:23Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     177,
+     177,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     148,
+     107,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     223,
+     152,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     164,
+     146,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     139,
+     108,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     188,
+     145,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     156,
+     121,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     131,
+     114,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     105,
+     72,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     166,
+     131,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     156,
+     150,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     269,
+     207,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     0,
+     0,
+     14,
+     false,
+     "21:23Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     258,
+     189,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     136,
+     136,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     176,
+     167,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     147,
+     147,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     143,
+     143,
+     14,
+     true,
+     "21:23Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "21:23Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "21:23Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     204,
+     156,
+     14,
+     true,
+     "21:23Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 21:21Z, cloud-top height 21:21Z, parallax-corrected",
+   "sat_upgraded_cells": 98,
+   "anvil_wind": {
+    "u_kmh": 59.881724585090055,
+    "v_kmh": 27.828027100159183,
+    "unc_kmh": 18.52,
+    "kt": 35.7,
+    "from_deg": 245,
+    "n": 35,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 21:16Z, 35 anvil-level vectors: 36 kt from 245 deg, +/-10 kt"
+   }
+  }
+ ],
+ "rule_keys": [
+  "lightning",
+  "cumulus_through",
+  "cumulus_5nm",
+  "cumulus_10nm",
+  "attached_anvil",
+  "detached_anvil",
+  "field_mill",
+  "thick_layer"
+ ],
+ "rules": {
+  "lightning": "Lightning within 10 nmi (4.1.1) - MERLIN, GLM or NLDN CG",
+  "cumulus_through": "Flight through cumulus topping at or colder than +5 \u00b0C (4.1.3.1)",
+  "cumulus_5nm": "Cumulus topping colder than \u221210 \u00b0C within 5 nmi (4.1.3.2)",
+  "cumulus_10nm": "Cumulus topping colder than \u221220 \u00b0C within 10 nmi (4.1.3.3)",
+  "attached_anvil": "Attached anvil within 3 nmi (4.1.4)",
+  "detached_anvil": "Detached anvil within 3 nmi (4.1.5)",
+  "field_mill": "Surface electric field of 1,000 V/m or more within 5 nmi (4.1.2)",
+  "thick_layer": "Thick cloud layer spanning 0 to \u221210 \u00b0C (4.1.8)"
+ },
+ "rule_how": {
+  "lightning": "Any lightning within 10 nmi in the last 30 minutes: a MERLIN cloud-to-ground or cloud-to-cloud event, a GOES-19 GLM flash (total lightning) or an NLDN cloud-to-ground strike. Any one source counts.",
+  "cumulus_through": "The point itself is in cumulus (not anvil) echo reaching an isotherm level, or whose strongest return sits above the +5 \u00b0C height.",
+  "cumulus_5nm": "Cumulus or cumulonimbus echo of 0 dBZ or more at the \u221210 \u00b0C level within 5 nmi. Anvil echo never counts, however cold it reaches.",
+  "cumulus_10nm": "Cumulus or cumulonimbus echo of 0 dBZ or more at the \u221220 \u00b0C level within 10 nmi. Anvil echo never counts.",
+  "attached_anvil": "An attached anvil cell within 3 nmi, unless the exception holds: no echo at the 0 \u00b0C level beneath any anvil within 5 nmi, and the largest reflectivity within 1 nmi below 7.5 dBZ. Also violated by an attached anvil within 10 nmi while lightning is within 10 nmi.",
+  "detached_anvil": "A detached anvil cell within 3 nmi, with the same exception.",
+  "field_mill": "A field mill within 5 nmi of the point measured |E| of 1,000 V/m or more in any one-minute reading over the 15 minutes before the frame. Points more than 5 nmi from every reporting mill are not evaluated, not clear. A mill reading exactly 0 for the whole window counts as not reporting. The rule's exceptions are not applied, the conservative side.",
+  "thick_layer": "The point has echo at both ends of a 10-degree span inside the 0 to \u221220 \u00b0C band (0 and \u221210, \u22125 and \u221215, or \u221210 and \u221220 \u00b0C): a layer at least ~5,000 ft deep. Not applied to anvil or to cumulus - convective echo and cores are excluded; echo whose type is unknown is still tested. Exception: MRR below 7.5 dBZ within 1 nmi."
+ },
+ "watch_how": "Watch means no rule is broken, but one would be if its standoff were 2 nmi longer, or there is lightning within 20 nmi.",
+ "not_evaluated": [
+  "Disturbed weather (4.1.7) - applied to synoptic disturbances such as fronts, which radar alone cannot identify",
+  "The exceptions to the surface electric field rule (4.1.2), and the rule itself more than 5 nmi from every reporting field mill",
+  "Debris clouds (4.1.6), which need an observed detachment time",
+  "Smoke plumes (4.1.9)",
+  "Triboelectrification (4.1.10)",
+  "The 3-hour lightning clocks on the anvil rules - only ~95 minutes of lightning is kept"
+ ],
+ "rules_off": [],
+ "classes": [
+  {
+   "id": 0,
+   "key": "clear",
+   "name": "No echo",
+   "color": "#00000000",
+   "how": "Composite reflectivity below 0 dBZ. No rule applies here."
+  },
+  {
+   "id": 1,
+   "key": "warm",
+   "name": "Shallow shower, below freezing",
+   "color": "#94A3B8",
+   "how": "Echo of 0 dBZ or more that shows up at none of the isotherm levels: the column's strongest echo sits below the measured 0 \u00b0C height. Can still trip flight-through cumulus if it reaches the +5 \u00b0C level, taken from the XMR model sounding."
+  },
+  {
+   "id": 2,
+   "key": "cu0",
+   "name": "Cumulus topping 0 to \u221210 \u00b0C",
+   "color": "#22D3EE",
+   "how": "Echo of 0 dBZ or more at the 0 \u00b0C level, but none at \u221210 \u00b0C, so the top lies somewhere between 0 and \u221210 \u00b0C."
+  },
+  {
+   "id": 3,
+   "key": "cu10",
+   "name": "Cumulus topping \u221210 to \u221220 \u00b0C",
+   "color": "#3B82F6",
+   "how": "Echo at the \u221210 \u00b0C level, but none at \u221220 \u00b0C, so the top lies between \u221210 and \u221220 \u00b0C. Drives the 5 nmi cumulus standoff."
+  },
+  {
+   "id": 4,
+   "key": "cu20",
+   "name": "Cumulus topping below \u221220 \u00b0C",
+   "color": "#A78BFA",
+   "how": "Echo of 0 dBZ or more at the \u221220 \u00b0C level, so the top is colder than \u221220 \u00b0C. Drives the 10 nmi cumulus standoff."
+  },
+  {
+   "id": 5,
+   "key": "core",
+   "name": "Convective core",
+   "color": "#FF4FD8",
+   "how": "Composite reflectivity of 40 dBZ or more, or any vertically integrated ice. VII only registers in strong cells, so it confirms a core rather than finding anvil. Takes precedence over every other class."
+  },
+  {
+   "id": 6,
+   "key": "att",
+   "name": "Attached anvil",
+   "color": "#FB923C",
+   "how": "Echo weaker than 40 dBZ that reaches the \u221220 \u00b0C level, or sits only aloft (its strongest echo above the \u221220 \u00b0C height, or in the upper layer composite), and is joined to a convective core by unbroken echo."
+  },
+  {
+   "id": 7,
+   "key": "det",
+   "name": "Detached anvil",
+   "color": "#F5F5F4",
+   "how": "An anvil that came from a convective core and has separated from it, lying where an attached anvil was in the last hour (allowing ~32 kt of drift) with no unbroken path back to a core now. Either floating - no echo at 0 \u00b0C beneath it - or still raining out as stratiform echo: anvil until it rains out. Unconnected convective echo rooted through 0 \u00b0C is a new tower and stays cumulus."
+  },
+  {
+   "id": 8,
+   "key": "elev",
+   "name": "Layered cloud, not convective",
+   "color": "#C9A66B",
+   "how": "Echo the convective/stratiform separation (Steiner et al. 1995, run on the 3-D volume's ~3 km level) calls stratiform and that is not anvil, or floating echo with no convective origin in the last hour. Layered cloud, not cumulus: scored by the thick-cloud-layer rule when it spans about 4,500 ft of the 0 to \u221220 \u00b0C band, never by the cumulus or anvil standoffs."
+  }
+ ],
+ "class_note": "Classes come from how high the echo reaches through the isotherm levels, checked in this order: core, attached anvil, detached anvil, then cumulus by depth, then shallow shower. Once an anvil, always an anvil: anvil echo is scored only by the anvil rules and never trips a cumulus standoff. The convective core is the cumulonimbus tower and does count as cumulus, so a point near a core can still be within a cumulus standoff because of the core. Radar cannot reliably tell convective from layered cloud, so a broad rain shield reaching \u221220 \u00b0C is classed with cumulus topping below \u221220 \u00b0C.",
+ "top_levels": [
+  "No echo",
+  "Below the 0 \u00b0C level: no echo at any isotherm",
+  "Between 0 and \u22125 \u00b0C: echo at 0 \u00b0C, none at \u22125 \u00b0C",
+  "Between \u22125 and \u221210 \u00b0C: echo at \u22125 \u00b0C, none at \u221210 \u00b0C",
+  "Between \u221210 and \u221215 \u00b0C: echo at \u221210 \u00b0C, none at \u221215 \u00b0C",
+  "Between \u221215 and \u221220 \u00b0C: echo at \u221215 \u00b0C, none at \u221220 \u00b0C",
+  "Colder than \u221220 \u00b0C: echo at the \u221220 \u00b0C level",
+  "Only above the \u221220 \u00b0C level: elevated echo"
+ ],
+ "levels_km": [
+  0.5,
+  0.75,
+  1.0,
+  1.25,
+  1.5,
+  1.75,
+  2.0,
+  2.25,
+  2.5,
+  2.75,
+  3.0,
+  3.5,
+  4.0,
+  4.5,
+  5.0,
+  5.5,
+  6.0,
+  6.5,
+  7.0,
+  7.5,
+  8.0,
+  8.5,
+  9.0,
+  10.0,
+  11.0,
+  12.0,
+  13.0,
+  14.0,
+  15.0,
+  16.0,
+  17.0,
+  18.0,
+  19.0
+ ],
+ "status": {
+  "-1": {
+   "name": "No coverage",
+   "color": "#6B7785"
+  },
+  "0": {
+   "name": "Clear",
+   "color": "#3FB97A"
+  },
+  "1": {
+   "name": "Watch",
+   "color": "#F2C14E"
+  },
+  "2": {
+   "name": "Violating",
+   "color": "#E5484D"
+  }
+ },
+ "refl": {
+  "levels": [
+   0,
+   5,
+   10,
+   15,
+   20,
+   25,
+   30,
+   35,
+   40,
+   45,
+   50,
+   55,
+   60,
+   65,
+   70,
+   95
+  ],
+  "colors": [
+   "#04E9E7",
+   "#019FF4",
+   "#0300F4",
+   "#02FD02",
+   "#01C501",
+   "#008E00",
+   "#FDF802",
+   "#E5BC00",
+   "#FD9500",
+   "#FD0000",
+   "#D40000",
+   "#BC0000",
+   "#F800FD",
+   "#9854C6",
+   "#FDFDFD"
+  ]
+ },
+ "thresholds": {
+  "lightning_nm": 10.0,
+  "lightning_watch_nm": 20.0,
+  "cumulus_5nm": 5.0,
+  "cumulus_10nm": 10.0,
+  "plus5_c": 5.0,
+  "attached_3nm": 3.0,
+  "attached_lightning_nm": 10.0,
+  "detached_3nm": 3.0,
+  "excep_nm": 5.0,
+  "mrr_dbz": 7.5,
+  "mrr_search_nm": 4.0,
+  "mrr_eval_nm": 1.0,
+  "thick_mrr_dbz": 7.5,
+  "disturbed_nm": 5.0,
+  "disturbed_dbz": 30.0,
+  "core_dbz": 40.0,
+  "yellow_margin_nm": 2.0,
+  "field_mill_nm": 5.0,
+  "field_mill_vm": 1000.0,
+  "field_mill_window_min": 15.0
+ },
+ "standard": "NASA-STD-4010 (2017-06-27)",
+ "local_notes": [
+  "MERLIN CG: 1 call(s); 0 events cached, covered 2026-10-17T20:45:59 to 2026-10-17T22:20:59",
+  "MERLIN CC: 1 call(s); 1 events cached, covered 2026-10-17T20:45:59 to 2026-10-17T22:20:59",
+  "LPLWS (range): 165 reading(s) fetched; 2574 cached from 33 mills, covered 2026-10-17T21:00:59 to 2026-10-17T22:20:59"
+ ],
+ "field_mill_colors": [
+  [
+   500.0,
+   "#3FB97A"
+  ],
+  [
+   1000.0,
+   "#F2C14E"
+  ],
+  [
+   null,
+   "#E5484D"
+  ]
+ ]
+}
