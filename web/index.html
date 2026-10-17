@@ -314,7 +314,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v21";
+const VIEWER_VERSION = "mrms-v22";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -411,7 +411,7 @@ function show(i){
   $("now").textContent = hhmm(f.valid);
   pads(f);
   srcLine(f);
-  if (pin) readout(pin.lat, pin.lon, pin.label);
+  if (pin) (pin.mill != null ? millReadout(pin.mill) : readout(pin.lat, pin.lon, pin.label));
   if (xsOn) drawSection();
 }
 
@@ -510,8 +510,54 @@ function onTap(ev){
     redraw(); drawSection();
     return;
   }
+  const mill = millAt(ev.clientX - r.left, ev.clientY - r.top, r.width, r.height);
+  if (mill){
+    pin = {lat: mill[1], lon: mill[2], label: null, mill: mill[0]};
+    millReadout(mill[0]); redraw();
+    return;
+  }
   pin = {lat, lon, label: null};
   readout(lat, lon, null); redraw();
+}
+// The field mill drawn nearest a tap, if within MILL_HIT_PX on screen.
+const MILL_HIT_PX = 12;
+function millAt(px, py, w, h){
+  const f = frameAt(idx), L = (f && f.field_mills) || [];
+  let best = null, bd = MILL_HIT_PX;
+  L.forEach(m => { const [fx, fy] = toFrac(m[1], m[2]);
+    const d = Math.hypot(fx * w - px, fy * h - py); if (d <= bd){ bd = d; best = m; } });
+  return best;
+}
+const nmBetween = (a1, o1, a2, o2) => Math.hypot((a1 - a2) * 60, (o1 - o2) * 60 * Math.cos(a1 * Math.PI / 180));
+function millReadout(id){
+  const f = frameAt(idx), box = $("readout");
+  const m = ((f && f.field_mills) || []).find(r => r[0] === id);
+  if (!m){
+    box.innerHTML = `<h3>Field mill FM${String(id).padStart(2, "0")}</h3><div class="hint">frame ${hhmm(f.valid)}</div>
+      <div class="ro-how" style="margin-top:10px">No reading from this mill in this frame's 15-minute window.</div>`;
+    return;
+  }
+  const [, lat, lon, mx, last, n, ok, lastT] = m;
+  const win = (M.thresholds && M.thresholds.field_mill_window_min) || 15;
+  const thr = (M.thresholds && M.thresholds.field_mill_vm) || 1000;
+  const reach = (M.thresholds && M.thresholds.field_mill_nm) || 5;
+  const pads = Object.entries(M.sites).map(([p, [a, o]]) => [p, nmBetween(a, o, lat, lon)])
+    .filter(([, d]) => d <= reach).sort((a, b) => a[1] - b[1]);
+  const lamp = ok ? `<span class="lamp" style="background:${fmColor(mx)}"></span>` : `<span class="lamp s-1"></span>`;
+  box.innerHTML = `
+    <h3>Field mill FM${String(id).padStart(2, "0")}</h3>
+    <div class="hint">frame ${hhmm(f.valid)} · ${lat.toFixed(3)}° N, ${Math.abs(lon).toFixed(3)}° W</div>
+    <div class="ro-status">${lamp}${ok ? `${last} V/m now` : "Not reporting"}</div>
+    <dl>
+      <dt>Latest</dt><dd>${last} V/m${lastT ? ` at ${lastT}` : ""}</dd>
+      <dt>${win}-min max |E|</dt><dd${mx >= thr ? ' style="color:#FFC2C3"' : ""}>${mx.toLocaleString("en-US")} V/m${
+        !ok ? "" : mx >= thr ? ` · <b>violates 4.1.2 within ${reach} nmi</b>` : ` · below ${thr.toLocaleString("en-US")}`}</dd>
+      <dt>Minutes</dt><dd>${n} of ${win} reported</dd>
+      <dt>Pads within ${reach} nmi</dt><dd>${pads.length ? pads.map(([p, d]) => `${p} ${d.toFixed(1)}`).join(", ") + " nmi" : "none"}</dd>
+    </dl>
+    ${ok ? "" : `<div class="ro-how" style="margin-top:10px">Read exactly 0 for the whole window, so it is treated as
+      dead or offline rather than calm, and does not count toward evaluating 4.1.2.</div>`}
+    <div class="ro-how" style="margin-top:10px">Tap away from the mill for the point readout.</div>`;
 }
 $("map-left").addEventListener("click", onTap);
 $("map-right").addEventListener("click", onTap);
@@ -561,8 +607,18 @@ function fmCoverNote(f){
   if (s.coverage === "partial") return " · <span style=\"color:var(--yellow)\">window incomplete: mill data stopped part-way</span>";
   return "";
 }
-function fmRow(d, n, c, f){
+function fmRow(d, n, c, f, label){
   if (d.length < 14 * n) return "";
+  // A pad tap uses the pad's own summary: exact values, and the mills behind them.
+  const P = label && f.pads && f.pads[label] && f.pads[label].field_mill;
+  if (P){
+    const fm = id => "FM" + String(id).padStart(2, "0");
+    const hot = P.max15 >= ((M.thresholds && M.thresholds.field_mill_vm) || 1000);
+    return `<dt>Field mill</dt><dd${hot ? ' style="color:#FFC2C3"' : ""}>${P.max15.toLocaleString("en-US")} V/m ` +
+           `15-min max (${fm(P.max15_mill)})${hot ? " · <b>violates 4.1.2</b>" : ""}<br>` +
+           `<span style="color:var(--steel)">now ${P.now} V/m (${fm(P.now_mill)}), median ${P.median_now} ` +
+           `of ${P.n} mill${P.n === 1 ? "" : "s"} within 5 nmi</span>${fmCoverNote(f)}</dd>`;
+  }
   const v = d[13 * n + c];
   if (v === 255){
     const why = f.sources && f.sources.field_mills && f.sources.field_mills.coverage === "none"
@@ -631,7 +687,7 @@ function readout(lat, lon, label){
         ${volRows(d, n, c)}
         ${sepRow(d, n, c)}
         ${ltgRow(d, n, c, f)}
-        ${fmRow(d, n, c, f)}
+        ${fmRow(d, n, c, f, label)}
         ${satRow(d, n, c)}
       </dl>
       ${cls === 7 ? `<div class="ro-how">Detached-anvil drift: ${f.anvil_wind ? f.anvil_wind.label
@@ -1050,7 +1106,14 @@ function pads(f){
     const num = [];
     if (p.max_dbz_10nm != null) num.push(`${p.max_dbz_10nm} dBZ`);
     if (p.nearest_echo_nm != null && p.nearest_echo_nm < 60) num.push(`echo ${p.nearest_echo_nm} nmi`);
-    if (p.field_mill_vm != null) num.push(`<span style="color:${fmColor(p.field_mill_vm)}">EFM ${p.field_mill_vm} V/m</span>`);
+    if (p.field_mill){
+      const q = p.field_mill, fm = id => "FM" + String(id).padStart(2, "0");
+      // each number in its own colour: a past spike must not make the current reading look hot
+      num.push(`<span title="Mills within 5 nmi: 15-min max ${q.max15} V/m (${fm(q.max15_mill)}); ` +
+               `latest minute highest ${q.now} V/m (${fm(q.now_mill)}), median ${q.median_now} of ${q.n}">` +
+               `<span style="color:${fmColor(q.max15)}">EFM ${q.max15} max</span> · ` +
+               `<span style="color:${fmColor(Math.abs(q.now))}">${q.now} now</span></span>`);
+    } else if (p.field_mill_vm != null) num.push(`<span style="color:${fmColor(p.field_mill_vm)}">EFM ${p.field_mill_vm} V/m</span>`);
     const reason = p.status === 2 ? p.red.map(k => SHORT[k] || k).join(", ")
                  : p.status === 1 ? (p.yellow.length ? "Within 2 nmi of: " +
                      p.yellow.map(k => lcFirst(SHORT[k] || k)).join(", ")
