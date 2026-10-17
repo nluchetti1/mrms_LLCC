@@ -16,7 +16,7 @@
     --line:#2C3A4D; --line-2:#3A4B61;
     --steel:#9FB2C4; --dim:#6F8296; --ink:#E8EEF3;
     --red:#E5484D; --yellow:#F2C14E; --green:#3FB97A; --grey:#6B7785;
-    --shell:1320px;
+    --shell:1760px;
   }
   *{box-sizing:border-box}
   /* The `hidden` attribute is only a user-agent display:none, and any author rule that sets
@@ -27,20 +27,20 @@
   html,body{margin:0;padding:0}
   body{background:var(--bg); color:var(--ink);
        font-family:"Barlow",system-ui,sans-serif; font-size:15px; line-height:1.45;
-       font-variant-numeric:tabular-nums; padding:clamp(12px,2.2vw,26px)}
+       font-variant-numeric:tabular-nums; padding:clamp(10px,1.6vw,20px)}
   .shell{max-width:var(--shell); margin:0 auto}
   button,input,select{font:inherit}
   :focus-visible{outline:2px solid var(--steel); outline-offset:2px}
 
   /* ---- header -------------------------------------------------------------------- */
-  header{display:grid; grid-template-columns:1fr auto; gap:14px 24px; align-items:end;
-         padding-bottom:14px; border-bottom:1px solid var(--line)}
-  .brand{font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:clamp(28px,4.2vw,44px);
+  header{display:grid; grid-template-columns:1fr auto; gap:8px 24px; align-items:end;
+         padding-bottom:8px; border-bottom:1px solid var(--line)}
+  .brand{font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:clamp(26px,3vw,34px);
          line-height:.9; letter-spacing:.01em}
   .brand span{color:var(--steel); font-weight:500}
-  .tag{color:var(--steel); font-size:14px; margin-top:6px; max-width:62ch}
+  .tag{color:var(--steel); font-size:13.5px; margin-top:4px; max-width:120ch}
   .clock{text-align:right}
-  .clock .t{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:clamp(26px,3.6vw,38px);
+  .clock .t{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:clamp(24px,2.8vw,32px);
             line-height:1}
   .clock .d{color:var(--steel); font-size:14px; margin-top:4px}
   .age{display:inline-block; margin-left:8px; padding:1px 8px; border-radius:999px;
@@ -51,7 +51,7 @@
   .stale{display:none; margin:14px 0 0; padding:10px 14px; border-radius:6px;
          background:#3A1517; border:1px solid var(--red); color:#FFC2C3; font-weight:500}
   .stale.on{display:block}
-  .srcline{display:flex; flex-wrap:wrap; gap:4px 14px; margin:-4px 0 10px; font-size:12.5px;
+  .srcline{display:flex; flex-wrap:wrap; gap:4px 14px; margin:-2px 0 8px; font-size:12.5px;
            color:var(--steel)}
   .srcline b{font-weight:600; color:var(--ink)}
   .srcline .bad{color:#FFC2C3} .srcline .warn{color:var(--yellow)}
@@ -59,7 +59,7 @@
   .marks svg{vertical-align:-2px; margin-right:4px}
 
   /* ---- controls ------------------------------------------------------------------ */
-  .bar{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; margin:16px 0 12px}
+  .bar{display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center; margin:10px 0 8px}
   .seg{display:inline-flex; background:var(--panel); border:1px solid var(--line);
        border-radius:6px; padding:2px}
   .seg button{background:none; border:0; color:var(--steel); padding:6px 12px; cursor:pointer;
@@ -75,12 +75,30 @@
   .export:hover{background:var(--panel-2)}
 
   /* ---- maps ---------------------------------------------------------------------- */
-  .maps{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  /* ---- work area: maps, timeline and section on the left; readout and pads in a sticky
+     column on the right once the screen is wide enough, so everything is on one screen ---- */
+  .work{display:block}
+  .side{display:grid; gap:12px; margin-top:12px}
+  @media (min-width:1180px){
+    .work{display:grid; grid-template-columns:minmax(0,1fr) clamp(340px,24vw,430px); gap:12px;
+          align-items:start}
+    .side{position:sticky; top:10px; margin-top:0; max-height:calc(100vh - 20px); overflow:auto;
+          scrollbar-width:thin; align-content:start}
+    .side .row{grid-template-columns:16px 74px 1fr; padding:7px 12px}
+    .side .pname{white-space:nowrap; font-size:17px}
+    .side .pnum{grid-column:3; text-align:left}
+    .side .pclass{font-size:13px}
+  }
+  @media (min-width:900px) and (max-width:1179px){
+    .side{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); align-items:start}
+    .side .readout{order:2}
+  }
+  .maps{display:grid; grid-template-columns:1fr 1fr; gap:12px}
   .maps.overlay{grid-template-columns:1fr}
   @media (max-width:760px){ .maps{grid-template-columns:1fr} }
   .panel{background:var(--panel); border:1px solid var(--line); border-radius:8px;
-         padding:10px 10px 8px}
-  .panel h3{margin:0 0 8px; font-family:"Barlow Condensed",sans-serif; font-weight:600;
+         padding:8px 10px 8px}
+  .panel h3{margin:0 0 6px; font-family:"Barlow Condensed",sans-serif; font-weight:600;
             font-size:18px; letter-spacing:.01em; display:flex; justify-content:space-between;
             align-items:baseline}
   .panel h3 small{font-family:"Barlow",sans-serif; font-weight:400; font-size:13px;
@@ -91,8 +109,8 @@
   .map{position:relative; background:var(--well); border-radius:4px; overflow:hidden;
        line-height:0; cursor:crosshair; touch-action:manipulation; --ar:.882;
        aspect-ratio:var(--ar); margin:0 auto;
-       width:min(100%, max(calc(300px * var(--ar)), calc((100vh - 330px) * var(--ar))))}
-  .maps.overlay .map{width:min(100%, max(calc(320px * var(--ar)), calc((100vh - 300px) * var(--ar))))}
+       width:min(100%, max(calc(300px * var(--ar)), calc((100vh - 378px) * var(--ar))))}
+  .maps.overlay .map{width:min(100%, max(calc(320px * var(--ar)), calc((100vh - 320px) * var(--ar))))}
   .map img{display:block; width:100%; height:100%; image-rendering:pixelated}
   .map img.layer{position:absolute; inset:0}
   .map svg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
@@ -116,7 +134,7 @@
   .reflticks .unit{right:0; left:auto; transform:none}
 
   /* ---- timeline ------------------------------------------------------------------ */
-  .timeline{display:flex; align-items:center; gap:14px; margin:14px 0 6px; flex-wrap:wrap}
+  .timeline{display:flex; align-items:center; gap:14px; margin:8px 0 4px; flex-wrap:wrap}
   .play{background:var(--ink); color:var(--bg); border:0; border-radius:6px; padding:8px 16px;
         font-weight:600; cursor:pointer; min-width:84px}
   .scrubwrap{flex:1; min-width:220px}
@@ -126,9 +144,6 @@
   .now{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:20px; min-width:7ch}
 
   /* ---- lower: pads + readout ----------------------------------------------------- */
-  .lower{display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:14px;
-         margin-top:14px}
-  @media (max-width:900px){ .lower{grid-template-columns:1fr} }
 
   .poll{background:var(--panel); border:1px solid var(--line); border-radius:8px}
   .poll .head{display:flex; justify-content:space-between; align-items:baseline;
@@ -181,11 +196,17 @@
   .def b{font-weight:600}
   .def p{grid-column:2; margin:0; color:var(--steel); font-size:14px; line-height:1.45}
   .ro-how{color:var(--steel); font-size:13.5px; line-height:1.45; margin:-4px 0 12px}
-  .xs{margin-top:14px}
+  .xs{margin-top:10px}
   .xsh{display:flex; gap:16px; align-items:baseline}
   .xsh .chk{font-size:13px}
   .xswrap{position:relative; background:var(--well); border-radius:4px; line-height:0}
-  #xs-canvas{display:block; width:100%; height:320px}
+  #xs-canvas{display:block; width:100%; height:300px; cursor:crosshair; touch-action:none}
+  /* The hover cursor lives on its own canvas so tracking the pointer never re-renders the section */
+  #xs-hover{position:absolute; left:0; top:0; width:100%; height:300px; pointer-events:none}
+  .xshov{fill:#FFD166; stroke:#141D29; stroke-width:1.5; vector-effect:non-scaling-stroke}
+  .xshovr{fill:none; stroke:#FFD166; stroke-width:1.8; vector-effect:non-scaling-stroke}
+  .xshovh{fill:none; stroke:#141D29; stroke-width:4.5; stroke-opacity:.85; vector-effect:non-scaling-stroke}
+  .xshovl{stroke:#FFD166; stroke-width:1.2; stroke-dasharray:3 3; vector-effect:non-scaling-stroke}
   .xsmsg{position:absolute; inset:0; display:grid; place-items:center; color:var(--steel);
          font-size:14px; line-height:1.4; padding:20px; text-align:center; pointer-events:none}
   .xsline{stroke:#FFFFFF; stroke-width:2; vector-effect:non-scaling-stroke; stroke-dasharray:6 4}
@@ -230,6 +251,8 @@
 </div>
 <div class="srcline" id="srcline" hidden></div>
 
+<div class="work">
+<div class="main">
 <div class="maps" id="maps">
   <section class="panel" id="p-left">
     <h3><span id="left-title">Status</span><small id="left-sub">every cell as the flight path</small></h3>
@@ -263,24 +286,26 @@
 </div>
 
 <section class="panel xs" id="xs-panel" hidden>
-  <h3><span>Vertical cross-section <small style="font-weight:400">tap it for the readout at that point</small></span>
+  <h3><span>Vertical cross-section <small style="font-weight:400">hover to track it on the maps · tap for the readout</small></span>
     <span class="xsh"><label class="chk"><input type="checkbox" id="xs-smooth" checked> Smooth</label>
     <small id="xs-sub">tap a start point on either map</small></span></h3>
-  <div class="xswrap"><canvas id="xs-canvas" height="320"></canvas>
+  <div class="xswrap"><canvas id="xs-canvas" height="300"></canvas><canvas id="xs-hover"></canvas>
     <div class="xsmsg" id="xs-msg"></div></div>
   <div class="scale" id="xs-legend"></div>
 </section>
 
-<div class="lower">
+</div>
+<aside class="side">
+  <section class="readout" id="readout">
+    <h3>Point readout</h3>
+    <div class="hint">Tap any point on either map, or a pad, to see what the radar
+      classifies it as and which rules it trips.</div>
+  </section>
   <section class="poll">
     <div class="head"><h3>Pads</h3><div class="tally" id="tally"></div></div>
     <div id="pads"></div>
   </section>
-  <section class="readout" id="readout">
-    <h3>Point readout</h3>
-    <div class="hint">Tap any point on either map, or a pad on the left, to see what the radar
-      classifies it as and which rules it trips.</div>
-  </section>
+</aside>
 </div>
 
 <section class="how" id="how"></section>
@@ -289,7 +314,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v20";
+const VIEWER_VERSION = "mrms-v21";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -308,6 +333,10 @@ let M = null, idx = 0, timer = null, STAMP = "", mode = "status", view = "pair",
 let firstLoad = true;
 let xsOn = false, xsA = null, xsB = null;
 let xsT = null, XSG = null;            // tapped position along the section (0..1), and its geometry
+// Hover link between the maps and the section: {t (0..1 along A-B), off (nmi from the line),
+// z (km, section hover only), src "map"|"xs", lat/lon of the pointer for map hovers}.
+let xsHover = null;
+const HOVER_OFF_NM = 6;                // map pointer must be this close to the line to track it
 const VOLS = {};
 const DATA = {};
 const $ = id => document.getElementById(id);
@@ -431,6 +460,18 @@ function drawSvg(svgId, imgId){
     }
     out += `<circle class="xsend" cx="${ax * W}" cy="${ay * H}" r="5"/>
             <text class="xslbl" x="${ax * W + 8}" y="${ay * H - 6}">A</text>`;
+  }
+  if (xsHover && xsA && xsB && xsOn){
+    const [hx, hy] = toFrac(...sectionPoint(xsHover.t));
+    if (xsHover.src === "map" && xsHover.off >= 0.3){
+      const [qx, qy] = toFrac(xsHover.lat, xsHover.lon);
+      out += `<line class="xshovl" x1="${qx * W}" y1="${qy * H}" x2="${hx * W}" y2="${hy * H}"/>`;
+    }
+    // SVG units are the image's native pixels; scale so the marker is ~9 px on screen at any size
+    const k = W / (svg.clientWidth || W);
+    out += `<circle class="xshovh" cx="${hx * W}" cy="${hy * H}" r="${9 * k}"/>
+            <circle class="xshovr" cx="${hx * W}" cy="${hy * H}" r="${9 * k}"/>
+            <circle class="xshov" cx="${hx * W}" cy="${hy * H}" r="${4 * k}"/>`;
   }
   if (pin){
     const [px, py] = toFrac(pin.lat, pin.lon);
@@ -679,7 +720,7 @@ async function drawSection(){
 
   const g = M.grid, n = g.ny * g.nx, H = M.levels_km, L = H.length;
   const dpr = window.devicePixelRatio || 1;
-  const Wc = cv.clientWidth, Hc = 320;
+  const Wc = cv.clientWidth, Hc = 300;
   cv.width = Wc * dpr; cv.height = Hc * dpr;
   const x = cv.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0);
   x.clearRect(0, 0, Wc, Hc);
@@ -807,7 +848,7 @@ async function drawSection(){
     x.fillText(lbl, pl + 6, y - 3);
   });
   x.font = '500 11.5px "Barlow", sans-serif';
-  XSG = {pl, PW, pt, PH, nmi: km / 1.852};
+  XSG = {pl, PW, pt, PH, nmi: km / 1.852, Wc, Hc, ZMAX, f, vol, dat};
   if (xsT != null){
     const xx = pl + PW * xsT;
     x.strokeStyle = "#FFFFFF"; x.lineWidth = 1.5; x.setLineDash([]);
@@ -842,7 +883,132 @@ async function drawSection(){
     `<span><i style="background:#B892F2"></i>Second strip: cloud class</span>` +
     `<span><i style="background:#26313F"></i>Radar cannot see this low</span>` +
     `<span>Isotherms: ${f.iso_source || "estimated"}</span>`;
+  drawHover();
 }
+
+// ---- section <-> map hover link -------------------------------------------------------
+// Where a map point falls along A-B (t) and how far off the line it is, on a local flat grid -
+// the same geometry the section uses to place pads.
+function projectOnSection(lat, lon){
+  if (!xsA || !xsB) return null;
+  const k = Math.cos((xsA.lat + xsB.lat) / 2 * Math.PI / 180);
+  const ax = (xsB.lon - xsA.lon) * 111.32 * k, ay = (xsB.lat - xsA.lat) * 111.32;
+  const px = (lon - xsA.lon) * 111.32 * k, py = (lat - xsA.lat) * 111.32;
+  const L2 = ax * ax + ay * ay;
+  if (!L2) return null;
+  const t = (px * ax + py * ay) / L2;
+  return {t, off: Math.hypot(px - t * ax, py - t * ay) / 1.852};
+}
+function sectionPoint(t){
+  return [xsA.lat + (xsB.lat - xsA.lat) * t, xsA.lon + (xsB.lon - xsA.lon) * t];
+}
+// Temperature at height z from the frame's isotherm heights, interpolated between levels.
+function tempAt(f, z){
+  const I = f && f.isotherms_km;
+  if (!I) return null;
+  const P = Object.entries(I).map(([k, h]) => [parseFloat(k), h]).filter(p => p[1] != null)
+    .sort((a, b) => a[1] - b[1]);
+  if (P.length < 2 || z < P[0][1] || z > P[P.length - 1][1]) return null;
+  for (let q = 0; q < P.length - 1; q++){
+    const [t0, h0] = P[q], [t1, h1] = P[q + 1];
+    if (z >= h0 && z <= h1) return t0 + (t1 - t0) * (h1 > h0 ? (z - h0) / (h1 - h0) : 0);
+  }
+  return null;
+}
+// What the hover readout says, as lines of text.
+function hoverInfo(h){
+  const G = XSG, out = [];
+  out.push(`${(h.t * G.nmi).toFixed(1)} nmi from A` +
+           (h.src === "map" && h.off >= 0.3 ? ` · pointer ${h.off.toFixed(1)} nmi off the line` : ""));
+  const [lat, lon] = sectionPoint(h.t), g = M.grid, n = g.ny * g.nx;
+  const j = Math.round((g.lat_n - lat) / g.dlat), i = Math.round((lon - g.lon_w) / g.dlon);
+  const inside = j >= 0 && i >= 0 && j < g.ny && i < g.nx;
+  if (h.z != null){
+    const T = tempAt(G.f, h.z), H = M.levels_km || [];
+    out.push(`${h.z.toFixed(1)} km · ${Math.round(h.z * 3.28084 * 10) / 10} kft` +
+             (T != null ? ` · ${T >= 0 ? "+" : "−"}${Math.abs(T).toFixed(0)} °C` : ""));
+    if (inside && G.vol && H.length){
+      let k = 0;
+      for (let q = 1; q < H.length; q++) if (Math.abs(H[q] - h.z) < Math.abs(H[k] - h.z)) k = q;
+      const v = G.vol[k * n + j * g.nx + i];
+      out.push(v === 254 ? "Radar cannot see this low here" : v === 255 ? "No echo" : `${(v / 2).toFixed(1)} dBZ`);
+    }
+  }
+  if (inside && G.dat){
+    const c = j * g.nx + i, st = M.status[String(G.dat[c] - 1)], cl = G.dat[n + c];
+    out.push(`${st ? st.name : ""}${cl ? " · " + M.classes[cl].name : ""}`);
+  }
+  return out;
+}
+function drawHover(){
+  const c = $("xs-hover");
+  if (!c || !c.getContext) return;
+  const G = XSG, dpr = window.devicePixelRatio || 1;
+  if (G && (c.width !== Math.round(G.Wc * dpr) || c.height !== Math.round(G.Hc * dpr))){
+    c.width = Math.round(G.Wc * dpr); c.height = Math.round(G.Hc * dpr);
+  }
+  const x = c.getContext("2d");
+  x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  x.clearRect(0, 0, G ? G.Wc : c.width, G ? G.Hc : c.height);
+  if (!G || !xsHover || !xsOn || !xsA || !xsB) return;
+  const h = xsHover, xx = G.pl + G.PW * h.t, top = 2, bot = G.pt + G.PH;
+  x.strokeStyle = "#FFD166"; x.fillStyle = "#FFD166"; x.lineWidth = 1.5;
+  x.beginPath(); x.moveTo(xx + 0.5, top); x.lineTo(xx + 0.5, bot); x.stroke();
+  x.beginPath(); x.moveTo(xx - 5, bot + 7); x.lineTo(xx + 5, bot + 7); x.lineTo(xx, bot); x.fill();
+  let yy = null;
+  if (h.z != null){
+    yy = G.pt + G.PH * (1 - Math.min(h.z, G.ZMAX) / G.ZMAX);
+    x.globalAlpha = 0.6; x.setLineDash([3, 3]);
+    x.beginPath(); x.moveTo(G.pl, yy + 0.5); x.lineTo(G.pl + G.PW, yy + 0.5); x.stroke();
+    x.setLineDash([]); x.globalAlpha = 1;
+    x.beginPath(); x.arc(xx + 0.5, yy + 0.5, 3.5, 0, 2 * Math.PI); x.fill();
+  }
+  // label box beside the cursor, flipped to the left near the right edge
+  const lines = hoverInfo(h);
+  x.font = '600 12px "Barlow", sans-serif';
+  const w = Math.max(...lines.map(l => x.measureText(l).width || l.length * 6.5)) + 14;
+  const bh = lines.length * 16 + 8;
+  let bx = xx + 10; if (bx + w > G.pl + G.PW) bx = xx - 10 - w;
+  let by = (yy != null ? yy : G.pt + 8) - bh / 2;
+  by = Math.max(G.pt - 2, Math.min(by, G.pt + G.PH - bh));
+  x.fillStyle = "rgba(17,26,37,.92)"; x.strokeStyle = "#FFD166"; x.lineWidth = 1;
+  x.fillRect(bx, by, w, bh); x.strokeRect(bx + 0.5, by + 0.5, w - 1, bh - 1);
+  x.fillStyle = "#E8EEF3"; x.textAlign = "left";
+  lines.forEach((l, q) => {
+    x.font = (q === 0 ? "600 " : "500 ") + '12px "Barlow", sans-serif';
+    x.fillText(l, bx + 7, by + 17 + q * 16);
+  });
+}
+let hoverRaf = null;
+function setHover(h){
+  xsHover = h;
+  const paint = () => { hoverRaf = null; drawHover(); drawSvg("svg-left", "img-left"); drawSvg("svg-right", "img-right"); };
+  if (typeof requestAnimationFrame === "function"){ if (!hoverRaf) hoverRaf = requestAnimationFrame(paint); }
+  else paint();
+}
+function onMapMove(ev){
+  if (!M || !xsOn || !xsA || !xsB) return;
+  const r = ev.currentTarget.getBoundingClientRect();
+  const [lat, lon] = fromFrac(Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width)),
+                              Math.min(1, Math.max(0, (ev.clientY - r.top) / r.height)));
+  const p = projectOnSection(lat, lon);
+  setHover(p && p.t >= 0 && p.t <= 1 && p.off <= HOVER_OFF_NM
+    ? {t: p.t, off: p.off, z: null, src: "map", lat, lon} : null);
+}
+["map-left", "map-right"].forEach(id => {
+  $(id).addEventListener("pointermove", onMapMove);
+  $(id).addEventListener("pointerleave", () => { if (xsHover && xsHover.src === "map") setHover(null); });
+});
+$("xs-canvas").addEventListener("pointermove", e => {
+  if (!XSG || !xsA || !xsB) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  const px = e.clientX - r.left, py = e.clientY - r.top;
+  const t = (px - XSG.pl) / XSG.PW;
+  if (t < 0 || t > 1){ setHover(null); return; }
+  const z = XSG.ZMAX * (1 - (py - XSG.pt) / XSG.PH);
+  setHover({t, off: 0, z: z >= 0 && z <= XSG.ZMAX ? z : null, src: "xs"});
+});
+$("xs-canvas").addEventListener("pointerleave", () => setHover(null));
 addEventListener("resize", () => { if (xsOn) drawSection(); });
 // Tap the section: the readout jumps to that exact point along the line - which rules fire there,
 // and how far the nearest lightning is - with a cursor on the section and a crosshair on the maps.
@@ -971,12 +1137,12 @@ function drawMarks(){
   const plus = c => sym(`<path d="M7 1v12M1 7h12" stroke="#141D29" stroke-width="4"/><path d="M7 1v12M1 7h12" stroke="${c}" stroke-width="2"/>`);
   const dot = (c, r = 5, fill = true) => sym(`<circle cx="7" cy="7" r="${r}" fill="${fill ? c : "none"}" stroke="${fill ? "#E8EEF3" : c}" stroke-width="1.4"/>`);
   $("marks").innerHTML =
-    `<span>${plus("#FB923C")}MERLIN cloud-to-ground</span>` +
-    `<span>${sym('<circle cx="7" cy="7" r="2.4" fill="#fff" stroke="#141D29" stroke-width="1"/>')}MERLIN cloud-to-cloud</span>` +
-    `<span>${sym('<path d="M3 3l8 8M11 3l-8 8" stroke="#fff" stroke-width="1.6"/>')}GLM flash</span>` +
-    `<span>${plus("#FDE047")}NLDN cloud-to-ground</span>` +
-    `<span>${dot(FM_COLORS[0][1])}${dot(FM_COLORS[1][1])}${dot(FM_COLORS[2][1])}Field mill, 15-min max |E|: under 500, under 1,000, 1,000+ V/m</span>` +
-    `<span>${dot("#8FA3B6", 4.5, false)}Mill not reporting</span>`;
+    `<span title="MERLIN cloud-to-ground">${plus("#FB923C")}MERLIN CG</span>` +
+    `<span title="MERLIN cloud-to-cloud">${sym('<circle cx="7" cy="7" r="2.4" fill="#fff" stroke="#141D29" stroke-width="1"/>')}MERLIN CC</span>` +
+    `<span title="GOES-19 GLM flash">${sym('<path d="M3 3l8 8M11 3l-8 8" stroke="#fff" stroke-width="1.6"/>')}GLM</span>` +
+    `<span title="NLDN cloud-to-ground">${plus("#FDE047")}NLDN CG</span>` +
+    `<span title="Field mill, 15-minute max |E|">${dot(FM_COLORS[0][1])}${dot(FM_COLORS[1][1])}${dot(FM_COLORS[2][1])}Mill &lt;500 · &lt;1,000 · 1,000+ V/m</span>` +
+    `<span>${dot("#8FA3B6", 4.5, false)}not reporting</span>`;
 }
 // Which feeds this frame was scored with - a missing feed must be visible, not silent.
 function srcLine(f){
@@ -1022,7 +1188,7 @@ $("rings").onchange = redraw;
 $("xs-btn").onclick = () => {
   xsOn = !xsOn;
   $("xs-btn").setAttribute("aria-pressed", String(xsOn));
-  if (!xsOn){ xsA = xsB = null; xsT = null; }
+  if (!xsOn){ xsA = xsB = null; xsT = null; xsHover = null; }
   redraw(); drawSection();
   if (xsOn) $("xs-panel").scrollIntoView({behavior: "smooth", block: "nearest"});
 };
