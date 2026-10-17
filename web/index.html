@@ -51,6 +51,12 @@
   .stale{display:none; margin:14px 0 0; padding:10px 14px; border-radius:6px;
          background:#3A1517; border:1px solid var(--red); color:#FFC2C3; font-weight:500}
   .stale.on{display:block}
+  .srcline{display:flex; flex-wrap:wrap; gap:4px 14px; margin:-4px 0 10px; font-size:12.5px;
+           color:var(--steel)}
+  .srcline b{font-weight:600; color:var(--ink)}
+  .srcline .bad{color:#FFC2C3} .srcline .warn{color:var(--yellow)}
+  .marks{display:flex; flex-wrap:wrap; gap:4px 12px; margin-top:6px; font-size:12px; color:var(--steel)}
+  .marks svg{vertical-align:-2px; margin-right:4px}
 
   /* ---- controls ------------------------------------------------------------------ */
   .bar{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; margin:16px 0 12px}
@@ -199,8 +205,8 @@
 <header>
   <div>
     <div class="brand">CloudScope <span>Radar</span></div>
-    <div class="tag">Live MRMS radar and lightning scored against the lightning launch commit
-      criteria, as if the flight path ran through every point on the map.</div>
+    <div class="tag">Live MRMS radar, lightning and field mills scored against the lightning
+      launch commit criteria, as if the flight path ran through every point on the map.</div>
   </div>
   <div class="clock">
     <div class="t" id="clock">--:--Z</div>
@@ -222,6 +228,7 @@
   <label class="chk"><input type="checkbox" id="rings" checked> Range rings</label>
   <a class="export" id="gif" download hidden>Export GIF</a>
 </div>
+<div class="srcline" id="srcline" hidden></div>
 
 <div class="maps" id="maps">
   <section class="panel" id="p-left">
@@ -235,13 +242,14 @@
     <div class="scale" id="legend-left"></div>
   </section>
   <section class="panel" id="p-right">
-    <h3>Radar <small>composite reflectivity · GLM flashes × · NLDN CG +, last 30 min</small></h3>
+    <h3>Radar <small>composite reflectivity · lightning, last 30 min · field mills, last 15 min</small></h3>
     <div class="map" id="map-right">
       <img id="img-right" alt="Composite reflectivity">
       <svg id="svg-right" aria-hidden="true"></svg>
     </div>
     <div class="refl" id="refl"></div>
     <div class="reflticks" id="reflticks"></div>
+    <div class="marks" id="marks"></div>
   </section>
 </div>
 
@@ -281,7 +289,7 @@
 
 <script>
 // Bump on every viewer change. The header shows it, so a stale page is visible at a glance.
-const VIEWER_VERSION = "mrms-v19";
+const VIEWER_VERSION = "mrms-v20";
 const STALE_WARN_MIN = 12, STALE_BAD_MIN = 20, REFRESH_S = 60;
 const RINGS_NM = [3, 5, 10, 20];
 
@@ -290,7 +298,11 @@ const SHORT = {
   cumulus_5nm: "Cumulus colder than −10 °C within 5 nmi", cumulus_10nm: "Cumulus colder than −20 °C within 10 nmi",
   attached_anvil: "Attached anvil within 3 nmi", detached_anvil: "Detached anvil within 3 nmi",
   disturbed: "Disturbed weather", thick_layer: "Thick cloud layer, 0 to −10 °C",
+  field_mill: "Field mill 1,000 V/m or more within 5 nmi",
 };
+// Field-mill marker colours, matched to FM_COLORS in mrms_classify.py.
+const FM_COLORS = [[500, "#3FB97A"], [1000, "#F2C14E"], [Infinity, "#E5484D"]];
+const fmColor = v => FM_COLORS.find(([lim]) => v < lim)[1];
 
 let M = null, idx = 0, timer = null, STAMP = "", mode = "status", view = "pair", pin = null;
 let firstLoad = true;
@@ -333,7 +345,7 @@ function boot(prevValid){
   // studying an older one. Follow the newest only if that is where they already were.
   const keep = prevValid ? M.frames.findIndex(f => f.valid === prevValid) : -1;
   idx = keep >= 0 ? keep : M.frames.length - 1;
-  drawRefl(); drawTicks(); drawMethod(); drawHow(); legendLeft(); gifLink();
+  drawRefl(); drawMarks(); drawTicks(); drawMethod(); drawHow(); legendLeft(); gifLink();
   M.frames.forEach(f => Object.values(f.images).forEach(u => { const i = new Image(); i.src = bust(u); }));
   show(idx);
   checkStale();
@@ -369,6 +381,7 @@ function show(i){
   $("scrub").value = i;
   $("now").textContent = hhmm(f.valid);
   pads(f);
+  srcLine(f);
   if (pin) readout(pin.lat, pin.lon, pin.label);
   if (xsOn) drawSection();
 }
@@ -499,6 +512,28 @@ function ltgRow(d, n, c, f){
   return v === 255 ? `<dt>Lightning</dt><dd>None within 50 nmi, last 30 min${src}</dd>`
                    : `<dt>Lightning</dt><dd>Nearest ${(v / 5).toFixed(1)} nmi, last 30 min${src}</dd>`;
 }
+// Surface electric field (plane 13): the strongest 15-minute |E| among reporting mills within 5 nmi.
+function fmCoverNote(f){
+  const s = f.sources && f.sources.field_mills;
+  if (!s) return "";
+  if (s.coverage === "sampled") return " · <span style=\"color:var(--yellow)\">sampled: one minute per run, a short spike can be missed</span>";
+  if (s.coverage === "partial") return " · <span style=\"color:var(--yellow)\">window incomplete: mill data stopped part-way</span>";
+  return "";
+}
+function fmRow(d, n, c, f){
+  if (d.length < 14 * n) return "";
+  const v = d[13 * n + c];
+  if (v === 255){
+    const why = f.sources && f.sources.field_mills && f.sources.field_mills.coverage === "none"
+      ? "no field-mill data for this frame" : "no reporting mill within 5 nmi";
+    return `<dt>Field mill</dt><dd style="color:var(--dim)">Not evaluated: ${why}</dd>`;
+  }
+  // plane 13: 10 V/m steps below 1,000 (code 100 = exactly 1,000), 100 V/m steps above
+  const vm = v === 254 ? "over 16,300" : (v < 100 ? v * 10 : 1000 + (v - 100) * 100).toLocaleString("en-US");
+  const hot = v >= 100;
+  return `<dt>Field mill</dt><dd${hot ? ' style="color:#FFC2C3"' : ""}>${vm} V/m, strongest mill within ` +
+         `5 nmi, last 15 min${hot ? " · <b>violates 4.1.2</b>" : ""}${fmCoverNote(f)}</dd>`;
+}
 function exceptionBlock(d, n, c){
   if (d.length < 10 * n) return "";
   const fl = d[9 * n + c];
@@ -555,6 +590,7 @@ function readout(lat, lon, label){
         ${volRows(d, n, c)}
         ${sepRow(d, n, c)}
         ${ltgRow(d, n, c, f)}
+        ${fmRow(d, n, c, f)}
         ${satRow(d, n, c)}
       </dl>
       ${cls === 7 ? `<div class="ro-how">Detached-anvil drift: ${f.anvil_wind ? f.anvil_wind.label
@@ -571,7 +607,7 @@ function readout(lat, lon, label){
       ${red.length || yel.length ? `<ul class="rules">
         ${red.map(k => `<li class="r">${SHORT[k] || k}</li>`).join("")}
         ${yel.map(k => `<li class="y">Within 2 nmi: ${lcFirst(SHORT[k] || k)}</li>`).join("")}
-      </ul>` : (st === 1 ? `<ul class="rules"><li class="y">CG lightning within 20 nmi</li></ul>` : "")}`;
+      </ul>` : (st === 1 ? `<ul class="rules"><li class="y">Lightning within 20 nmi</li></ul>` : "")}`;
   });
 }
 
@@ -848,10 +884,11 @@ function pads(f){
     const num = [];
     if (p.max_dbz_10nm != null) num.push(`${p.max_dbz_10nm} dBZ`);
     if (p.nearest_echo_nm != null && p.nearest_echo_nm < 60) num.push(`echo ${p.nearest_echo_nm} nmi`);
+    if (p.field_mill_vm != null) num.push(`<span style="color:${fmColor(p.field_mill_vm)}">EFM ${p.field_mill_vm} V/m</span>`);
     const reason = p.status === 2 ? p.red.map(k => SHORT[k] || k).join(", ")
                  : p.status === 1 ? (p.yellow.length ? "Within 2 nmi of: " +
                      p.yellow.map(k => lcFirst(SHORT[k] || k)).join(", ")
-                   : "CG lightning within 20 nmi") : "";
+                   : "Lightning within 20 nmi") : "";
     return `<div class="row" data-pad="${name}" tabindex="0">
       <span class="lamp s${p.status}"></span>
       <span class="pname">${name}</span>
@@ -918,7 +955,7 @@ function drawMethod(){
     `<p>Every point is scored against ${M.standard} as if the flight path passed through it, ` +
     `gated on echo of 0 dBZ or more, which is how the standard itself defines a non-transparent ` +
     `cloud. <b>Watch</b> means a rule would be broken if its standoff were 2 nmi longer, or ` +
-    `cloud-to-ground lightning is within 20 nmi. <b>Clear</b> means no violation the radar can ` +
+    `any lightning is within 20 nmi. <b>Clear</b> means no violation the radar and sensors can ` +
     `see. It is not a GO.</p>` +
     `<p><b>Evaluated:</b> ${M.rule_keys.filter(k => !(M.rules_off || []).includes(k))
         .map(k => M.rules[k]).join("; ")}.</p>` +
@@ -927,6 +964,34 @@ function drawMethod(){
     `it drops, so any echo at the 0 °C level beneath an anvil counts as the anvil reaching 0 °C, ` +
     `and the exception for an anvil entirely colder than 0 °C is rarely granted.</p>` +
     `<p>Page ${VIEWER_VERSION}. Built ${hhmm(M.generated)}.</p>`;
+}
+// Symbols drawn on the radar and status maps by the server.
+function drawMarks(){
+  const sym = (body) => `<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">${body}</svg>`;
+  const plus = c => sym(`<path d="M7 1v12M1 7h12" stroke="#141D29" stroke-width="4"/><path d="M7 1v12M1 7h12" stroke="${c}" stroke-width="2"/>`);
+  const dot = (c, r = 5, fill = true) => sym(`<circle cx="7" cy="7" r="${r}" fill="${fill ? c : "none"}" stroke="${fill ? "#E8EEF3" : c}" stroke-width="1.4"/>`);
+  $("marks").innerHTML =
+    `<span>${plus("#FB923C")}MERLIN cloud-to-ground</span>` +
+    `<span>${sym('<circle cx="7" cy="7" r="2.4" fill="#fff" stroke="#141D29" stroke-width="1"/>')}MERLIN cloud-to-cloud</span>` +
+    `<span>${sym('<path d="M3 3l8 8M11 3l-8 8" stroke="#fff" stroke-width="1.6"/>')}GLM flash</span>` +
+    `<span>${plus("#FDE047")}NLDN cloud-to-ground</span>` +
+    `<span>${dot(FM_COLORS[0][1])}${dot(FM_COLORS[1][1])}${dot(FM_COLORS[2][1])}Field mill, 15-min max |E|: under 500, under 1,000, 1,000+ V/m</span>` +
+    `<span>${dot("#8FA3B6", 4.5, false)}Mill not reporting</span>`;
+}
+// Which feeds this frame was scored with - a missing feed must be visible, not silent.
+function srcLine(f){
+  const el = $("srcline"), s = f.sources;
+  if (!s){ el.hidden = true; return; }
+  const cov = v => v === "full" ? "<b>✓</b>" : v === "partial" ? `<span class="warn">partial</span>` : `<span class="bad">✗</span>`;
+  const yes = v => v ? "<b>✓</b>" : `<span class="bad">✗</span>`;
+  const fm = s.field_mills || {};
+  const fmTxt = fm.coverage === "none" ? `<span class="bad">no data, 4.1.2 not evaluated</span>`
+    : `${fm.reporting} of ${fm.listed} reporting` +
+      (fm.coverage === "full" ? "" : ` <span class="warn">(${fm.coverage})</span>`);
+  el.innerHTML = `<span>Scored with: MERLIN CG ${cov(s.merlin_cg)} cloud-to-cloud ${cov(s.merlin_cc)}</span>` +
+                 `<span>GLM ${yes(s.glm)}</span><span>NLDN CG ${yes(s.nldn)}</span>` +
+                 `<span>Field mills: ${fmTxt}</span>`;
+  el.hidden = false;
 }
 function checkStale(){
   const f = M.frames[M.frames.length - 1];
