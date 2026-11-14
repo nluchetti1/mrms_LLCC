@@ -1,0 +1,7831 @@
+{
+ "generated": "2026-11-14T20:46:30Z",
+ "gifs": {
+  "status": "loop_status.gif",
+  "class": "loop_class.gif",
+  "overlay": "loop_overlay.gif"
+ },
+ "viewer_expected": "mrms-v22",
+ "valid": "2026-11-14T20:44:38Z",
+ "freezing": {
+  "fetched": "2026-11-14T19:51:02.733232+00:00",
+  "valid": "2026-11-14T18:00:00Z"
+ },
+ "domain": {
+  "lat_min": 27.6,
+  "lat_max": 29.6,
+  "lon_min": -81.6,
+  "lon_max": -79.6
+ },
+ "grid": {
+  "ny": 200,
+  "nx": 200,
+  "lat_n": 29.594999999999995,
+  "lon_w": -81.595,
+  "dlat": 0.00999999999999801,
+  "dlon": 0.009999999999990905
+ },
+ "sites": {
+  "LC-39A": [
+   28.6084,
+   -80.6043
+  ],
+  "LC-39B": [
+   28.6272,
+   -80.6208
+  ],
+  "SLC-41": [
+   28.5833,
+   -80.5834
+  ],
+  "SLC-40": [
+   28.5619,
+   -80.5772
+  ],
+  "SLC-37B": [
+   28.5317,
+   -80.5657
+  ],
+  "SLC-20": [
+   28.5085,
+   -80.5546
+  ],
+  "LZ-1": [
+   28.4857,
+   -80.5444
+  ],
+  "SLC-36": [
+   28.4707,
+   -80.5379
+  ],
+  "SLC-46": [
+   28.4584,
+   -80.5271
+  ],
+  "KTTS": [
+   28.615,
+   -80.6944
+  ],
+  "KXMR": [
+   28.4675,
+   -80.5664
+  ]
+ },
+ "frames": [
+  {
+   "valid": "2026-11-14T20:44:38Z",
+   "stamp": "20261114T2044",
+   "images": {
+    "status": "frames/20261114T2044_status.png",
+    "statusline": "frames/20261114T2044_statusline.png",
+    "radar": "frames/20261114T2044_radar.png",
+    "class": "frames/20261114T2044_class.png"
+   },
+   "data": "frames/20261114T2044.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 275,
+     "field_mill": {
+      "max15": 275,
+      "max15_mill": 4,
+      "now": 190,
+      "now_mill": 35,
+      "median_now": 167,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 275,
+     "field_mill": {
+      "max15": 275,
+      "max15_mill": 4,
+      "now": 190,
+      "now_mill": 35,
+      "median_now": 167,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 9,
+      "now": 190,
+      "now_mill": 35,
+      "median_now": 157,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 9,
+      "now": 190,
+      "now_mill": 35,
+      "median_now": 157,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 28,
+      "now": 237,
+      "now_mill": 28,
+      "median_now": 170,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 28,
+      "now": 237,
+      "now_mill": 28,
+      "median_now": 167,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 28,
+      "now": 237,
+      "now_mill": 28,
+      "median_now": 167,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 28,
+      "now": 237,
+      "now_mill": 28,
+      "median_now": 167,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 28,
+      "now": 237,
+      "now_mill": 28,
+      "median_now": 184,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 275,
+     "field_mill": {
+      "max15": 275,
+      "max15_mill": 4,
+      "now": 169,
+      "now_mill": 9,
+      "median_now": 157,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 28,
+      "now": 237,
+      "now_mill": 28,
+      "median_now": 167,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 1.9,
+   "volume": "frames/20261114T2044.vol",
+   "volume_valid": "2026-11-14T20:44:38Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.02,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.02,
+    "-5": 4.63,
+    "-10": 5.5,
+    "-15": 6.29,
+    "-20": 6.97
+   },
+   "iso_source": "RAP 19Z run, profile valid 21Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "20:43Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     219,
+     145,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     275,
+     167,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     173,
+     166,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     196,
+     127,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     171,
+     151,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     215,
+     168,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     273,
+     169,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     199,
+     157,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     144,
+     139,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     192,
+     149,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "20:43Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     170,
+     170,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     14,
+     false,
+     "20:43Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     217,
+     188,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     172,
+     157,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     166,
+     163,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     14,
+     false,
+     "20:43Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     105,
+     85,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     140,
+     133,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     14,
+     false,
+     "20:43Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     215,
+     168,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     194,
+     159,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     191,
+     131,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     155,
+     121,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     284,
+     237,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     216,
+     157,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     228,
+     197,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     236,
+     184,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     192,
+     167,
+     14,
+     true,
+     "20:43Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "20:43Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "20:43Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     240,
+     190,
+     14,
+     true,
+     "20:43Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:41Z, cloud-top height 20:41Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 137.99444503046874,
+    "v_kmh": 76.45710927406239,
+    "unc_kmh": 18.52,
+    "kt": 85.2,
+    "from_deg": 241,
+    "n": 21,
+    "band": "C08",
+    "label": "GOES-19 band 8 winds 20:31Z, 21 anvil-level vectors: 85 kt from 241 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T20:38:41Z",
+   "stamp": "20261114T2038",
+   "images": {
+    "status": "frames/20261114T2038_status.png",
+    "statusline": "frames/20261114T2038_statusline.png",
+    "radar": "frames/20261114T2038_radar.png",
+    "class": "frames/20261114T2038_class.png"
+   },
+   "data": "frames/20261114T2038.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 280,
+     "field_mill": {
+      "max15": 280,
+      "max15_mill": 4,
+      "now": 225,
+      "now_mill": 4,
+      "median_now": 142,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 280,
+     "field_mill": {
+      "max15": 280,
+      "max15_mill": 4,
+      "now": 225,
+      "now_mill": 4,
+      "median_now": 142,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 239,
+     "field_mill": {
+      "max15": 239,
+      "max15_mill": 9,
+      "now": 168,
+      "now_mill": 8,
+      "median_now": 136,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 239,
+     "field_mill": {
+      "max15": 239,
+      "max15_mill": 9,
+      "now": 154,
+      "now_mill": 17,
+      "median_now": 136,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 218,
+      "now_mill": 28,
+      "median_now": 142,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 218,
+      "now_mill": 28,
+      "median_now": 169,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 218,
+      "now_mill": 28,
+      "median_now": 197,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 218,
+      "now_mill": 28,
+      "median_now": 197,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 218,
+      "now_mill": 28,
+      "median_now": 207,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 280,
+     "field_mill": {
+      "max15": 280,
+      "max15_mill": 4,
+      "now": 225,
+      "now_mill": 4,
+      "median_now": 153,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 218,
+      "now_mill": 28,
+      "median_now": 197,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 0.6,
+   "volume": "frames/20261114T2038.vol",
+   "volume_valid": "2026-11-14T20:38:43Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.02,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.02,
+    "-5": 4.63,
+    "-10": 5.5,
+    "-15": 6.29,
+    "-20": 6.97
+   },
+   "iso_source": "RAP 19Z run, profile valid 21Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "20:38Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     244,
+     160,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     280,
+     225,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     166,
+     124,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     196,
+     153,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     176,
+     143,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     234,
+     168,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     239,
+     127,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     215,
+     162,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     152,
+     128,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     192,
+     142,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "20:38Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     200,
+     142,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     15,
+     false,
+     "20:38Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     217,
+     136,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     192,
+     154,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     142,
+     125,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     15,
+     false,
+     "20:38Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     105,
+     85,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     140,
+     132,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     15,
+     false,
+     "20:38Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     214,
+     214,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     190,
+     175,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     201,
+     154,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     174,
+     132,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     260,
+     218,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     227,
+     207,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     219,
+     197,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     236,
+     207,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     184,
+     169,
+     15,
+     true,
+     "20:38Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "20:38Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "20:38Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     211,
+     134,
+     15,
+     true,
+     "20:38Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:36Z, cloud-top height 20:31Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 137.99444503046874,
+    "v_kmh": 76.45710927406239,
+    "unc_kmh": 18.52,
+    "kt": 85.2,
+    "from_deg": 241,
+    "n": 21,
+    "band": "C08",
+    "label": "GOES-19 band 8 winds 20:31Z, 21 anvil-level vectors: 85 kt from 241 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T20:34:40Z",
+   "stamp": "20261114T2034",
+   "images": {
+    "status": "frames/20261114T2034_status.png",
+    "statusline": "frames/20261114T2034_statusline.png",
+    "radar": "frames/20261114T2034_radar.png",
+    "class": "frames/20261114T2034_class.png"
+   },
+   "data": "frames/20261114T2034.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 187,
+      "now_mill": 26,
+      "median_now": 174,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 187,
+      "now_mill": 35,
+      "median_now": 174,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 255,
+     "field_mill": {
+      "max15": 255,
+      "max15_mill": 14,
+      "now": 187,
+      "now_mill": 26,
+      "median_now": 172,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 255,
+     "field_mill": {
+      "max15": 255,
+      "max15_mill": 14,
+      "now": 187,
+      "now_mill": 26,
+      "median_now": 174,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 194,
+      "now_mill": 29,
+      "median_now": 182,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 194,
+      "now_mill": 29,
+      "median_now": 182,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 31,
+      "median_now": 182,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 31,
+      "median_now": 182,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 31,
+      "median_now": 182,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 184,
+      "now_mill": 4,
+      "median_now": 169,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 28,
+      "now": 198,
+      "now_mill": 31,
+      "median_now": 182,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [
+    "Reflectivity_-5C"
+   ],
+   "skew_min": 1.6,
+   "volume": "frames/20261114T2034.vol",
+   "volume_valid": "2026-11-14T20:34:40Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.02,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.02,
+    "-5": 4.63,
+    "-10": 5.5,
+    "-15": 6.29,
+    "-20": 6.97
+   },
+   "iso_source": "RAP 19Z run, profile valid 21Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "20:33Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     244,
+     169,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     289,
+     184,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     187,
+     135,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     171,
+     137,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     182,
+     158,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     234,
+     162,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     230,
+     174,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     215,
+     182,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     152,
+     130,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     177,
+     177,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "20:33Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     255,
+     134,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     14,
+     false,
+     "20:33Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     231,
+     185,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     192,
+     172,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     142,
+     103,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     14,
+     false,
+     "20:33Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     91,
+     81,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     140,
+     140,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     14,
+     false,
+     "20:33Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     227,
+     176,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     187,
+     182,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     201,
+     187,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     174,
+     151,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     260,
+     169,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     246,
+     194,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     225,
+     182,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     227,
+     198,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     214,
+     145,
+     14,
+     true,
+     "20:33Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "20:33Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "20:33Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     211,
+     187,
+     14,
+     true,
+     "20:33Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:31Z, cloud-top height 20:31Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 139.3679415405501,
+    "v_kmh": 74.95181741744919,
+    "unc_kmh": 18.52,
+    "kt": 85.4,
+    "from_deg": 242,
+    "n": 24,
+    "band": "C08",
+    "label": "GOES-19 band 8 winds 20:16Z, 24 anvil-level vectors: 85 kt from 242 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T20:28:38Z",
+   "stamp": "20261114T2028",
+   "images": {
+    "status": "frames/20261114T2028_status.png",
+    "statusline": "frames/20261114T2028_statusline.png",
+    "radar": "frames/20261114T2028_radar.png",
+    "class": "frames/20261114T2028_class.png"
+   },
+   "data": "frames/20261114T2028.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 233,
+      "now_mill": 8,
+      "median_now": 152,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 233,
+      "now_mill": 8,
+      "median_now": 160,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 265,
+     "field_mill": {
+      "max15": 265,
+      "max15_mill": 9,
+      "now": 233,
+      "now_mill": 8,
+      "median_now": 152,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 265,
+     "field_mill": {
+      "max15": 265,
+      "max15_mill": 9,
+      "now": 181,
+      "now_mill": 17,
+      "median_now": 149,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 262,
+     "field_mill": {
+      "max15": 262,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 28,
+      "median_now": 164,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 262,
+     "field_mill": {
+      "max15": 262,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 28,
+      "median_now": 168,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 262,
+     "field_mill": {
+      "max15": 262,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 28,
+      "median_now": 174,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 262,
+     "field_mill": {
+      "max15": 262,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 28,
+      "median_now": 174,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 262,
+     "field_mill": {
+      "max15": 262,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 28,
+      "median_now": 187,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 233,
+      "now_mill": 8,
+      "median_now": 160,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 262,
+     "field_mill": {
+      "max15": 262,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 28,
+      "median_now": 174,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 0.3,
+   "volume": "frames/20261114T2028.vol",
+   "volume_valid": "2026-11-14T20:28:38Z",
+   "volume_note": "33 levels; Steiner at 3 km",
+   "freezing_km": 4.03,
+   "isotherms_km": {
+    "+5": 3.23,
+    "+0": 4.03,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.99
+   },
+   "iso_source": "RAP 19Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "20:28Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     244,
+     226,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     289,
+     175,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     187,
+     145,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     246,
+     140,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     213,
+     137,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     234,
+     233,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     265,
+     140,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     223,
+     215,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     182,
+     152,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     172,
+     160,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "20:28Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     255,
+     164,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     15,
+     false,
+     "20:28Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     254,
+     148,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     200,
+     181,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     151,
+     132,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     15,
+     false,
+     "20:28Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     112,
+     79,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     148,
+     135,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     15,
+     false,
+     "20:28Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     227,
+     166,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     187,
+     182,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     201,
+     149,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     174,
+     174,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     262,
+     249,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     246,
+     227,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     253,
+     168,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     233,
+     187,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     214,
+     136,
+     15,
+     true,
+     "20:28Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "20:28Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "20:28Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     221,
+     140,
+     15,
+     true,
+     "20:28Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:26Z, cloud-top height 20:26Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 139.3679415405501,
+    "v_kmh": 74.95181741744919,
+    "unc_kmh": 18.52,
+    "kt": 85.4,
+    "from_deg": 242,
+    "n": 24,
+    "band": "C08",
+    "label": "GOES-19 band 8 winds 20:16Z, 24 anvil-level vectors: 85 kt from 242 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T20:24:37Z",
+   "stamp": "20261114T2024",
+   "images": {
+    "status": "frames/20261114T2024_status.png",
+    "statusline": "frames/20261114T2024_statusline.png",
+    "radar": "frames/20261114T2024_radar.png",
+    "class": "frames/20261114T2024_class.png"
+   },
+   "data": "frames/20261114T2024.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 240,
+      "now_mill": 14,
+      "median_now": 165,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 240,
+      "now_mill": 14,
+      "median_now": 176,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 265,
+     "field_mill": {
+      "max15": 265,
+      "max15_mill": 9,
+      "now": 240,
+      "now_mill": 14,
+      "median_now": 161,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 265,
+     "field_mill": {
+      "max15": 265,
+      "max15_mill": 9,
+      "now": 240,
+      "now_mill": 14,
+      "median_now": 161,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 246,
+      "now_mill": 29,
+      "median_now": 187,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 246,
+      "now_mill": 29,
+      "median_now": 187,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 246,
+      "now_mill": 29,
+      "median_now": 187,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 246,
+      "now_mill": 29,
+      "median_now": 187,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 246,
+      "now_mill": 29,
+      "median_now": 225,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 289,
+     "field_mill": {
+      "max15": 289,
+      "max15_mill": 4,
+      "now": 222,
+      "now_mill": 4,
+      "median_now": 176,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 246,
+      "now_mill": 29,
+      "median_now": 187,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [
+    "HeightCompositeReflectivity",
+    "EchoTop_18"
+   ],
+   "skew_min": 2.0,
+   "volume": "frames/20261114T2024.vol",
+   "volume_valid": "2026-11-14T20:24:37Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 3 km",
+   "freezing_km": 4.03,
+   "isotherms_km": {
+    "+5": 3.23,
+    "+0": 4.03,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.99
+   },
+   "iso_source": "RAP 19Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "20:23Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     220,
+     217,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     289,
+     222,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     187,
+     177,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     265,
+     139,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     218,
+     162,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     203,
+     203,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     265,
+     176,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     233,
+     181,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     182,
+     126,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     172,
+     165,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "20:23Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     255,
+     240,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     14,
+     false,
+     "20:23Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     254,
+     149,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     200,
+     140,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     166,
+     125,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     14,
+     false,
+     "20:23Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     112,
+     91,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     148,
+     111,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     14,
+     false,
+     "20:23Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     227,
+     171,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     194,
+     172,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     260,
+     187,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     177,
+     149,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     262,
+     242,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     271,
+     246,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     253,
+     225,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     233,
+     179,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     224,
+     167,
+     14,
+     true,
+     "20:23Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "20:23Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "20:23Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     221,
+     161,
+     14,
+     true,
+     "20:23Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:21Z, cloud-top height 20:16Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 139.3679415405501,
+    "v_kmh": 74.95181741744919,
+    "unc_kmh": 18.52,
+    "kt": 85.4,
+    "from_deg": 242,
+    "n": 24,
+    "band": "C08",
+    "label": "GOES-19 band 8 winds 20:16Z, 24 anvil-level vectors: 85 kt from 242 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T20:18:37Z",
+   "stamp": "20261114T2018",
+   "images": {
+    "status": "frames/20261114T2018_status.png",
+    "statusline": "frames/20261114T2018_statusline.png",
+    "radar": "frames/20261114T2018_radar.png",
+    "class": "frames/20261114T2018_class.png"
+   },
+   "data": "frames/20261114T2018.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 298,
+     "field_mill": {
+      "max15": 298,
+      "max15_mill": 8,
+      "now": 265,
+      "now_mill": 9,
+      "median_now": 178,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 298,
+     "field_mill": {
+      "max15": 298,
+      "max15_mill": 8,
+      "now": 265,
+      "now_mill": 9,
+      "median_now": 178,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 298,
+     "field_mill": {
+      "max15": 298,
+      "max15_mill": 8,
+      "now": 265,
+      "now_mill": 9,
+      "median_now": 163,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 265,
+     "field_mill": {
+      "max15": 265,
+      "max15_mill": 9,
+      "now": 265,
+      "now_mill": 9,
+      "median_now": 159,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 244,
+      "now_mill": 30,
+      "median_now": 179,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 244,
+      "now_mill": 30,
+      "median_now": 193,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 244,
+      "now_mill": 30,
+      "median_now": 201,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 244,
+      "now_mill": 30,
+      "median_now": 201,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 244,
+      "now_mill": 30,
+      "median_now": 221,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 298,
+     "field_mill": {
+      "max15": 298,
+      "max15_mill": 8,
+      "now": 265,
+      "now_mill": 9,
+      "median_now": 178,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 244,
+      "now_mill": 30,
+      "median_now": 201,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 0.6,
+   "volume": "frames/20261114T2018.vol",
+   "volume_valid": "2026-11-14T20:18:37Z",
+   "volume_note": "33 levels; Steiner at 2.75 km",
+   "freezing_km": 4.0,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.0,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.98
+   },
+   "iso_source": "RAP 18Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "20:18Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     220,
+     187,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     269,
+     260,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     169,
+     167,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     265,
+     156,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     218,
+     191,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     298,
+     184,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     265,
+     265,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     233,
+     151,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     178,
+     178,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     172,
+     153,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "20:18Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     212,
+     189,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     15,
+     false,
+     "20:18Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     254,
+     179,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     200,
+     163,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     176,
+     125,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     15,
+     false,
+     "20:18Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     114,
+     112,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     148,
+     111,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     15,
+     false,
+     "20:18Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     245,
+     193,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     221,
+     164,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     260,
+     154,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     177,
+     151,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     264,
+     221,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     271,
+     201,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     244,
+     244,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     233,
+     233,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     224,
+     193,
+     15,
+     true,
+     "20:18Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "20:18Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "20:18Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     221,
+     159,
+     15,
+     true,
+     "20:18Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:16Z, cloud-top height 20:16Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 136.2573304404388,
+    "v_kmh": 64.43280279072138,
+    "unc_kmh": 18.52,
+    "kt": 81.4,
+    "from_deg": 245,
+    "n": 6,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 20:01Z, 6 anvil-level vectors: 81 kt from 245 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T20:14:40Z",
+   "stamp": "20261114T2014",
+   "images": {
+    "status": "frames/20261114T2014_status.png",
+    "statusline": "frames/20261114T2014_statusline.png",
+    "radar": "frames/20261114T2014_radar.png",
+    "class": "frames/20261114T2014_class.png"
+   },
+   "data": "frames/20261114T2014.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 254,
+      "now_mill": 16,
+      "median_now": 175,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 254,
+      "now_mill": 16,
+      "median_now": 175,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 298,
+     "field_mill": {
+      "max15": 298,
+      "max15_mill": 8,
+      "now": 254,
+      "now_mill": 16,
+      "median_now": 172,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 260,
+     "field_mill": {
+      "max15": 260,
+      "max15_mill": 26,
+      "now": 254,
+      "now_mill": 16,
+      "median_now": 172,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 254,
+      "now_mill": 16,
+      "median_now": 178,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 254,
+      "now_mill": 16,
+      "median_now": 199,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 223,
+      "now_mill": 28,
+      "median_now": 199,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 223,
+      "now_mill": 28,
+      "median_now": 199,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 223,
+      "now_mill": 28,
+      "median_now": 199,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 246,
+      "now_mill": 6,
+      "median_now": 172,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 271,
+     "field_mill": {
+      "max15": 271,
+      "max15_mill": 29,
+      "now": 223,
+      "now_mill": 28,
+      "median_now": 199,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 0.6,
+   "volume": "frames/20261114T2014.vol",
+   "volume_valid": "2026-11-14T20:14:40Z",
+   "volume_note": "33 levels; Steiner at 2.75 km",
+   "freezing_km": 4.0,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.0,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.98
+   },
+   "iso_source": "RAP 18Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "20:14Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     206,
+     165,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     317,
+     231,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     166,
+     166,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     265,
+     246,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     218,
+     165,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     298,
+     175,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     256,
+     160,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     233,
+     208,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     169,
+     142,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     172,
+     172,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "20:14Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     212,
+     175,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     15,
+     false,
+     "20:14Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     254,
+     254,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     200,
+     200,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     176,
+     151,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     15,
+     false,
+     "20:14Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     129,
+     97,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     163,
+     148,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     15,
+     false,
+     "20:14Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     245,
+     175,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     221,
+     181,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     260,
+     200,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     177,
+     155,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     264,
+     223,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     271,
+     199,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     207,
+     178,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     219,
+     219,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     224,
+     178,
+     15,
+     true,
+     "20:14Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "20:14Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "20:14Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     255,
+     157,
+     15,
+     true,
+     "20:14Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:11Z, cloud-top height 20:11Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 136.2573304404388,
+    "v_kmh": 64.43280279072138,
+    "unc_kmh": 18.52,
+    "kt": 81.4,
+    "from_deg": 245,
+    "n": 6,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 20:01Z, 6 anvil-level vectors: 81 kt from 245 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T20:08:40Z",
+   "stamp": "20261114T2008",
+   "images": {
+    "status": "frames/20261114T2008_status.png",
+    "statusline": "frames/20261114T2008_statusline.png",
+    "radar": "frames/20261114T2008_radar.png",
+    "class": "frames/20261114T2008_class.png"
+   },
+   "data": "frames/20261114T2008.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 249,
+      "now_mill": 16,
+      "median_now": 183,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 249,
+      "now_mill": 16,
+      "median_now": 174,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 298,
+     "field_mill": {
+      "max15": 298,
+      "max15_mill": 8,
+      "now": 249,
+      "now_mill": 16,
+      "median_now": 174,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 256,
+     "field_mill": {
+      "max15": 256,
+      "max15_mill": 9,
+      "now": 249,
+      "now_mill": 16,
+      "median_now": 174,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 264,
+     "field_mill": {
+      "max15": 264,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 16,
+      "median_now": 177,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 264,
+     "field_mill": {
+      "max15": 264,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 16,
+      "median_now": 198,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 264,
+     "field_mill": {
+      "max15": 264,
+      "max15_mill": 28,
+      "now": 240,
+      "now_mill": 28,
+      "median_now": 183,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 264,
+     "field_mill": {
+      "max15": 264,
+      "max15_mill": 28,
+      "now": 240,
+      "now_mill": 28,
+      "median_now": 183,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 264,
+     "field_mill": {
+      "max15": 264,
+      "max15_mill": 28,
+      "now": 240,
+      "now_mill": 28,
+      "median_now": 198,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 238,
+      "now_mill": 9,
+      "median_now": 172,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 264,
+     "field_mill": {
+      "max15": 264,
+      "max15_mill": 28,
+      "now": 240,
+      "now_mill": 28,
+      "median_now": 183,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 0.7,
+   "volume": "frames/20261114T2008.vol",
+   "volume_valid": "2026-11-14T20:08:40Z",
+   "volume_note": "33 levels; Steiner at 2.75 km",
+   "freezing_km": 4.0,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.0,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.98
+   },
+   "iso_source": "RAP 18Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "20:08Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     208,
+     168,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     317,
+     205,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     159,
+     142,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     212,
+     151,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     193,
+     176,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     298,
+     200,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     256,
+     238,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     201,
+     172,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     155,
+     130,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     182,
+     138,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "20:08Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     212,
+     148,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     15,
+     false,
+     "20:08Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     249,
+     249,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     196,
+     183,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     176,
+     171,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     15,
+     false,
+     "20:08Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     129,
+     94,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     163,
+     121,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     15,
+     false,
+     "20:08Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     245,
+     242,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     221,
+     221,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     204,
+     183,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     175,
+     165,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     264,
+     240,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     249,
+     235,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     207,
+     177,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     201,
+     173,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     198,
+     198,
+     15,
+     true,
+     "20:08Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "20:08Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "20:08Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     255,
+     174,
+     15,
+     true,
+     "20:08Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:06Z, cloud-top height 20:01Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 136.2573304404388,
+    "v_kmh": 64.43280279072138,
+    "unc_kmh": 18.52,
+    "kt": 81.4,
+    "from_deg": 245,
+    "n": 6,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 20:01Z, 6 anvil-level vectors: 81 kt from 245 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T20:04:38Z",
+   "stamp": "20261114T2004",
+   "images": {
+    "status": "frames/20261114T2004_status.png",
+    "statusline": "frames/20261114T2004_statusline.png",
+    "radar": "frames/20261114T2004_radar.png",
+    "class": "frames/20261114T2004_class.png"
+   },
+   "data": "frames/20261114T2004.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 273,
+      "now_mill": 8,
+      "median_now": 180,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 273,
+      "now_mill": 8,
+      "median_now": 174,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 8,
+      "now": 273,
+      "now_mill": 8,
+      "median_now": 153,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 16,
+      "now": 207,
+      "now_mill": 16,
+      "median_now": 153,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 207,
+      "now_mill": 16,
+      "median_now": 184,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 207,
+      "now_mill": 16,
+      "median_now": 185,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 200,
+      "now_mill": 28,
+      "median_now": 185,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 200,
+      "now_mill": 28,
+      "median_now": 185,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 200,
+      "now_mill": 28,
+      "median_now": 188,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 317,
+     "field_mill": {
+      "max15": 317,
+      "max15_mill": 4,
+      "now": 273,
+      "now_mill": 8,
+      "median_now": 172,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 200,
+      "now_mill": 28,
+      "median_now": 185,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 0.5,
+   "volume": "frames/20261114T2004.vol",
+   "volume_valid": "2026-11-14T20:04:38Z",
+   "volume_note": "33 levels; Steiner at 2.75 km",
+   "freezing_km": 4.0,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.0,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.98
+   },
+   "iso_source": "RAP 18Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "20:03Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     208,
+     195,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     317,
+     239,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     161,
+     143,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     212,
+     183,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     194,
+     164,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     273,
+     273,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     237,
+     153,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     201,
+     172,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     155,
+     136,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     185,
+     138,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "20:03Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     205,
+     174,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     14,
+     false,
+     "20:03Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     269,
+     207,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     202,
+     180,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     172,
+     166,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     14,
+     false,
+     "20:03Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     131,
+     99,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     163,
+     152,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     14,
+     false,
+     "20:03Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     223,
+     206,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     220,
+     217,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     225,
+     185,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     173,
+     149,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     273,
+     200,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     249,
+     184,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     216,
+     188,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     221,
+     191,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     180,
+     162,
+     14,
+     true,
+     "20:03Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "20:03Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "20:03Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     255,
+     153,
+     14,
+     true,
+     "20:03Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 20:01Z, cloud-top height 20:01Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 134.8085640530262,
+    "v_kmh": 67.79454680874245,
+    "unc_kmh": 18.52,
+    "kt": 81.5,
+    "from_deg": 243,
+    "n": 9,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 19:46Z, 9 anvil-level vectors: 81 kt from 243 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T19:58:41Z",
+   "stamp": "20261114T1958",
+   "images": {
+    "status": "frames/20261114T1958_status.png",
+    "statusline": "frames/20261114T1958_statusline.png",
+    "radar": "frames/20261114T1958_radar.png",
+    "class": "frames/20261114T1958_class.png"
+   },
+   "data": "frames/20261114T1958.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 4,
+      "now": 284,
+      "now_mill": 4,
+      "median_now": 179,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 4,
+      "now": 284,
+      "now_mill": 4,
+      "median_now": 168,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 16,
+      "now": 217,
+      "now_mill": 35,
+      "median_now": 163,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 16,
+      "now": 217,
+      "now_mill": 35,
+      "median_now": 163,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 251,
+      "now_mill": 28,
+      "median_now": 188,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 251,
+      "now_mill": 28,
+      "median_now": 165,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 251,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 251,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 251,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 284,
+     "field_mill": {
+      "max15": 284,
+      "max15_mill": 4,
+      "now": 284,
+      "now_mill": 4,
+      "median_now": 165,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 273,
+     "field_mill": {
+      "max15": 273,
+      "max15_mill": 28,
+      "now": 251,
+      "now_mill": 28,
+      "median_now": 173,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 0.7,
+   "volume": "frames/20261114T1958.vol",
+   "volume_valid": "2026-11-14T20:00:35Z",
+   "volume_note": "33 levels, 3 distinct valid times; Steiner at 2.75 km",
+   "freezing_km": 4.0,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.0,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.98
+   },
+   "iso_source": "RAP 18Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "19:58Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     203,
+     199,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     284,
+     284,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     180,
+     159,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     212,
+     161,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     240,
+     165,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     268,
+     213,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     238,
+     179,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     201,
+     168,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     165,
+     155,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     223,
+     148,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "19:58Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     205,
+     188,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     15,
+     false,
+     "19:58Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     269,
+     153,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     202,
+     163,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     172,
+     141,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     15,
+     false,
+     "19:58Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     136,
+     99,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     145,
+     123,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     15,
+     false,
+     "19:58Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     223,
+     195,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     220,
+     171,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     256,
+     196,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     192,
+     140,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     273,
+     251,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     249,
+     231,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     216,
+     165,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     233,
+     173,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     206,
+     151,
+     15,
+     true,
+     "19:58Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "19:58Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "19:58Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     217,
+     217,
+     15,
+     true,
+     "19:58Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 19:56Z, cloud-top height 19:56Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 134.8085640530262,
+    "v_kmh": 67.79454680874245,
+    "unc_kmh": 18.52,
+    "kt": 81.5,
+    "from_deg": 243,
+    "n": 9,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 19:46Z, 9 anvil-level vectors: 81 kt from 243 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T19:54:38Z",
+   "stamp": "20261114T1954",
+   "images": {
+    "status": "frames/20261114T1954_status.png",
+    "statusline": "frames/20261114T1954_statusline.png",
+    "radar": "frames/20261114T1954_radar.png",
+    "class": "frames/20261114T1954_class.png"
+   },
+   "data": "frames/20261114T1954.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 16,
+      "now": 268,
+      "now_mill": 16,
+      "median_now": 197,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 16,
+      "now": 268,
+      "now_mill": 16,
+      "median_now": 197,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 16,
+      "now": 268,
+      "now_mill": 16,
+      "median_now": 197,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 269,
+     "field_mill": {
+      "max15": 269,
+      "max15_mill": 16,
+      "now": 268,
+      "now_mill": 16,
+      "median_now": 197,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 273,
+      "now_mill": 28,
+      "median_now": 215,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 273,
+      "now_mill": 28,
+      "median_now": 216,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 273,
+      "now_mill": 28,
+      "median_now": 215,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 273,
+      "now_mill": 28,
+      "median_now": 215,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 273,
+      "now_mill": 28,
+      "median_now": 216,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 268,
+     "field_mill": {
+      "max15": 268,
+      "max15_mill": 8,
+      "now": 251,
+      "now_mill": 4,
+      "median_now": 196,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 273,
+      "now_mill": 28,
+      "median_now": 215,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [
+    "EchoTop_18"
+   ],
+   "skew_min": 2.0,
+   "volume": "frames/20261114T1954.vol",
+   "volume_valid": "2026-11-14T19:54:38Z",
+   "volume_note": "33 levels; Steiner at 2.75 km",
+   "freezing_km": 4.0,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.0,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.98
+   },
+   "iso_source": "RAP 18Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     14,
+     false,
+     "19:53Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     228,
+     199,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     267,
+     251,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     180,
+     150,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     210,
+     171,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     240,
+     194,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     268,
+     246,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     238,
+     234,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     196,
+     196,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     169,
+     139,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     223,
+     183,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     14,
+     false,
+     "19:53Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     205,
+     197,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     14,
+     false,
+     "19:53Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     269,
+     268,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     202,
+     197,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     165,
+     165,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     14,
+     false,
+     "19:53Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     147,
+     102,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     168,
+     128,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     14,
+     false,
+     "19:53Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     223,
+     223,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     220,
+     220,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     256,
+     215,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     192,
+     154,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     285,
+     273,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     250,
+     222,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     216,
+     216,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     233,
+     177,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     206,
+     177,
+     14,
+     true,
+     "19:53Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     14,
+     false,
+     "19:53Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     14,
+     false,
+     "19:53Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     216,
+     155,
+     14,
+     true,
+     "19:53Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 19:51Z, cloud-top height 19:51Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 134.8085640530262,
+    "v_kmh": 67.79454680874245,
+    "unc_kmh": 18.52,
+    "kt": 81.5,
+    "from_deg": 243,
+    "n": 9,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 19:46Z, 9 anvil-level vectors: 81 kt from 243 deg, +/-10 kt"
+   }
+  },
+  {
+   "valid": "2026-11-14T19:48:37Z",
+   "stamp": "20261114T1948",
+   "images": {
+    "status": "frames/20261114T1948_status.png",
+    "statusline": "frames/20261114T1948_statusline.png",
+    "radar": "frames/20261114T1948_radar.png",
+    "class": "frames/20261114T1948_class.png"
+   },
+   "data": "frames/20261114T1948.bin",
+   "pads": {
+    "LC-39A": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 79.6,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 238,
+      "now_mill": 4,
+      "median_now": 199,
+      "n": 12
+     }
+    },
+    "LC-39B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 78.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 238,
+      "now_mill": 4,
+      "median_now": 196,
+      "n": 12
+     }
+    },
+    "SLC-41": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 81.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 266,
+     "field_mill": {
+      "max15": 266,
+      "max15_mill": 8,
+      "now": 220,
+      "now_mill": 26,
+      "median_now": 196,
+      "n": 12
+     }
+    },
+    "SLC-40": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 82.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 256,
+     "field_mill": {
+      "max15": 256,
+      "max15_mill": 26,
+      "now": 220,
+      "now_mill": 26,
+      "median_now": 196,
+      "n": 10
+     }
+    },
+    "SLC-37B": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 84.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 29,
+      "median_now": 190,
+      "n": 10
+     }
+    },
+    "SLC-20": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 85.9,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 29,
+      "median_now": 190,
+      "n": 8
+     }
+    },
+    "LZ-1": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.2,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 29,
+      "median_now": 209,
+      "n": 8
+     }
+    },
+    "SLC-36": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 88.0,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 29,
+      "median_now": 209,
+      "n": 7
+     }
+    },
+    "SLC-46": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 89.3,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 29,
+      "median_now": 209,
+      "n": 6
+     }
+    },
+    "KTTS": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 76.1,
+     "lightning_10nm": false,
+     "field_mill_vm": 267,
+     "field_mill": {
+      "max15": 267,
+      "max15_mill": 4,
+      "now": 238,
+      "now_mill": 4,
+      "median_now": 180,
+      "n": 12
+     }
+    },
+    "KXMR": {
+     "status": 0,
+     "red": [],
+     "yellow": [],
+     "class_here": "No echo",
+     "classes_10nm": [],
+     "class_10nm": null,
+     "max_dbz_10nm": null,
+     "nearest_echo_nm": 87.5,
+     "lightning_10nm": false,
+     "field_mill_vm": 285,
+     "field_mill": {
+      "max15": 285,
+      "max15_mill": 28,
+      "now": 249,
+      "now_mill": 29,
+      "median_now": 209,
+      "n": 8
+     }
+    }
+   },
+   "counts": {
+    "-1": 0,
+    "0": 40000,
+    "1": 0,
+    "2": 0
+   },
+   "class_counts": {
+    "clear": 40000,
+    "warm": 0,
+    "cu0": 0,
+    "cu10": 0,
+    "cu20": 0,
+    "core": 0,
+    "att": 0,
+    "det": 0,
+    "elev": 0
+   },
+   "missing": [],
+   "skew_min": 0.4,
+   "volume": "frames/20261114T1948.vol",
+   "volume_valid": "2026-11-14T19:50:42Z",
+   "volume_note": "33 levels, 2 distinct valid times; Steiner at 2.75 km",
+   "freezing_km": 4.0,
+   "isotherms_km": {
+    "+5": 3.18,
+    "+0": 4.0,
+    "-5": 4.61,
+    "-10": 5.51,
+    "-15": 6.34,
+    "-20": 6.98
+   },
+   "iso_source": "RAP 18Z run, profile valid 20Z (PSU BUFKIT, XMR)",
+   "lightning_source": "MERLIN CG + MERLIN CC + GLM + NLDN CG",
+   "glm_flashes_30min": 0,
+   "merlin_cg_30min": 0,
+   "merlin_cc_30min": 0,
+   "sources": {
+    "merlin_cg": "full",
+    "merlin_cc": "full",
+    "glm": true,
+    "nldn": true,
+    "field_mills": {
+     "coverage": "full",
+     "mode": "range",
+     "reporting": 26,
+     "listed": 33
+    }
+   },
+   "field_mills": [
+    [
+     1,
+     28.70363,
+     -80.66856,
+     0,
+     0,
+     15,
+     false,
+     "19:48Z"
+    ],
+    [
+     2,
+     28.68754,
+     -80.71951,
+     231,
+     174,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     4,
+     28.66433,
+     -80.63912,
+     267,
+     238,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     5,
+     28.65818,
+     -80.69935,
+     180,
+     180,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     6,
+     28.64397,
+     -80.66638,
+     263,
+     177,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     7,
+     28.64237,
+     -80.74761,
+     240,
+     178,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     8,
+     28.63887,
+     -80.62253,
+     266,
+     213,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     9,
+     28.62141,
+     -80.60797,
+     246,
+     199,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     10,
+     28.62412,
+     -80.70151,
+     239,
+     155,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     11,
+     28.60576,
+     -80.67387,
+     187,
+     148,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     12,
+     28.60226,
+     -80.64093,
+     223,
+     216,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     13,
+     28.60205,
+     -80.58942,
+     0,
+     0,
+     15,
+     false,
+     "19:48Z"
+    ],
+    [
+     14,
+     28.57852,
+     -80.60858,
+     208,
+     196,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     15,
+     28.57675,
+     -80.6431,
+     0,
+     0,
+     15,
+     false,
+     "19:48Z"
+    ],
+    [
+     16,
+     28.57529,
+     -80.5731,
+     234,
+     175,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     17,
+     28.56204,
+     -80.67002,
+     222,
+     202,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     18,
+     28.55517,
+     -80.70211,
+     140,
+     139,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     19,
+     28.54948,
+     -80.62038,
+     0,
+     0,
+     15,
+     false,
+     "19:48Z"
+    ],
+    [
+     20,
+     28.5417,
+     -80.64443,
+     147,
+     124,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     21,
+     28.52575,
+     -80.62209,
+     168,
+     137,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     22,
+     28.50692,
+     -80.69359,
+     0,
+     0,
+     15,
+     false,
+     "19:48Z"
+    ],
+    [
+     24,
+     28.47676,
+     -80.67485,
+     251,
+     185,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     25,
+     28.42473,
+     -80.66379,
+     204,
+     162,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     26,
+     28.54937,
+     -80.56698,
+     256,
+     220,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     27,
+     28.50308,
+     -80.55812,
+     192,
+     151,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     28,
+     28.46023,
+     -80.52722,
+     285,
+     232,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     29,
+     28.46256,
+     -80.58355,
+     275,
+     249,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     30,
+     28.47511,
+     -80.55841,
+     238,
+     190,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     31,
+     28.42033,
+     -80.59115,
+     247,
+     209,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     32,
+     28.43688,
+     -80.58,
+     206,
+     186,
+     15,
+     true,
+     "19:48Z"
+    ],
+    [
+     33,
+     28.41532,
+     -80.60582,
+     0,
+     0,
+     15,
+     false,
+     "19:48Z"
+    ],
+    [
+     34,
+     28.44982,
+     -80.56349,
+     0,
+     0,
+     15,
+     false,
+     "19:48Z"
+    ],
+    [
+     35,
+     28.60148,
+     -80.59033,
+     233,
+     164,
+     15,
+     true,
+     "19:48Z"
+    ]
+   ],
+   "sat_source": "GOES-19 band 13 19:46Z, cloud-top height 19:46Z, parallax-corrected",
+   "sat_upgraded_cells": 0,
+   "anvil_wind": {
+    "u_kmh": 132.94032412553275,
+    "v_kmh": 72.52483106929685,
+    "unc_kmh": 18.52,
+    "kt": 81.8,
+    "from_deg": 241,
+    "n": 12,
+    "band": "C14",
+    "label": "GOES-19 band 14 winds 19:31Z, 12 anvil-level vectors: 82 kt from 241 deg, +/-10 kt"
+   }
+  }
+ ],
+ "rule_keys": [
+  "lightning",
+  "cumulus_through",
+  "cumulus_5nm",
+  "cumulus_10nm",
+  "attached_anvil",
+  "detached_anvil",
+  "field_mill",
+  "thick_layer"
+ ],
+ "rules": {
+  "lightning": "Lightning within 10 nmi (4.1.1) - MERLIN, GLM or NLDN CG",
+  "cumulus_through": "Flight through cumulus topping at or colder than +5 \u00b0C (4.1.3.1)",
+  "cumulus_5nm": "Cumulus topping colder than \u221210 \u00b0C within 5 nmi (4.1.3.2)",
+  "cumulus_10nm": "Cumulus topping colder than \u221220 \u00b0C within 10 nmi (4.1.3.3)",
+  "attached_anvil": "Attached anvil within 3 nmi (4.1.4)",
+  "detached_anvil": "Detached anvil within 3 nmi (4.1.5)",
+  "field_mill": "Surface electric field of 1,000 V/m or more within 5 nmi (4.1.2)",
+  "thick_layer": "Thick cloud layer spanning 0 to \u221210 \u00b0C (4.1.8)"
+ },
+ "rule_how": {
+  "lightning": "Any lightning within 10 nmi in the last 30 minutes: a MERLIN cloud-to-ground or cloud-to-cloud event, a GOES-19 GLM flash (total lightning) or an NLDN cloud-to-ground strike. Any one source counts.",
+  "cumulus_through": "The point itself is in cumulus (not anvil) echo reaching an isotherm level, or whose strongest return sits above the +5 \u00b0C height.",
+  "cumulus_5nm": "Cumulus or cumulonimbus echo of 0 dBZ or more at the \u221210 \u00b0C level within 5 nmi. Anvil echo never counts, however cold it reaches.",
+  "cumulus_10nm": "Cumulus or cumulonimbus echo of 0 dBZ or more at the \u221220 \u00b0C level within 10 nmi. Anvil echo never counts.",
+  "attached_anvil": "An attached anvil cell within 3 nmi, unless the exception holds: no echo at the 0 \u00b0C level beneath any anvil within 5 nmi, and the largest reflectivity within 1 nmi below 7.5 dBZ. Also violated by an attached anvil within 10 nmi while lightning is within 10 nmi.",
+  "detached_anvil": "A detached anvil cell within 3 nmi, with the same exception.",
+  "field_mill": "A field mill within 5 nmi of the point measured |E| of 1,000 V/m or more in any one-minute reading over the 15 minutes before the frame. Points more than 5 nmi from every reporting mill are not evaluated, not clear. A mill reading exactly 0 for the whole window counts as not reporting. The rule's exceptions are not applied, the conservative side.",
+  "thick_layer": "The point has echo at both ends of a 10-degree span inside the 0 to \u221220 \u00b0C band (0 and \u221210, \u22125 and \u221215, or \u221210 and \u221220 \u00b0C): a layer at least ~5,000 ft deep. Not applied to anvil or to cumulus - convective echo and cores are excluded; echo whose type is unknown is still tested. Exception: MRR below 7.5 dBZ within 1 nmi."
+ },
+ "watch_how": "Watch means no rule is broken, but one would be if its standoff were 2 nmi longer, or there is lightning within 20 nmi.",
+ "not_evaluated": [
+  "Disturbed weather (4.1.7) - applied to synoptic disturbances such as fronts, which radar alone cannot identify",
+  "The exceptions to the surface electric field rule (4.1.2), and the rule itself more than 5 nmi from every reporting field mill",
+  "Debris clouds (4.1.6), which need an observed detachment time",
+  "Smoke plumes (4.1.9)",
+  "Triboelectrification (4.1.10)",
+  "The 3-hour lightning clocks on the anvil rules - only ~95 minutes of lightning is kept"
+ ],
+ "rules_off": [],
+ "classes": [
+  {
+   "id": 0,
+   "key": "clear",
+   "name": "No echo",
+   "color": "#00000000",
+   "how": "Composite reflectivity below 0 dBZ. No rule applies here."
+  },
+  {
+   "id": 1,
+   "key": "warm",
+   "name": "Shallow shower, below freezing",
+   "color": "#94A3B8",
+   "how": "Echo of 0 dBZ or more that shows up at none of the isotherm levels: the column's strongest echo sits below the measured 0 \u00b0C height. Can still trip flight-through cumulus if it reaches the +5 \u00b0C level, taken from the XMR model sounding."
+  },
+  {
+   "id": 2,
+   "key": "cu0",
+   "name": "Cumulus topping 0 to \u221210 \u00b0C",
+   "color": "#22D3EE",
+   "how": "Echo of 0 dBZ or more at the 0 \u00b0C level, but none at \u221210 \u00b0C, so the top lies somewhere between 0 and \u221210 \u00b0C."
+  },
+  {
+   "id": 3,
+   "key": "cu10",
+   "name": "Cumulus topping \u221210 to \u221220 \u00b0C",
+   "color": "#3B82F6",
+   "how": "Echo at the \u221210 \u00b0C level, but none at \u221220 \u00b0C, so the top lies between \u221210 and \u221220 \u00b0C. Drives the 5 nmi cumulus standoff."
+  },
+  {
+   "id": 4,
+   "key": "cu20",
+   "name": "Cumulus topping below \u221220 \u00b0C",
+   "color": "#A78BFA",
+   "how": "Echo of 0 dBZ or more at the \u221220 \u00b0C level, so the top is colder than \u221220 \u00b0C. Drives the 10 nmi cumulus standoff."
+  },
+  {
+   "id": 5,
+   "key": "core",
+   "name": "Convective core",
+   "color": "#FF4FD8",
+   "how": "Composite reflectivity of 40 dBZ or more, or any vertically integrated ice. VII only registers in strong cells, so it confirms a core rather than finding anvil. Takes precedence over every other class."
+  },
+  {
+   "id": 6,
+   "key": "att",
+   "name": "Attached anvil",
+   "color": "#FB923C",
+   "how": "Echo weaker than 40 dBZ that reaches the \u221220 \u00b0C level, or sits only aloft (its strongest echo above the \u221220 \u00b0C height, or in the upper layer composite), and is joined to a convective core by unbroken echo."
+  },
+  {
+   "id": 7,
+   "key": "det",
+   "name": "Detached anvil",
+   "color": "#F5F5F4",
+   "how": "An anvil that came from a convective core and has separated from it, lying where an attached anvil was in the last hour (allowing ~32 kt of drift) with no unbroken path back to a core now. Either floating - no echo at 0 \u00b0C beneath it - or still raining out as stratiform echo: anvil until it rains out. Unconnected convective echo rooted through 0 \u00b0C is a new tower and stays cumulus."
+  },
+  {
+   "id": 8,
+   "key": "elev",
+   "name": "Layered cloud, not convective",
+   "color": "#C9A66B",
+   "how": "Echo the convective/stratiform separation (Steiner et al. 1995, run on the 3-D volume's ~3 km level) calls stratiform and that is not anvil, or floating echo with no convective origin in the last hour. Layered cloud, not cumulus: scored by the thick-cloud-layer rule when it spans about 4,500 ft of the 0 to \u221220 \u00b0C band, never by the cumulus or anvil standoffs."
+  }
+ ],
+ "class_note": "Classes come from how high the echo reaches through the isotherm levels, checked in this order: core, attached anvil, detached anvil, then cumulus by depth, then shallow shower. Once an anvil, always an anvil: anvil echo is scored only by the anvil rules and never trips a cumulus standoff. The convective core is the cumulonimbus tower and does count as cumulus, so a point near a core can still be within a cumulus standoff because of the core. Radar cannot reliably tell convective from layered cloud, so a broad rain shield reaching \u221220 \u00b0C is classed with cumulus topping below \u221220 \u00b0C.",
+ "top_levels": [
+  "No echo",
+  "Below the 0 \u00b0C level: no echo at any isotherm",
+  "Between 0 and \u22125 \u00b0C: echo at 0 \u00b0C, none at \u22125 \u00b0C",
+  "Between \u22125 and \u221210 \u00b0C: echo at \u22125 \u00b0C, none at \u221210 \u00b0C",
+  "Between \u221210 and \u221215 \u00b0C: echo at \u221210 \u00b0C, none at \u221215 \u00b0C",
+  "Between \u221215 and \u221220 \u00b0C: echo at \u221215 \u00b0C, none at \u221220 \u00b0C",
+  "Colder than \u221220 \u00b0C: echo at the \u221220 \u00b0C level",
+  "Only above the \u221220 \u00b0C level: elevated echo"
+ ],
+ "levels_km": [
+  0.5,
+  0.75,
+  1.0,
+  1.25,
+  1.5,
+  1.75,
+  2.0,
+  2.25,
+  2.5,
+  2.75,
+  3.0,
+  3.5,
+  4.0,
+  4.5,
+  5.0,
+  5.5,
+  6.0,
+  6.5,
+  7.0,
+  7.5,
+  8.0,
+  8.5,
+  9.0,
+  10.0,
+  11.0,
+  12.0,
+  13.0,
+  14.0,
+  15.0,
+  16.0,
+  17.0,
+  18.0,
+  19.0
+ ],
+ "status": {
+  "-1": {
+   "name": "No coverage",
+   "color": "#6B7785"
+  },
+  "0": {
+   "name": "Clear",
+   "color": "#3FB97A"
+  },
+  "1": {
+   "name": "Watch",
+   "color": "#F2C14E"
+  },
+  "2": {
+   "name": "Violating",
+   "color": "#E5484D"
+  }
+ },
+ "refl": {
+  "levels": [
+   0,
+   5,
+   10,
+   15,
+   20,
+   25,
+   30,
+   35,
+   40,
+   45,
+   50,
+   55,
+   60,
+   65,
+   70,
+   95
+  ],
+  "colors": [
+   "#04E9E7",
+   "#019FF4",
+   "#0300F4",
+   "#02FD02",
+   "#01C501",
+   "#008E00",
+   "#FDF802",
+   "#E5BC00",
+   "#FD9500",
+   "#FD0000",
+   "#D40000",
+   "#BC0000",
+   "#F800FD",
+   "#9854C6",
+   "#FDFDFD"
+  ]
+ },
+ "thresholds": {
+  "lightning_nm": 10.0,
+  "lightning_watch_nm": 20.0,
+  "cumulus_5nm": 5.0,
+  "cumulus_10nm": 10.0,
+  "plus5_c": 5.0,
+  "attached_3nm": 3.0,
+  "attached_lightning_nm": 10.0,
+  "detached_3nm": 3.0,
+  "excep_nm": 5.0,
+  "mrr_dbz": 7.5,
+  "mrr_search_nm": 4.0,
+  "mrr_eval_nm": 1.0,
+  "thick_mrr_dbz": 7.5,
+  "disturbed_nm": 5.0,
+  "disturbed_dbz": 30.0,
+  "core_dbz": 40.0,
+  "yellow_margin_nm": 2.0,
+  "field_mill_nm": 5.0,
+  "field_mill_vm": 1000.0,
+  "field_mill_window_min": 15.0
+ },
+ "standard": "NASA-STD-4010 (2017-06-27)",
+ "local_notes": [
+  "MERLIN CG: 1 call(s); 0 events cached, covered 2026-11-14T19:10:56 to 2026-11-14T20:45:56",
+  "MERLIN CC: 1 call(s); 0 events cached, covered 2026-11-14T19:10:56 to 2026-11-14T20:45:56",
+  "LPLWS (range): 165 reading(s) fetched; 2574 cached from 33 mills, covered 2026-11-14T19:25:56 to 2026-11-14T20:45:56"
+ ],
+ "field_mill_colors": [
+  [
+   500.0,
+   "#3FB97A"
+  ],
+  [
+   1000.0,
+   "#F2C14E"
+  ],
+  [
+   null,
+   "#E5484D"
+  ]
+ ]
+}
